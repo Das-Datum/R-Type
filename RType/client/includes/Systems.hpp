@@ -66,8 +66,3 @@ public:
         }
     }
 };
-
-class NetworkSystem : public System {
-public:
-    void update() {}
-};

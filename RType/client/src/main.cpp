@@ -18,7 +18,11 @@ int main() {
     auto renderSystem = gCoordinator.registerSystem<RenderSystem>();
     auto inputSystem = gCoordinator.registerSystem<InputSystem>();
     auto physicsSystem = gCoordinator.registerSystem<PhysicsSystem>();
+    auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
     Signature signature;
+
+    //? NetworkSystem
+    networkSystem->init("127.0.0.0", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -48,13 +52,19 @@ int main() {
         inputSystem->update();
         physicsSystem->update();
 
+        //? NETWORK
+        std::string response = networkSystem->update();
+        if (response != "") {
+            networkSystem->sendData("Ok");
+        }
+
         //? RENDER
         BeginDrawing();
         ClearBackground(BLACK);
         renderSystem->update();
         EndDrawing();
     }
-
+    networkSystem->disconnect();
     CloseWindow();
     return 0;
 }
