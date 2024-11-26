@@ -3,7 +3,7 @@
 set -e
 
 BUILD_DIR="build/linux"
-EXECUTABLE="main"
+EXECUTABLE="client"
 
 echo "Creating Linux build directory..."
 mkdir -p "$BUILD_DIR"

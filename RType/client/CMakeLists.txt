@@ -31,11 +31,11 @@ set(SOURCES
     ${HEADER_FILES_ECS}
 )
 
-add_executable(main ${SOURCES})
+add_executable(client ${SOURCES})
 
-target_include_directories(main PRIVATE includes)
-target_link_libraries(main PRIVATE raylib)
+target_include_directories(client PRIVATE includes)
+target_link_libraries(client PRIVATE raylib)
 
 if(WIN32)
-  target_link_libraries(main PRIVATE opengl32 gdi32 winmm)
+  target_link_libraries(client PRIVATE opengl32 gdi32 winmm)
 endif()
