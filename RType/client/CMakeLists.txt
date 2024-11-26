@@ -24,11 +24,13 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(raylib)
 
 file(GLOB HEADER_FILES "includes/*.hpp")
-file(GLOB HEADER_FILES_ECS "../ECS/includes/*.hpp")
+file(GLOB HEADER_FILES_ECS "../../ECS/includes/*.hpp")
+file(GLOB HEADER_FILES_SHARED "../shared/includes/*.hpp")
 set(SOURCES
     src/main.cpp
-    ${HEADER_FILES}
     ${HEADER_FILES_ECS}
+    ${HEADER_FILES_SHARED}
+    ${HEADER_FILES}
 )
 
 add_executable(main ${SOURCES})
