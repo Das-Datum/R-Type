@@ -1,20 +1,55 @@
 #pragma once
 #include <raylib.h>
 
-struct TransformComponent {
-    Vector2 position;
-    float rotation;
-    Vector2 scale;
-
-    TransformComponent(Vector2 pos = {0, 0}, float rot = 0.0f, Vector2 scl = {1, 1})
-        : position(pos), rotation(rot), scale(scl) {}
-};
-
 struct ShipComponent {};
 
 struct BulletComponent {
-    Vector2 velocity;
+    float size;
+    Color color;
+
+    BulletComponent(float sz = 2.0f, Color clr = RED)
+        : size(sz), color(clr) {}
+};
+
+struct TimerComponent {
+    float elapsedTime = 0.0f;
+    float duration = 0.0f;
+    bool active = false;
+    bool done = false;
+};
+
+struct SpriteComponent {
+    Texture2D texture;
+    Rectangle sourceRect;
+
+    SpriteComponent(Texture2D tex, Rectangle srcRect)
+        : texture(tex), sourceRect(srcRect) {}
+};
+
+struct SpriteAnimationComponent {
+    int frameCount;
+    int currentFrame;
+    float frameDuration;
+    float elapsedTime;
+
+    SpriteAnimationComponent(int frames = 1, float duration = 0.1f)
+        : frameCount(frames), currentFrame(0), frameDuration(duration), elapsedTime(0.0f) {}
+};
+
+struct SpriteFrameComponent {
+    int frameIndex;
+    int frameCount;
+
+    SpriteFrameComponent(int index = 0, int count = 1)
+        : frameIndex(index), frameCount(count) {}
+
+    void nextFrame() {
+        frameIndex = (frameIndex + 1) % frameCount;
+    }
+
+    void prevFrame() {
+        frameIndex = (frameIndex - 1) % frameCount;
+    }
 };
 
 struct InputComponent {};
-struct ClientNetwork {};
