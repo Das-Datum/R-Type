@@ -12,8 +12,18 @@
 #include <sstream>
 #include <fstream>
 
+/**
+ * @class ServerSystem
+ * @brief Manages the server system.
+ */
 class ServerSystem : public System {
 public:
+    /**
+     * @brief Initialize the server system.
+     * @param ip The server IP address.
+     * @param port The server port.
+     * @return void
+     */
     void init(const std::string& ip, int port) {
         _ip = ip;
         _port = port;
@@ -49,6 +59,12 @@ public:
         getHelp();
         info("Server is listening on port " + std::to_string(port));
     }
+
+    /**
+     * @brief Display an error message.
+     * @param message The error message.
+     * @return void
+     */
     void getHelp() {
         _help.push_back("Available commands:");
         _help.push_back("send <message>                - Send a message to all client");
@@ -58,16 +74,32 @@ public:
         _help.push_back("help                          - Display this help");
         _help.push_back("Added commands:");
     }
+
+    /**
+     * @brief Display an error message.
+     * @param message The error message.
+     * @return void
+     */
     void stop() {
         close(_server_fd);
         _running = false;
         info("Server stopped");
-    };
+    }
+
+    /**
+     * @brief Restart the server.
+     * @return void
+     */
     void restart() {
         stop();
         _running = true;
         _restart = true;
-    };
+    }
+
+    /**
+     * @brief Read file descriptors.
+     * @return void
+     */
     void read_fds() {
         poll(_fds.data(), _fds.size(), 0);
         for (size_t i = 0; i < _fds.size(); ++i) {
@@ -99,7 +131,12 @@ public:
                 }
             }
         }
-    };
+    }
+
+    /**
+     * @brief Get the command option.
+     * @return std::string
+     */
     std::string getOption() {
         std::istringstream iss(_lastCommand);
         std::string token;
@@ -108,7 +145,12 @@ public:
             _commandOption.push_back(token);
         }
         return _commandOption.empty() ? "" : _commandOption[0];
-    };
+    }
+
+    /**
+     * @brief Handle the command.
+     * @return void
+     */
     void handleCommand() {
         if (_lastCommand == "")
             return prompt();
@@ -118,23 +160,47 @@ public:
         } else {
             info("Unknown command: " + _lastCommand);
         }
-    };
+    }
+
+    /**
+     * @brief Display an error message.
+     * @param message The error message.
+     * @return void
+     */
     void help() {
         for (const auto& command : _help) {
             std::cout << command << std::endl;
         }
         prompt();
-    };
+    }
+
+    /**
+     * @brief Add a command.
+     * @param command The command.
+     * @param func The function to execute.
+     * @param description The command description.
+     * @return void
+     */
     void addCommand(const std::string& command, const std::function<void()>& func, const std::string& description = "") {
         _commandMap[command] = func;
         _help.push_back(command + " " + description);
-    };
+    }
+
+    /**
+     * @brief Update the server system.
+     * @return void
+     */
     void update() {
         if (_restart) {
             init(_ip, _port);
         }
         read_fds();
-    };
+    }
+
+    /**
+     * @brief Send data to all players.
+     * @return void
+     */
     void sendDataAllPlayer() {
         if (_commandOption.size() < 2) {
             error("Invalid command option");
@@ -144,14 +210,26 @@ public:
         for (size_t i = 2; i < _fds.size(); ++i) {
             sendDataToPlayer(message, i);
         }
-    };
+    }
+
+    /**
+     * @brief Send data to a player.
+     * @return void
+     */
     void sendToPlayer() {
         if (_commandOption.size() < 3) {
             error("Invalid command option");
             return;
         }
         sendDataToPlayer(_commandOption[2], std::stoi(_commandOption[1]));
-    };
+    }
+
+    /**
+     * @brief Send data to a player.
+     * @param message The message to send.
+     * @param playerID The player ID.
+     * @return void
+     */
     void sendDataToPlayer(const std::string& message, int playerID) {
         if (playerID < 0 || playerID >= _fds.size()) {
             error("Invalid player ID");
@@ -162,28 +240,22 @@ public:
         }
         debug("Sent data to player " + std::to_string(playerID) + ": " + message);
     };
+
+    /**
+     * @brief Check if the server is running.
+     * @return bool
+     */
     bool isRunning() const { return _running; };
 
 private:
-    struct sockaddr_in _address;
-    int _port;
-    std::string _ip;
-    int _server_fd;
-    std::vector<pollfd> _fds;
-    bool _running = false;
-    std::string _lastCommand;
-    bool _restart = false;
-    std::map<std::string, std::function<void()>> _commandMap = {
-        {"stop", [this]() { stop(); }},
-        {"restart", [this]() { restart(); }},
-        {"send", [this]() { sendDataAllPlayer(); }},
-        {"sendto", [this]() { sendToPlayer(); }},
-        {"help", [this]() { help(); }},
-    };
-    std::vector<std::string> _commandOption;
-    std::vector<std::string> _help;
-
-
+    /**
+     * @brief Display a prompt.
+     * @return void
+     */
+    void prompt() {
+        if (isRunning())
+            std::cout << "> " << std::flush;
+    }
     void info(const std::string& message) {
         std::cout << "\033[2K\r[INFO]: " << message << std::endl;
         prompt();
@@ -201,19 +273,49 @@ private:
         std::cout << "\033[2K\r[WARNING]: " << message << std::endl;
         prompt();
     }
-    void prompt() {
-        if (isRunning())
-            std::cout << "> " << std::flush;
-    }
+
+    struct sockaddr_in _address;
+    int _port;
+    std::string _ip;
+    int _server_fd;
+    std::vector<pollfd> _fds;
+    bool _running = false;
+    std::string _lastCommand;
+    bool _restart = false;
+    std::map<std::string, std::function<void()>> _commandMap = {
+        {"stop", [this]() { stop(); }},
+        {"restart", [this]() { restart(); }},
+        {"send", [this]() { sendDataAllPlayer(); }},
+        {"sendto", [this]() { sendToPlayer(); }},
+        {"help", [this]() { help(); }},
+    };
+    std::vector<std::string> _commandOption;
+    std::vector<std::string> _help;
 };
 
+
+/**
+ * @class ClientSystem
+ * @brief Manages the client system.
+ */
 class ClientSystem : public System {
 public:
+    /**
+     * @brief Initialize the client system.
+     * @param ip The server IP address.
+     * @param port The server port.
+     * @return void
+     */
     void init(const std::string& ip, int port) {
         _ip = ip;
         _port = port;
         connectToServer();
     }
+
+    /**
+     * @brief Connect to the server.
+     * @return bool
+     */
     bool connectToServer() {
         if (isConnected()) {
             warning("Already connected to server");
@@ -241,7 +343,12 @@ public:
         info("Connected to server at " + _ip + ":" + std::to_string(_port));
         _connected = true;
         return true;
-    };
+    }
+
+    /**
+     * @brief Disconnect from the server.
+     * @return void
+     */
     void disconnect() {
         if (isConnected()) {
             close(_socket);
@@ -250,12 +357,28 @@ public:
         } else {
             warning("Not connected to server");
         }
-    };
+    }
+
+    /**
+     * @brief Restart the connection.
+     * @return void
+     */
     void restartConnection() {
         disconnect();
         connectToServer();
-    };
-    bool isConnected() const { return _connected; };
+    }
+
+    /**
+     * @brief Check if the client is connected to the server.
+     * @return bool
+     */
+    bool isConnected() const { return _connected; }
+
+    /**
+     * @brief Send data to the server.
+     * @param data The data to send.
+     * @return bool
+     */
     bool sendData(const std::string &data) {
         if (!isConnected()) {
             error("Not connected to server");
@@ -271,7 +394,12 @@ public:
         }
         debug("Sent data to server: " + data);
         return true;
-    };
+    }
+
+    /**
+     * @brief Receive data from the server.
+     * @return std::string
+     */
     std::string receiveData() {
         if (!isConnected()) {
             error("Not connected to server");
@@ -307,13 +435,18 @@ public:
             return data;
         }
         return "";
-    };
+    }
+
+    /**
+     * @brief Update the client system.
+     * @return std::string
+     */
     std::string update() {
         if (isConnected())
             return receiveData();
         connectToServer();
         return "";
-    };
+    }
 
 private:
     bool _connected = false;
