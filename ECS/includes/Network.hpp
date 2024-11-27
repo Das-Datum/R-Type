@@ -7,6 +7,10 @@
 #include <iostream>
 #include <poll.h>
 #include <vector>
+#include <map>
+#include <functional>
+#include <sstream>
+#include <fstream>
 
 class ServerSystem : public System {
 public:
@@ -41,7 +45,18 @@ public:
 
         _fds = {{_server_fd, POLLIN, 0}, {STDIN_FILENO, POLLIN, 0}};
         _running = true;
+        _restart = false;
+        getHelp();
         info("Server is listening on port " + std::to_string(port));
+    }
+    void getHelp() {
+        _help.push_back("Available commands:");
+        _help.push_back("send <message>                - Send a message to all client");
+        _help.push_back("sendto <message> <clientId>   - Send a message to the clientId");
+        _help.push_back("restart                       - Restart the server");
+        _help.push_back("stop                          - Stop the server");
+        _help.push_back("help                          - Display this help");
+        _help.push_back("Added commands:");
     }
     void stop() {
         close(_server_fd);
@@ -50,7 +65,8 @@ public:
     };
     void restart() {
         stop();
-        init(_ip, _port);
+        _running = true;
+        _restart = true;
     };
     void read_fds() {
         poll(_fds.data(), _fds.size(), 0);
@@ -84,24 +100,57 @@ public:
             }
         }
     };
+    std::string getOption() {
+        std::istringstream iss(_lastCommand);
+        std::string token;
+        _commandOption.clear();
+        while (iss >> token) {
+            _commandOption.push_back(token);
+        }
+        return _commandOption.empty() ? "" : _commandOption[0];
+    };
     void handleCommand() {
         if (_lastCommand == "")
             return prompt();
-        if (_lastCommand == "stop")
-            stop();
-        else if (_lastCommand == "restart")
-            restart();
-        else
+        auto it = _commandMap.find(getOption());
+        if (it != _commandMap.end()) {
+            it->second();
+        } else {
             info("Unknown command: " + _lastCommand);
-        _lastCommand = "";
+        }
+    };
+    void help() {
+        for (const auto& command : _help) {
+            std::cout << command << std::endl;
+        }
+        prompt();
+    };
+    void addCommand(const std::string& command, const std::function<void()>& func, const std::string& description = "") {
+        _commandMap[command] = func;
+        _help.push_back(command + " " + description);
     };
     void update() {
+        if (_restart) {
+            init(_ip, _port);
+        }
         read_fds();
     };
-    void sendDataAllPlayer(const std::string& message) {
-        for (size_t i = 0; i < _fds.size(); ++i) {
+    void sendDataAllPlayer() {
+        if (_commandOption.size() < 2) {
+            error("Invalid command option");
+            return;
+        }
+        std::string message = _commandOption[1];
+        for (size_t i = 2; i < _fds.size(); ++i) {
             sendDataToPlayer(message, i);
         }
+    };
+    void sendToPlayer() {
+        if (_commandOption.size() < 3) {
+            error("Invalid command option");
+            return;
+        }
+        sendDataToPlayer(_commandOption[2], std::stoi(_commandOption[1]));
     };
     void sendDataToPlayer(const std::string& message, int playerID) {
         if (playerID < 0 || playerID >= _fds.size()) {
@@ -123,6 +172,17 @@ private:
     std::vector<pollfd> _fds;
     bool _running = false;
     std::string _lastCommand;
+    bool _restart = false;
+    std::map<std::string, std::function<void()>> _commandMap = {
+        {"stop", [this]() { stop(); }},
+        {"restart", [this]() { restart(); }},
+        {"send", [this]() { sendDataAllPlayer(); }},
+        {"sendto", [this]() { sendToPlayer(); }},
+        {"help", [this]() { help(); }},
+    };
+    std::vector<std::string> _commandOption;
+    std::vector<std::string> _help;
+
 
     void info(const std::string& message) {
         std::cout << "\033[2K\r[INFO]: " << message << std::endl;
