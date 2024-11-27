@@ -1,15 +1,6 @@
 #pragma once
 #include <raylib.h>
-
-struct ShipComponent {};
-
-struct BulletComponent {
-    float size;
-    Color color;
-
-    BulletComponent(float sz = 2.0f, Color clr = RED)
-        : size(sz), color(clr) {}
-};
+#include <algorithm>
 
 struct TimerComponent {
     float elapsedTime = 0.0f;
@@ -21,9 +12,10 @@ struct TimerComponent {
 struct SpriteComponent {
     Texture2D texture;
     Rectangle sourceRect;
+    int zIndex;
 
-    SpriteComponent(Texture2D tex, Rectangle srcRect)
-        : texture(tex), sourceRect(srcRect) {}
+    SpriteComponent(Texture2D tex, Rectangle srcRect, int z = 0)
+        : texture(tex), sourceRect(srcRect), zIndex(z) {}
 };
 
 struct SpriteAnimationComponent {
@@ -52,4 +44,15 @@ struct SpriteFrameComponent {
     }
 };
 
+struct BackgroundScrollComponent {
+    float scrollSpeed;
+    float offset;
+    float textureWidth;
+    float windowWidth;
+
+    BackgroundScrollComponent(float speed = 100.0f, float texWidth = 0.0f, float winWidth = 0.0f)
+        : scrollSpeed(speed), offset(0.0f), textureWidth(texWidth), windowWidth(winWidth) {}
+};
+
 struct InputComponent {};
+struct StaticComponent {};

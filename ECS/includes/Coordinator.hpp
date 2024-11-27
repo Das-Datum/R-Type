@@ -108,7 +108,6 @@ class Coordinator
             return componentManager->getComponentTypeID<T>();
         }
 
-        // System methods
         /**
          * @brief Registers a system.
          * @tparam T System type.

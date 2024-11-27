@@ -14,3 +14,22 @@ struct TransformComponent {
 struct PhysicsComponent {
     Vector2 velocity;
 };
+
+struct CollisionComponent {
+    Rectangle collider;
+
+    CollisionComponent(Rectangle rect)
+        : collider(rect) {}
+};
+
+
+struct ShipComponent {};
+struct EnemyComponent {};
+
+struct BulletComponent {
+    float size;
+    Color color;
+
+    BulletComponent(float sz = 2.0f, Color clr = RED)
+        : size(sz), color(clr) {}
+};

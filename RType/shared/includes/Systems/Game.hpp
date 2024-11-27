@@ -13,10 +13,19 @@ class PhysicsSystem : public System {
                 transform.position.x += mob.velocity.x * frameTime;
                 transform.position.y += mob.velocity.y * frameTime;
 
-                if (transform.position.y < 0) {
+                if (transform.position.x > gameWidth || transform.position.x < 0 || transform.position.y > gameHeight || transform.position.y < 0) {
                     gCoordinator.destroyEntity(entity);
                 }
             }
         }
     }
+
+    void setGameDimensions(float width = 1280, float height = 720) {
+        gameWidth = width;
+        gameHeight = height;
+    }
+
+    private:
+        float gameWidth = 1280;
+        float gameHeight = 720;
 };
