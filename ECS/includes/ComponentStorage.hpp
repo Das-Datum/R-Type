@@ -18,7 +18,7 @@ public:
      * @param component The component data.
      */
     void insertData(Entity entity, T component) {
-        componentMap[entity] = component;
+        componentMap.emplace(entity, component);
     }
 
     /**

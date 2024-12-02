@@ -1,19 +1,58 @@
 #pragma once
 #include <raylib.h>
+#include <algorithm>
 
-struct TransformComponent {
-    Vector2 position;
-    float rotation;
-    Vector2 scale;
-
-    TransformComponent(Vector2 pos = {0, 0}, float rot = 0.0f, Vector2 scl = {1, 1})
-        : position(pos), rotation(rot), scale(scl) {}
+struct TimerComponent {
+    float elapsedTime = 0.0f;
+    float duration = 0.0f;
+    bool active = false;
+    bool done = false;
 };
 
-struct ShipComponent {};
+struct SpriteComponent {
+    Texture2D texture;
+    Rectangle sourceRect;
+    int zIndex;
 
-struct BulletComponent {
-    Vector2 velocity;
+    SpriteComponent(Texture2D tex, Rectangle srcRect, int z = 0)
+        : texture(tex), sourceRect(srcRect), zIndex(z) {}
+};
+
+struct SpriteAnimationComponent {
+    int frameCount;
+    int currentFrame;
+    float frameDuration;
+    float elapsedTime;
+
+    SpriteAnimationComponent(int frames = 1, float duration = 0.1f)
+        : frameCount(frames), currentFrame(0), frameDuration(duration), elapsedTime(0.0f) {}
+};
+
+struct SpriteFrameComponent {
+    int frameIndex;
+    int frameCount;
+
+    SpriteFrameComponent(int index = 0, int count = 1)
+        : frameIndex(index), frameCount(count) {}
+
+    void nextFrame() {
+        frameIndex = (frameIndex + 1) % frameCount;
+    }
+
+    void prevFrame() {
+        frameIndex = (frameIndex - 1) % frameCount;
+    }
+};
+
+struct BackgroundScrollComponent {
+    float scrollSpeed;
+    float offset;
+    float textureWidth;
+    float windowWidth;
+
+    BackgroundScrollComponent(float speed = 100.0f, float texWidth = 0.0f, float winWidth = 0.0f)
+        : scrollSpeed(speed), offset(0.0f), textureWidth(texWidth), windowWidth(winWidth) {}
 };
 
 struct InputComponent {};
+struct StaticComponent {};
