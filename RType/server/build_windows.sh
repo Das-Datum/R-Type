@@ -3,7 +3,7 @@
 set -e
 
 BUILD_DIR="build/windows"
-EXECUTABLE="client.exe"
+EXECUTABLE="server.exe"
 
 if ! dpkg -s mingw-w64 >/dev/null 2>&1; then
   echo "mingw-w64 is not installed. Installing..."
