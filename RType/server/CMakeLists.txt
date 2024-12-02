@@ -1,31 +1,22 @@
-cmake_minimum_required(VERSION 3.14)
-project(RTYPE)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    set(CMAKE_RC_COMPILER_INIT windres)
-    find_program(CMAKE_RC_COMPILER NAMES windres)
-    if(NOT CMAKE_RC_COMPILER)
-        message(FATAL_ERROR "windres not found")
-    endif()
-    enable_language(RC OPTIONAL)
-endif()
-
-file(GLOB HEADER_FILES "includes/*.hpp")
-file(GLOB HEADER_FILES_ECS "../ECS/includes/*.hpp")
-set(SOURCES
-    src/main.cpp
-    ${HEADER_FILES}
-    ${HEADER_FILES_ECS}
+file(GLOB SERVER_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-add_executable(server ${SOURCES})
+add_executable(server
+    ${SERVER_SOURCES}
+)
 
-target_include_directories(server PRIVATE includes)
-target_link_libraries(server PRIVATE raylib)
+target_include_directories(server PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes
+    ${CMAKE_SOURCE_DIR}/ECS/includes
+    ${CMAKE_SOURCE_DIR}/shared/includes
+)
+
+target_link_libraries(server
+    ECS
+    Shared
+)
 
 if(WIN32)
-  target_link_libraries(server PRIVATE opengl32 gdi32 winmm)
+    target_link_libraries(server ws2_32)
 endif()
