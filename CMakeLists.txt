@@ -4,25 +4,14 @@ project(RType)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-
-# include(FetchContent)
-
-# FetchContent_Declare(
-#     raylib
-#     GIT_REPOSITORY https://github.com/raysan5/raylib.git
-#     GIT_TAG 4.5.0  # Specify the desired version
-# )
-
-# FetchContent_GetProperties(raylib)
-# if(NOT raylib_POPULATED)
-#     FetchContent_Populate(raylib)
-#     add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
-# endif()
-
+# -> IF NINJA ISN'T INSTALLED, INSTALL IT :
+# wget https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-linux.zip
+# unzip ninja-linux.zip -d /usr/local/bin/
+# sudo mv /usr/local/bin/ninja /usr/local/bin/ninja
+# sudo chmod +x /usr/local/bin/ninja
 
 set(VCPKG_ROOT "${CMAKE_BINARY_DIR}/vcpkg")
 
-# download and install vcpkg
 function(install_vcpkg)
     if(NOT EXISTS "${VCPKG_ROOT}/vcpkg")
         message(STATUS "vcpkg not found. Installing...")
