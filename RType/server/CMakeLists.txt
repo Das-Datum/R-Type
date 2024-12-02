@@ -13,16 +13,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     enable_language(RC OPTIONAL)
 endif()
 
-include(FetchContent)
-
-FetchContent_Declare(
-  raylib
-  GIT_REPOSITORY https://github.com/raysan5/raylib.git
-  GIT_TAG 4.5.0
-)
-
-FetchContent_MakeAvailable(raylib)
-
 file(GLOB HEADER_FILES "includes/*.hpp")
 file(GLOB HEADER_FILES_ECS "../ECS/includes/*.hpp")
 set(SOURCES
@@ -31,11 +21,11 @@ set(SOURCES
     ${HEADER_FILES_ECS}
 )
 
-add_executable(client ${SOURCES})
+add_executable(server ${SOURCES})
 
-target_include_directories(client PRIVATE includes)
-target_link_libraries(client PRIVATE raylib)
+target_include_directories(server PRIVATE includes)
+target_link_libraries(server PRIVATE raylib)
 
 if(WIN32)
-  target_link_libraries(client PRIVATE opengl32 gdi32 winmm)
+  target_link_libraries(server PRIVATE opengl32 gdi32 winmm)
 endif()

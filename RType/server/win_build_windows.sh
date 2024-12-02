@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BUILD_DIR="build/windows"
-EXECUTABLE="client.exe"
+EXECUTABLE="server.exe"
 
 echo "Creating Windows build directory..."
 mkdir -p "$BUILD_DIR"

@@ -17,4 +17,3 @@ struct BulletComponent {
 };
 
 struct InputComponent {};
-struct ClientNetwork {};
