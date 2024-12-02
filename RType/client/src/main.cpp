@@ -52,11 +52,11 @@ int main() {
     auto spriteFrameSystem = gCoordinator.registerSystem<SpriteFrameSystem>();
     auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
-    auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
+    // auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
     Signature signature;
 
     //? NetworkSystem
-    networkSystem->init("127.0.0.0", 5000);
+    // networkSystem->init("127.0.0.0", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -141,10 +141,10 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        std::string response = networkSystem->update();
-        if (response != "") {
-            networkSystem->sendData("Ok");
-        }
+        // std::string response = networkSystem->update();
+        // if (response != "") {
+        //     networkSystem->sendData("Ok");
+        // }
 
         //? RENDER
         BeginDrawing();
@@ -152,7 +152,7 @@ int main() {
         renderSystem->update();
         EndDrawing();
     }
-    networkSystem->disconnect();
+    // networkSystem->disconnect();
     TexturesManager.unloadAllTextures();
     CloseWindow();
     return 0;
