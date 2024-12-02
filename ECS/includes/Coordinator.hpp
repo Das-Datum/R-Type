@@ -5,6 +5,7 @@
 #include "ComponentManager.hpp"
 #include "SystemManager.hpp"
 #include "Types.hpp"
+#include <vector>
 
 /**
  * @class Coordinator
@@ -35,9 +36,22 @@ class Coordinator
          */
         void destroyEntity(Entity entity)
         {
-            entityManager->destroyEntity(entity);
-            componentManager->entityDestroyed(entity);
-            systemManager->entityDestroyed(entity);
+            entitiesToDestroy.push_back(entity);
+        }
+
+        /**
+         * @brief Processes entity destruction.
+         */
+        void processEntityDestruction()
+        {
+            for (Entity entity : entitiesToDestroy)
+            {
+                entityManager->destroyEntity(entity);
+                componentManager->entityDestroyed(entity);
+                systemManager->entityDestroyed(entity);
+                std::cout << "Entity destroyed: " << entity << std::endl;
+            }
+            entitiesToDestroy.clear();
         }
 
         /**
@@ -158,4 +172,5 @@ class Coordinator
         std::unique_ptr<ComponentManager> componentManager;
         std::unique_ptr<EntityManager> entityManager;
         std::unique_ptr<SystemManager> systemManager;
+        std::vector<Entity> entitiesToDestroy;
 };

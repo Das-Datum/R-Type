@@ -51,8 +51,11 @@ public:
      */
     void unloadAllTextures() {
         for (auto &[key, texture] : textureCache) {
+            std::cout << "Unloading texture: " << key << std::endl;
+            std::cout << "Texture id: " << texture.id << std::endl;
             UnloadTexture(texture);
         }
+        std::cout << "Clearing texture cache" << std::endl;
         textureCache.clear();
     }
 
@@ -73,7 +76,7 @@ public:
 
 private:
     TexturesManager() = default;
-    ~TexturesManager() { unloadAllTextures(); }
+    ~TexturesManager() {}
 
     std::unordered_map<std::string, Texture2D> textureCache;
 };

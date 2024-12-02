@@ -129,9 +129,12 @@ int main() {
         inputSystem->update();
         spriteFrameSystem->update();
         timerSystem->update();
-        physicsSystem->update(deltaTime);
         collisionSystem->update();
         backgroundScrollSystem->update(deltaTime);
+        physicsSystem->update(deltaTime);
+
+        //! DESTROY
+        gCoordinator.processEntityDestruction();
 
         //? RENDER
         BeginDrawing();
@@ -140,6 +143,7 @@ int main() {
         EndDrawing();
     }
 
+    TexturesManager.unloadAllTextures();
     CloseWindow();
     return 0;
 }
