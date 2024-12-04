@@ -22,6 +22,7 @@ int main() {
     auto& entitiesManager = EntitiesManager::getInstance();
     entitiesManager.setWindowHeight(static_cast<float>(WINDOW_HEIGHT));
 
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
