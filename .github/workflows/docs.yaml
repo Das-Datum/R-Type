@@ -26,10 +26,13 @@ jobs:
     - name: Create .nojekyll file
       run: touch ./html/.nojekyll
 
+    - name: Move HTML content to root
+      run: mv ./html/* ./
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./html
+        publish_dir: ./
         destination_dir: .
 
