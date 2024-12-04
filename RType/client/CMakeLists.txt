@@ -33,16 +33,10 @@ target_include_directories(client PRIVATE
     ${CMAKE_SOURCE_DIR}/shared/includes
 )
 
-target_link_libraries(client
-    ECS
-    Shared
-    raylib
-)
-
 if(WIN32)
-    target_link_libraries(client ws2_32 PRIVATE opengl32 gdi32 winmm)
+    target_link_libraries(client PRIVATE ws2_32 opengl32 gdi32 winmm ECS Shared raylib)
 elseif(UNIX)
-    target_link_libraries(client pthread)
+    target_link_libraries(client pthread ECS Shared raylib)
 endif()
 
 add_custom_command(TARGET client POST_BUILD
