@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['r_2dtype_37',['R-Type',['../md_Readme.html',1,'']]],
+  ['r_2dtype_37',['R-Type',['../index.html',1,'']]],
   ['read_5ffds_38',['read_fds',['../classServerSystem.html#a1062fca78710604acb514aaedd63de8b',1,'ServerSystem']]],
   ['receivedata_39',['receiveData',['../classClientSystem.html#adb9b7a30487504e7f2709e968df91dee',1,'ClientSystem']]],
   ['registercomponent_40',['registerComponent',['../classComponentManager.html#a1ad7d043cc6ad4b1dcb2a442d5c5b822',1,'ComponentManager::registerComponent()'],['../classCoordinator.html#add9d0a2a3c650d779c4e9175b183415a',1,'Coordinator::registerComponent()']]],
