@@ -24,16 +24,17 @@
 */
 var NAVTREE =
 [
-  [ "RType Documentation", "index.html", [
+  [ "R-Type", "index.html", [
+    [ "Auteurs", "index.html#autotoc_md1", null ],
     [ "Comparative Study", "md_docs_comparative_study.html", [
-      [ "Overview", "md_docs_comparative_study.html#autotoc_md1", null ],
-      [ "Key Points", "md_docs_comparative_study.html#autotoc_md2", [
-        [ "Approach A", "md_docs_comparative_study.html#autotoc_md3", null ],
-        [ "Approach B", "md_docs_comparative_study.html#autotoc_md4", null ],
-        [ "Approach C", "md_docs_comparative_study.html#autotoc_md5", null ]
+      [ "Overview", "md_docs_comparative_study.html#autotoc_md3", null ],
+      [ "Key Points", "md_docs_comparative_study.html#autotoc_md4", [
+        [ "Approach A", "md_docs_comparative_study.html#autotoc_md5", null ],
+        [ "Approach B", "md_docs_comparative_study.html#autotoc_md6", null ],
+        [ "Approach C", "md_docs_comparative_study.html#autotoc_md7", null ]
       ] ],
-      [ "Conclusion", "md_docs_comparative_study.html#autotoc_md6", null ],
-      [ "References", "md_docs_comparative_study.html#autotoc_md7", null ]
+      [ "Conclusion", "md_docs_comparative_study.html#autotoc_md8", null ],
+      [ "References", "md_docs_comparative_study.html#autotoc_md9", null ]
     ] ],
     [ "Modules", "modules.html", "modules" ],
     [ "Classes", "annotated.html", [
