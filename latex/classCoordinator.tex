@@ -1,0 +1,266 @@
+\hypertarget{classCoordinator}{}\doxysection{Coordinator Class Reference}
+\label{classCoordinator}\index{Coordinator@{Coordinator}}
+
+
+Coordinates entities, components, and systems.  
+
+
+
+
+{\ttfamily \#include $<$Coordinator.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classCoordinator_a70ce14302b4b3d08a97719cb5f9cefd8}\label{classCoordinator_a70ce14302b4b3d08a97719cb5f9cefd8}} 
+void {\bfseries init} ()
+\item 
+Entity \mbox{\hyperlink{classCoordinator_ada9b6182047cfc657aff195cdbb19270}{create\+Entity}} ()
+\begin{DoxyCompactList}\small\item\em Creates a new entity. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classCoordinator_aafd7f295bc0f5dcf54e060748f68ab53}{destroy\+Entity}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Destroys an entity. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classCoordinator_a42797821c18433a9e8aa96fc26d0e74d}\label{classCoordinator_a42797821c18433a9e8aa96fc26d0e74d}} 
+void \mbox{\hyperlink{classCoordinator_a42797821c18433a9e8aa96fc26d0e74d}{process\+Entity\+Destruction}} ()
+\begin{DoxyCompactList}\small\item\em Processes entity destruction. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classCoordinator_add9d0a2a3c650d779c4e9175b183415a}{register\+Component}} ()
+\begin{DoxyCompactList}\small\item\em Registers a component type. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classCoordinator_a38179502eab0f2dadcc6a9ba49ec149b}{add\+Component}} (Entity entity, T component)
+\begin{DoxyCompactList}\small\item\em Adds a component to an entity. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classCoordinator_aadc8b78646ba7ed2894274abbd954892}{remove\+Component}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Removes a component from an entity. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T \& \mbox{\hyperlink{classCoordinator_a3b2fdeead936cdf3274408b618a3907c}{get\+Component}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Gets a component from an entity. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\Component\+Type\+ID \mbox{\hyperlink{classCoordinator_a2ace979a7ab5abd778fdc0b52f823fa7}{get\+Component\+Type\+ID}} ()
+\begin{DoxyCompactList}\small\item\em Gets the component type ID. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{classCoordinator_a3f1bcd1e870e5eb78a5d3ecb007453d1}{register\+System}} ()
+\begin{DoxyCompactList}\small\item\em Registers a system. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classCoordinator_a6e52a97668cd56e3522e5303cca66c49}{set\+System\+Signature}} (Signature signature)
+\begin{DoxyCompactList}\small\item\em Sets the signature for a system. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\bool \mbox{\hyperlink{classCoordinator_a95479f4dca8ae1a8a7ecb64b32d05b52}{has\+Component}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Checks if an entity has a component. \end{DoxyCompactList}\item 
+Signature \mbox{\hyperlink{classCoordinator_ab199b65713c1abc5a8409e49da539131}{get\+Entity\+Signature}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Gets the signature of an entity. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Coordinates entities, components, and systems. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCoordinator_a38179502eab0f2dadcc6a9ba49ec149b}\label{classCoordinator_a38179502eab0f2dadcc6a9ba49ec149b}} 
+\index{Coordinator@{Coordinator}!addComponent@{addComponent}}
+\index{addComponent@{addComponent}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{addComponent()}{addComponent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Coordinator\+::add\+Component (\begin{DoxyParamCaption}\item[{Entity}]{entity,  }\item[{T}]{component }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Adds a component to an entity. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Component type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+{\em component} & The component data. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classCoordinator_ada9b6182047cfc657aff195cdbb19270}\label{classCoordinator_ada9b6182047cfc657aff195cdbb19270}} 
+\index{Coordinator@{Coordinator}!createEntity@{createEntity}}
+\index{createEntity@{createEntity}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{createEntity()}{createEntity()}}
+{\footnotesize\ttfamily Entity Coordinator\+::create\+Entity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Creates a new entity. 
+
+\begin{DoxyReturn}{Returns}
+The new entity ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCoordinator_aafd7f295bc0f5dcf54e060748f68ab53}\label{classCoordinator_aafd7f295bc0f5dcf54e060748f68ab53}} 
+\index{Coordinator@{Coordinator}!destroyEntity@{destroyEntity}}
+\index{destroyEntity@{destroyEntity}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{destroyEntity()}{destroyEntity()}}
+{\footnotesize\ttfamily void Coordinator\+::destroy\+Entity (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destroys an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity to destroy. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classCoordinator_a3b2fdeead936cdf3274408b618a3907c}\label{classCoordinator_a3b2fdeead936cdf3274408b618a3907c}} 
+\index{Coordinator@{Coordinator}!getComponent@{getComponent}}
+\index{getComponent@{getComponent}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{getComponent()}{getComponent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T\& Coordinator\+::get\+Component (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets a component from an entity. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Component type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the component data. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCoordinator_a2ace979a7ab5abd778fdc0b52f823fa7}\label{classCoordinator_a2ace979a7ab5abd778fdc0b52f823fa7}} 
+\index{Coordinator@{Coordinator}!getComponentTypeID@{getComponentTypeID}}
+\index{getComponentTypeID@{getComponentTypeID}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{getComponentTypeID()}{getComponentTypeID()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+Component\+Type\+ID Coordinator\+::get\+Component\+Type\+ID (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the component type ID. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Component type. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+The component type ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCoordinator_ab199b65713c1abc5a8409e49da539131}\label{classCoordinator_ab199b65713c1abc5a8409e49da539131}} 
+\index{Coordinator@{Coordinator}!getEntitySignature@{getEntitySignature}}
+\index{getEntitySignature@{getEntitySignature}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{getEntitySignature()}{getEntitySignature()}}
+{\footnotesize\ttfamily Signature Coordinator\+::get\+Entity\+Signature (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the signature of an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The entity\textquotesingle{}s signature. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCoordinator_a95479f4dca8ae1a8a7ecb64b32d05b52}\label{classCoordinator_a95479f4dca8ae1a8a7ecb64b32d05b52}} 
+\index{Coordinator@{Coordinator}!hasComponent@{hasComponent}}
+\index{hasComponent@{hasComponent}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{hasComponent()}{hasComponent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool Coordinator\+::has\+Component (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if an entity has a component. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Component type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the entity has the component. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCoordinator_add9d0a2a3c650d779c4e9175b183415a}\label{classCoordinator_add9d0a2a3c650d779c4e9175b183415a}} 
+\index{Coordinator@{Coordinator}!registerComponent@{registerComponent}}
+\index{registerComponent@{registerComponent}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{registerComponent()}{registerComponent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Coordinator\+::register\+Component (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Registers a component type. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Component type. \\
+\hline
+\end{DoxyTemplParams}
+\mbox{\Hypertarget{classCoordinator_a3f1bcd1e870e5eb78a5d3ecb007453d1}\label{classCoordinator_a3f1bcd1e870e5eb78a5d3ecb007453d1}} 
+\index{Coordinator@{Coordinator}!registerSystem@{registerSystem}}
+\index{registerSystem@{registerSystem}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{registerSystem()}{registerSystem()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::shared\+\_\+ptr$<$T$>$ Coordinator\+::register\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Registers a system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+A shared pointer to the system. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classCoordinator_aadc8b78646ba7ed2894274abbd954892}\label{classCoordinator_aadc8b78646ba7ed2894274abbd954892}} 
+\index{Coordinator@{Coordinator}!removeComponent@{removeComponent}}
+\index{removeComponent@{removeComponent}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{removeComponent()}{removeComponent()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Coordinator\+::remove\+Component (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Removes a component from an entity. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Component type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classCoordinator_a6e52a97668cd56e3522e5303cca66c49}\label{classCoordinator_a6e52a97668cd56e3522e5303cca66c49}} 
+\index{Coordinator@{Coordinator}!setSystemSignature@{setSystemSignature}}
+\index{setSystemSignature@{setSystemSignature}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{setSystemSignature()}{setSystemSignature()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Coordinator\+::set\+System\+Signature (\begin{DoxyParamCaption}\item[{Signature}]{signature }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the signature for a system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em signature} & The signature. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+ECS/includes/Coordinator.\+hpp\end{DoxyCompactItemize}

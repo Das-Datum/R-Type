@@ -1,0 +1,105 @@
+\hypertarget{classSystemManager}{}\doxysection{System\+Manager Class Reference}
+\label{classSystemManager}\index{SystemManager@{SystemManager}}
+
+
+Manages systems and their signatures.  
+
+
+
+
+{\ttfamily \#include $<$System\+Manager.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{classSystemManager_aa3f49b9bb45d8af754fc725934cc3602}{register\+System}} ()
+\begin{DoxyCompactList}\small\item\em Registers a new system. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classSystemManager_a2064240b2e13242fc7dab16c19dffdae}{set\+Signature}} (Signature signature)
+\begin{DoxyCompactList}\small\item\em Sets the signature for a system. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSystemManager_a8e4d8dfca2326b23e9d0d2567e10d79f}{entity\+Destroyed}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Notifies systems that an entity has been destroyed. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classSystemManager_af59a78e7d984c50994aab6447883da96}{entity\+Signature\+Changed}} (Entity entity, Signature entity\+Signature)
+\begin{DoxyCompactList}\small\item\em Updates systems when an entity\textquotesingle{}s signature changes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages systems and their signatures. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classSystemManager_a8e4d8dfca2326b23e9d0d2567e10d79f}\label{classSystemManager_a8e4d8dfca2326b23e9d0d2567e10d79f}} 
+\index{SystemManager@{SystemManager}!entityDestroyed@{entityDestroyed}}
+\index{entityDestroyed@{entityDestroyed}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{entityDestroyed()}{entityDestroyed()}}
+{\footnotesize\ttfamily void System\+Manager\+::entity\+Destroyed (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Notifies systems that an entity has been destroyed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The destroyed entity. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classSystemManager_af59a78e7d984c50994aab6447883da96}\label{classSystemManager_af59a78e7d984c50994aab6447883da96}} 
+\index{SystemManager@{SystemManager}!entitySignatureChanged@{entitySignatureChanged}}
+\index{entitySignatureChanged@{entitySignatureChanged}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{entitySignatureChanged()}{entitySignatureChanged()}}
+{\footnotesize\ttfamily void System\+Manager\+::entity\+Signature\+Changed (\begin{DoxyParamCaption}\item[{Entity}]{entity,  }\item[{Signature}]{entity\+Signature }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Updates systems when an entity\textquotesingle{}s signature changes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+{\em entity\+Signature} & The new signature. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classSystemManager_aa3f49b9bb45d8af754fc725934cc3602}\label{classSystemManager_aa3f49b9bb45d8af754fc725934cc3602}} 
+\index{SystemManager@{SystemManager}!registerSystem@{registerSystem}}
+\index{registerSystem@{registerSystem}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{registerSystem()}{registerSystem()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::shared\+\_\+ptr$<$T$>$ System\+Manager\+::register\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Registers a new system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+A shared pointer to the new system. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classSystemManager_a2064240b2e13242fc7dab16c19dffdae}\label{classSystemManager_a2064240b2e13242fc7dab16c19dffdae}} 
+\index{SystemManager@{SystemManager}!setSignature@{setSignature}}
+\index{setSignature@{setSignature}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{setSignature()}{setSignature()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void System\+Manager\+::set\+Signature (\begin{DoxyParamCaption}\item[{Signature}]{signature }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the signature for a system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em signature} & The signature to set. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+ECS/includes/System\+Manager.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,96 @@
+\hypertarget{classEntityManager}{}\doxysection{Entity\+Manager Class Reference}
+\label{classEntityManager}\index{EntityManager@{EntityManager}}
+
+
+Manages the creation and destruction of entities.  
+
+
+
+
+{\ttfamily \#include $<$Entity\+Manager.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Entity \mbox{\hyperlink{classEntityManager_ac7482168f0df8b2ff2570435f67b3fb0}{create\+Entity}} ()
+\begin{DoxyCompactList}\small\item\em Creates a new entity. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classEntityManager_aacc08e93994c20f37b1388ab81e62e19}{destroy\+Entity}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Destroys an entity. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classEntityManager_a2c6e0507876c18d2ee1ed03b65d60c78}{set\+Signature}} (Entity entity, Signature signature)
+\begin{DoxyCompactList}\small\item\em Sets the signature of an entity. \end{DoxyCompactList}\item 
+Signature \mbox{\hyperlink{classEntityManager_ad60fd822c39bbe8b0d0cc366a7de965d}{get\+Signature}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Gets the signature of an entity. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages the creation and destruction of entities. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classEntityManager_ac7482168f0df8b2ff2570435f67b3fb0}\label{classEntityManager_ac7482168f0df8b2ff2570435f67b3fb0}} 
+\index{EntityManager@{EntityManager}!createEntity@{createEntity}}
+\index{createEntity@{createEntity}!EntityManager@{EntityManager}}
+\doxysubsubsection{\texorpdfstring{createEntity()}{createEntity()}}
+{\footnotesize\ttfamily Entity Entity\+Manager\+::create\+Entity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Creates a new entity. 
+
+\begin{DoxyReturn}{Returns}
+The new entity ID. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classEntityManager_aacc08e93994c20f37b1388ab81e62e19}\label{classEntityManager_aacc08e93994c20f37b1388ab81e62e19}} 
+\index{EntityManager@{EntityManager}!destroyEntity@{destroyEntity}}
+\index{destroyEntity@{destroyEntity}!EntityManager@{EntityManager}}
+\doxysubsubsection{\texorpdfstring{destroyEntity()}{destroyEntity()}}
+{\footnotesize\ttfamily void Entity\+Manager\+::destroy\+Entity (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Destroys an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity to destroy. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classEntityManager_ad60fd822c39bbe8b0d0cc366a7de965d}\label{classEntityManager_ad60fd822c39bbe8b0d0cc366a7de965d}} 
+\index{EntityManager@{EntityManager}!getSignature@{getSignature}}
+\index{getSignature@{getSignature}!EntityManager@{EntityManager}}
+\doxysubsubsection{\texorpdfstring{getSignature()}{getSignature()}}
+{\footnotesize\ttfamily Signature Entity\+Manager\+::get\+Signature (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the signature of an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The signature of the entity. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classEntityManager_a2c6e0507876c18d2ee1ed03b65d60c78}\label{classEntityManager_a2c6e0507876c18d2ee1ed03b65d60c78}} 
+\index{EntityManager@{EntityManager}!setSignature@{setSignature}}
+\index{setSignature@{setSignature}!EntityManager@{EntityManager}}
+\doxysubsubsection{\texorpdfstring{setSignature()}{setSignature()}}
+{\footnotesize\ttfamily void Entity\+Manager\+::set\+Signature (\begin{DoxyParamCaption}\item[{Entity}]{entity,  }\item[{Signature}]{signature }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Sets the signature of an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+{\em signature} & The signature to set. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+ECS/includes/Entity\+Manager.\+hpp\end{DoxyCompactItemize}
