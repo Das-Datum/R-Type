@@ -1,0 +1,13 @@
+/*! \defgroup my_docs My Docs
+ *  \brief Regroupe des documents personnalisés
+ *
+ *  Cette section contient des pages personnalisées ajoutées à la documentation.
+ */
+
+/*! \page comparative_study Comparative Study
+ *  \ingroup my_docs
+ *
+ *  @htmlinclude docs/comparative_study.md
+ *
+ *  Cette page contient l'étude comparative.
+ */
