@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['r_2dtype_127',['R-Type',['../index.html',1,'']]]
+  ['comparative_20study_101',['Comparative Study',['../group__my__docs.html',1,'(Global Namespace)'],['../md_docs_comparative_study.html',1,'(Global Namespace)']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['loadtexture_108',['loadTexture',['../classTexturesManager.html#a7c05d0e36df6fe7b43ec1abe7836edf3',1,'TexturesManager']]]
+  ['processentitydestruction_83',['processEntityDestruction',['../classCoordinator.html#a42797821c18433a9e8aa96fc26d0e74d',1,'Coordinator']]]
 ];

@@ -1,12 +1,13 @@
 var searchData=
 [
-  ['r_2dtype_37',['R-Type',['../index.html',1,'']]],
-  ['read_5ffds_38',['read_fds',['../classServerSystem.html#a1062fca78710604acb514aaedd63de8b',1,'ServerSystem']]],
-  ['receivedata_39',['receiveData',['../classClientSystem.html#adb9b7a30487504e7f2709e968df91dee',1,'ClientSystem']]],
-  ['registercomponent_40',['registerComponent',['../classComponentManager.html#a1ad7d043cc6ad4b1dcb2a442d5c5b822',1,'ComponentManager::registerComponent()'],['../classCoordinator.html#add9d0a2a3c650d779c4e9175b183415a',1,'Coordinator::registerComponent()']]],
-  ['registersystem_41',['registerSystem',['../classCoordinator.html#a3f1bcd1e870e5eb78a5d3ecb007453d1',1,'Coordinator::registerSystem()'],['../classSystemManager.html#aa3f49b9bb45d8af754fc725934cc3602',1,'SystemManager::registerSystem()']]],
-  ['removecomponent_42',['removeComponent',['../classComponentManager.html#a34bc2408c0ec2610e3368bff45d08228',1,'ComponentManager::removeComponent()'],['../classCoordinator.html#aadc8b78646ba7ed2894274abbd954892',1,'Coordinator::removeComponent()']]],
-  ['removedata_43',['removeData',['../classComponentStorage.html#a5e6ce185c54533fd56e38d5ab79dc332',1,'ComponentStorage']]],
-  ['restart_44',['restart',['../classServerSystem.html#a0ca8cdb9252731c20e4b3a914c5a1b19',1,'ServerSystem']]],
-  ['restartconnection_45',['restartConnection',['../classClientSystem.html#afe2f820a7571bcf18192441a045bb852',1,'ClientSystem']]]
+  ['senddata_40',['sendData',['../classClientSystem.html#a6edc94cd1f07db9cecb30e4f7ff9a698',1,'ClientSystem']]],
+  ['senddataallplayer_41',['sendDataAllPlayer',['../classServerSystem.html#ab7d56ab5a48af23ce91b79776f36e6a8',1,'ServerSystem']]],
+  ['senddatatoplayer_42',['sendDataToPlayer',['../classServerSystem.html#a0e019edf8c161c747dd36a6d961e0039',1,'ServerSystem']]],
+  ['sendtoplayer_43',['sendToPlayer',['../classServerSystem.html#aa5d00e7f332317287842a252f7b5e2f7',1,'ServerSystem']]],
+  ['serversystem_44',['ServerSystem',['../classServerSystem.html',1,'']]],
+  ['setsignature_45',['setSignature',['../classEntityManager.html#a2c6e0507876c18d2ee1ed03b65d60c78',1,'EntityManager::setSignature()'],['../classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae',1,'SystemManager::setSignature()']]],
+  ['setsystemsignature_46',['setSystemSignature',['../classCoordinator.html#a6e52a97668cd56e3522e5303cca66c49',1,'Coordinator']]],
+  ['stop_47',['stop',['../classServerSystem.html#a526063d0ba39f7b96d0954d79e84ecd2',1,'ServerSystem']]],
+  ['system_48',['System',['../classSystem.html',1,'']]],
+  ['systemmanager_49',['SystemManager',['../classSystemManager.html',1,'']]]
 ];
