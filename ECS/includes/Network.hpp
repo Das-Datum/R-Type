@@ -1,16 +1,27 @@
 #pragma once
 #include "System.hpp"
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <string>
 #include <iostream>
-#include <poll.h>
+#include <cstring>
 #include <vector>
+#include <thread>
+#include <mutex>
 #include <map>
 #include <functional>
 #include <sstream>
 #include <fstream>
+
+#ifdef _WIN32
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #pragma comment(lib, "ws2_32.lib")
+#else
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+#endif
+
+#define BUFFER_SIZE 1024
 
 /**
  * @class ServerSystem
@@ -27,37 +38,36 @@ public:
     void init(const std::string& ip, int port) {
         _ip = ip;
         _port = port;
-        _server_fd = socket(AF_INET, SOCK_STREAM, 0);
-        if (_server_fd == 0) {
-            error("socket failed");
+
+        #ifdef _WIN32
+            if (WSAStartup(MAKEWORD(2, 2), &_wsaData) != 0) {
+                error("Failed to initialize Winsock.");
+                exit(84);
+            }
+        #endif
+        _server_fd = socket(AF_INET, SOCK_DGRAM, 0);
+        if (_server_fd < 0) {
+            error("socket creation failed");
             exit(84);
         }
 
-        int opt = 1;
-
-        if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
-            error("setsockopt");
-            exit(84);
-        }
-
+        std::memset(&_address, 0, sizeof(_address));
         _address.sin_family = AF_INET;
         _address.sin_addr.s_addr = INADDR_ANY;
         _address.sin_port = htons(port);
 
         if (bind(_server_fd, (struct sockaddr *)&_address, sizeof(_address)) < 0) {
             error("bind failed");
-            exit(84);
-        }
-        if (listen(_server_fd, 3) < 0) {
-            error("listen");
+            stop();
             exit(84);
         }
 
-        _fds = {{_server_fd, POLLIN, 0}, {STDIN_FILENO, POLLIN, 0}};
         _running = true;
-        _restart = false;
         getHelp();
         info("Server is listening on port " + std::to_string(port));
+        if (!_restart)
+            _terminal_thread = std::thread(&ServerSystem::handleCommand, this);
+        _restart = false;
     }
 
     /**
@@ -81,56 +91,101 @@ public:
      * @return void
      */
     void stop() {
-        close(_server_fd);
+        if (!_restart && _terminal_thread.joinable()) {
+            _terminal_thread.detach();
+        }
+        for (const auto& addr : _clients_addr) {
+            sendto(_server_fd, "Server stopped", 14, MSG_DONTWAIT, (struct sockaddr*)&addr, sizeof(addr));
+        }
+        _clients_addr.clear();
+        #ifdef _WIN32
+            closesocket(_server_fd);
+            WSACleanup();
+        #else
+            close(_server_fd);
+        #endif
         _running = false;
         info("Server stopped");
     }
 
-    /**
-     * @brief Restart the server.
-     * @return void
-     */
-    void restart() {
-        stop();
-        _running = true;
-        _restart = true;
-    }
 
     /**
      * @brief Read file descriptors.
      * @return void
      */
     void read_fds() {
-        poll(_fds.data(), _fds.size(), 0);
-        for (size_t i = 0; i < _fds.size(); ++i) {
-            if (_fds[i].revents & POLLIN) {
-                if (_fds[i].fd == _server_fd) {
-                    int client_fd = accept(_server_fd, nullptr, nullptr);
-                    _fds.push_back({client_fd, POLLIN, 0});
-                    info("From: " + std::to_string(_fds.size() - 1) + " New connection");
-                } else if (_fds[i].fd == STDIN_FILENO) {
-                    char buffer[1024];
-                    int n = read(STDIN_FILENO, buffer, sizeof(buffer));
-                    if (n <= 0) {
-                        error("Failed to read from stdin");
-                    } else {
-                        _lastCommand = std::string(buffer, n - 1);
-                        handleCommand();
-                    }
-                } else {
-                    char buffer[1024];
-                    int n = read(_fds[i].fd, buffer, sizeof(buffer));
-                    if (n <= 0) {
-                        close(_fds[i].fd);
-                        info("From: " + std::to_string(i) + " Connection closed");
-                        _fds.erase(_fds.begin() + i);
-                        --i;
-                    } else {
-                        debug("From: " + std::to_string(i) + " Received: " + std::string(buffer, n));
-                    }
-                }
+        char buffer[BUFFER_SIZE];
+        sockaddr_in client_addr;
+        socklen_t client_len = sizeof(client_addr);
+        std::memset(buffer, 0, BUFFER_SIZE);
+        int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT, (struct sockaddr*)&client_addr, &client_len);
+        if (bytes_received < 0) {
+            return;
+        }
+
+        std::string client_ip = inet_ntoa(client_addr.sin_addr);
+        int client_port = ntohs(client_addr.sin_port);
+
+        info("Received message from " + client_ip + ":" + std::to_string(client_port) + " - " + buffer);
+
+
+        std::unique_lock<std::mutex> lock(_clients_mutex);
+        bool client_exists = false;
+        for (const auto& addr : _clients_addr) {
+            if (addr.sin_addr.s_addr == client_addr.sin_addr.s_addr && addr.sin_port == client_addr.sin_port) {
+                client_exists = true;
+                break;
             }
         }
+        if (!client_exists) {
+            _clients_addr.push_back(client_addr);
+            for (const auto& addr : _clients_addr) {
+                sendto(_server_fd, "New client connected", 20, MSG_DONTWAIT, (struct sockaddr*)&addr, client_len);
+            }
+        }
+    }
+
+    /**
+     * @brief Update the server system.
+     * @return void
+     */
+    void update() {
+        if (_restart) {
+            init(_ip, _port);
+        }
+        read_fds();
+    }
+
+    /**
+     * @brief Handle the command.
+     * @return void
+     */
+    void handleCommand() {
+        while (isRunning()) {
+            std::string command;
+            std::getline(std::cin, command);
+            _lastCommand = command;
+            if (_lastCommand == "")
+                return prompt();
+            auto it = _commandMap.find(getOption());
+            if (it != _commandMap.end()) {
+                it->second();
+            } else {
+                info("Unknown command: " + _lastCommand);
+            }
+        }
+    }
+
+    /**
+     * @brief Add a command.
+     * @param command The command.
+     * @param func The function to execute.
+     * @param description The command description.
+     * @return void
+     */
+    void addCommand(const std::string& command, const std::function<void()>& func, const std::string& description = "") {
+        _commandMap[command] = func;
+        _help.push_back(command + " " + description);
     }
 
     /**
@@ -148,19 +203,16 @@ public:
     }
 
     /**
-     * @brief Handle the command.
+     * @brief Restart the server.
      * @return void
      */
-    void handleCommand() {
-        if (_lastCommand == "")
-            return prompt();
-        auto it = _commandMap.find(getOption());
-        if (it != _commandMap.end()) {
-            it->second();
-        } else {
-            info("Unknown command: " + _lastCommand);
-        }
+    void restart() {
+        std::unique_lock<std::mutex> lock(_clients_mutex);
+        stop();
+        _running = true;
+        _restart = true;
     }
+
 
     /**
      * @brief Display an error message.
@@ -175,40 +227,17 @@ public:
     }
 
     /**
-     * @brief Add a command.
-     * @param command The command.
-     * @param func The function to execute.
-     * @param description The command description.
-     * @return void
-     */
-    void addCommand(const std::string& command, const std::function<void()>& func, const std::string& description = "") {
-        _commandMap[command] = func;
-        _help.push_back(command + " " + description);
-    }
-
-    /**
-     * @brief Update the server system.
-     * @return void
-     */
-    void update() {
-        if (_restart) {
-            init(_ip, _port);
-        }
-        read_fds();
-    }
-
-    /**
      * @brief Send data to all players.
      * @return void
      */
     void sendDataAllPlayer() {
+        std::unique_lock<std::mutex> lock(_clients_mutex);
         if (_commandOption.size() < 2) {
             error("Invalid command option");
             return;
         }
-        std::string message = _commandOption[1];
-        for (size_t i = 2; i < _fds.size(); ++i) {
-            sendDataToPlayer(message, i);
+        for (const auto& addr : _clients_addr) {
+            sendDataToPlayer(_commandOption[1], addr);
         }
     }
 
@@ -221,7 +250,8 @@ public:
             error("Invalid command option");
             return;
         }
-        sendDataToPlayer(_commandOption[2], std::stoi(_commandOption[1]));
+        warning("Not implemented");
+        // sendDataToPlayer(_commandOption[2], std::stoi(_commandOption[1]));
     }
 
     /**
@@ -230,15 +260,20 @@ public:
      * @param playerID The player ID.
      * @return void
      */
-    void sendDataToPlayer(const std::string& message, int playerID) {
-        if (playerID < 0 || playerID >= _fds.size()) {
-            error("Invalid player ID");
-            return;
+    void sendDataToPlayer(const std::string& message, sockaddr_in client_addr) {
+        bool client_exists = false;
+        for (const auto& addr : _clients_addr) {
+            if (addr.sin_addr.s_addr == client_addr.sin_addr.s_addr && addr.sin_port == client_addr.sin_port) {
+                client_exists = true;
+                break;
+            }
         }
-        if (send(_fds[playerID].fd, message.c_str(), message.size(), 0) < 0) {
-            error("Failed to send data to player " + std::to_string(playerID));
+        if (client_exists) {
+            debug("Sent data to player " + std::to_string(ntohs(client_addr.sin_port)) + ": " + message);
+            sendto(_server_fd, message.c_str(), message.size(), MSG_DONTWAIT, (struct sockaddr*)&client_addr, sizeof(client_addr));
+        } else {
+            error("Client not found");
         }
-        debug("Sent data to player " + std::to_string(playerID) + ": " + message);
     };
 
     /**
@@ -278,10 +313,14 @@ private:
     int _port;
     std::string _ip;
     int _server_fd;
-    std::vector<pollfd> _fds;
     bool _running = false;
     std::string _lastCommand;
     bool _restart = false;
+    std::vector<std::string> _commandOption;
+    std::vector<std::string> _help;
+    std::mutex _clients_mutex;
+    std::thread _terminal_thread;
+    std::vector<sockaddr_in> _clients_addr;
     std::map<std::string, std::function<void()>> _commandMap = {
         {"stop", [this]() { stop(); }},
         {"restart", [this]() { restart(); }},
@@ -289,8 +328,6 @@ private:
         {"sendto", [this]() { sendToPlayer(); }},
         {"help", [this]() { help(); }},
     };
-    std::vector<std::string> _commandOption;
-    std::vector<std::string> _help;
 };
 
 
@@ -317,16 +354,23 @@ public:
      * @return bool
      */
     bool connectToServer() {
+        #ifdef _WIN32
+            if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+                std::cerr << "Failed to initialize Winsock." << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        #endif
         if (isConnected()) {
             warning("Already connected to server");
             return false;
         }
-        _socket = socket(AF_INET, SOCK_STREAM, 0);
+        _socket = socket(AF_INET, SOCK_DGRAM, 0);
         if (_socket < 0) {
             error("Error creating socket");
             return false;
         }
 
+        std::memset(&_address, 0, sizeof(_address));
         _address.sin_family = AF_INET;
         _address.sin_addr.s_addr = INADDR_ANY;
         _address.sin_port = htons(_port);
@@ -335,9 +379,8 @@ public:
             error("Invalid server address");
             return false;
         }
-
-        if (connect(_socket, (struct sockaddr*)&_address, sizeof(_address)) < 0) {
-            // error("Failed to connect to server");
+        if (sendto(_socket, "Start", 6, 0, (struct sockaddr*)&_address, sizeof(_address)) < 0) {
+            error("Send failed");
             return false;
         }
         info("Connected to server at " + _ip + ":" + std::to_string(_port));
@@ -388,8 +431,8 @@ public:
             }
             info("Reconnected to server");
         }
-        if (send(_socket, data.c_str(), data.size(), 0) < 0) {
-            error("Failed to send data to server");
+        if (sendto(_socket, data.c_str(), data.size(), MSG_DONTWAIT, (struct sockaddr*)&_address, sizeof(_address)) < 0) {
+            error("Send failed");
             return false;
         }
         debug("Sent data to server: " + data);
@@ -401,40 +444,22 @@ public:
      * @return std::string
      */
     std::string receiveData() {
-        if (!isConnected()) {
-            error("Not connected to server");
+        char buffer[BUFFER_SIZE];
+        std::memset(buffer, 0, BUFFER_SIZE);
+        int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT, (struct sockaddr*)&_address, (socklen_t*)sizeof(_address));
+        if (bytes_received < 0) {
+            if (buffer[0] == '\0')
+                return std::string(buffer);
+            // return "";
+        }
+        if (bytes_received == 0) {
+            warning("Server disconnected");
+            disconnect();
             return "";
         }
-
-        struct pollfd _fds;
-        _fds.fd = _socket;
-        _fds.events = POLLIN;
-
-        int pollResult = poll(&_fds, 1, 0);
-        if (pollResult == -1) {
-            error("Poll error");
-            return "";
-        } else if (pollResult == 0) {
-            return "";
-        }
-
-        if (_fds.revents & POLLIN) {
-            char buffer[1024] = {0};
-            int valread = read(_socket, buffer, 1024);
-            if (valread < 0) {
-                error("Failed to read data from server");
-                return "";
-            }
-            if (valread == 0) {
-                error("Server disconnected");
-                disconnect();
-                return "";
-            }
-            std::string data(buffer, valread);
-            debug("Received data from server: " + data);
-            return data;
-        }
-        return "";
+        std::string message = std::string(buffer);
+        debug("Received data from server: " + message);
+        return message;
     }
 
     /**
@@ -451,9 +476,12 @@ public:
 private:
     bool _connected = false;
     int _socket;
-    struct sockaddr_in _address;
+    sockaddr_in _address;
     int _port;
     std::string _ip;
+    #ifdef _WIN32
+        WSADATA wsaData;
+    #endif
 
     void info(const std::string& message) {
         std::cout << "[INFO]: " << message << std::endl;
