@@ -27,7 +27,7 @@ jobs:
       run: touch ./html/.nojekyll
 
     - name: Move HTML content to root
-      run: ls
+      run: mv ./html/* ./
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
