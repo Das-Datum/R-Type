@@ -7,20 +7,20 @@ void all() {
 }
 
 int main() {
-    gCoordinator.init();
-    auto networkSystem = gCoordinator.registerSystem<ServerSystem>();
+    // gCoordinator.init();
+    // auto networkSystem = gCoordinator.registerSystem<ServerSystem>();
 
-    //? NetworkSystem
-    networkSystem->init("127.0.0.0", 5000);
-    networkSystem->addCommand("all", all, "Print all command");
+    // //? NetworkSystem
+    // networkSystem->init("127.0.0.0", 5000);
+    // networkSystem->addCommand("all", all, "Print all command");
 
 
-    //! MAIN LOOP
-    while (networkSystem->isRunning()) {
-        //? LOGIC
+    // //! MAIN LOOP
+    // while (networkSystem->isRunning()) {
+    //     //? LOGIC
 
-        //? NETWORK
-        networkSystem->update();
-    }
+    //     //? NETWORK
+    //     networkSystem->update();
+    // }
     return 0;
 }
