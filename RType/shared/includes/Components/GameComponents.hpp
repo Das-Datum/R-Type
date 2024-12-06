@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib.h>
+#include "EnemiesComponents.hpp"
 
 struct TransformComponent {
     Vector2 position;
@@ -11,20 +12,24 @@ struct TransformComponent {
         : position(pos), rotation(rot), scale(scl), size(sz) {}
 };
 
-struct PhysicsComponent {
+struct FixedVelocityComponent {
     Vector2 velocity;
+
+    FixedVelocityComponent(Vector2 vel = {0, 0}) : velocity(vel) {}
 };
+
+struct DestroyOutOfBoundsComponent {};
+struct BlockOutOfBoundsComponent {};
 
 struct CollisionComponent {
     Rectangle collider;
+    float rotation;
 
-    CollisionComponent(Rectangle rect)
-        : collider(rect) {}
+    CollisionComponent(Rectangle col = {0, 0, 0, 0}, float rot = 0.0f)
+        : collider(col), rotation(rot) {}
 };
 
-
 struct ShipComponent {};
-struct EnemyComponent {};
 
 struct BulletComponent {
     float size;
