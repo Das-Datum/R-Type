@@ -33,6 +33,16 @@ class StageLoader {
         }
         ~StageLoader() = default;
 
+        /**
+         * @brief Load the config file and store it in the _config attribute
+         *
+         * @param void
+         *
+         * @throw std::runtime_error if the file can't be opened
+         * @throw std::runtime_error if no valid mob type is found
+         *
+         * @return void
+         */
         void loadConfig() {
             std::cout << "Loading config file: " << _config_filepath << std::endl;
             std::ifstream file(_config_filepath);
@@ -61,57 +71,28 @@ class StageLoader {
             }
         };
 
+        /**
+         * @brief Generate waves of mobs
+         *
+         * @param void
+         *
+         * @return void
+         */
         void genWaves() {
-            std::cout << "Generating waves" << std::endl;
-            _waveCount = _config.time / 15 + (rand() % 5 - 2); // % 5 -> [0;4] / -2 -> [-2;2]
+            _waveCount = _config.time / 15 + (rand() % 5 - 2);
 
-            // ASSIGN WAVES DURATION
-            // init vector with constant duration
-            for (std::size_t i = 0; i < _waveCount; i++) {
-                _wavesDurations.push_back((_config.time - getSumWavesInterval()) / _waveCount);
-            }
-            // regulate duration with random
-            for (std::size_t i = 0; i < _waveCount; i++) {
-                float random_duration = (rand() % 4) + 1;
-                _wavesDurations[_waveCount - i - 1] += random_duration;
-                _wavesDurations[i] -= random_duration;
-            }
-            // check if duration is in range
-            if (getSumWavesDurations() + getSumWavesInterval() == _config.time) {
-                std::cout << "Waves durations are correct" << std::endl;
-            } else {
-                std::cerr << "Waves durations are incorrect: " << getSumWavesDurations() + getSumWavesInterval() << " > " << _config.time << std::endl;
-            }
-
-            // ASSIGN NUMBER OF MOBS
-            for (std::size_t i = 0; i < _waveCount; i++) {
-                const std::size_t waveDuration = _wavesDurations[i];
-                const std::size_t countMobs = (rand() % (waveDuration * 3 - waveDuration)) + waveDuration;
-                _wavesMobsCount.push_back(countMobs);
-            }
-
-            // ASSIGN MOBS TYPES
-            for (std::size_t i = 0; i < _waveCount; i++) {
-                std::vector<std::size_t> mobsTypes;
-                std::size_t nbMobsTypesForWave = (rand() % _config.mobs_types.size()) + 1;
-                std::vector<std::string> remainingTypeToChoose = _config.mobs_types;
-
-                for (std::size_t j = 0; j < nbMobsTypesForWave; j++) {
-                    std::size_t randomIndex = rand() % remainingTypeToChoose.size();
-                    std::string type = remainingTypeToChoose[randomIndex];
-
-                    remainingTypeToChoose.erase(remainingTypeToChoose.begin() + randomIndex);
-                    auto it = std::find(_config.mobs_types.begin(), _config.mobs_types.end(), type);
-                    if (it != _config.mobs_types.end()) {
-                        std::size_t index = std::distance(_config.mobs_types.begin(), it);
-                        mobsTypes.push_back(index);
-                    }
-                }
-
-                _wavesMobsTypes[i] = mobsTypes;
-            }
+            this->defineWavesDurations();
+            this->defineWavesMobsCount();
+            this->defineWavesMobsTypes();
         };
 
+        /**
+         * @brief Generate mobs entities
+         *
+         * @param gCoordinator ECS Coordinator
+         *
+         * @return void
+         */
         void genMobsEntities(Coordinator& gCoordinator) {
             for (std::size_t i = 0; i < _waveCount; i++) {
                 std::size_t waveMobsCount = _wavesMobsCount[i];
@@ -194,6 +175,11 @@ class StageLoader {
         std::vector<std::size_t> _wavesMobsCount;
         std::map<std::size_t, std::vector<std::size_t>> _wavesMobsTypes;
 
+        /**
+         * @brief Get the Sum Waves Durations object
+         *
+         * @return float
+         */
         float getSumWavesDurations() const {
             float sum = 0;
             for (auto duration : _wavesDurations) {
@@ -202,10 +188,22 @@ class StageLoader {
             return sum;
         };
 
+        /**
+         * @brief Get the Sum Waves Interval object
+         *
+         * @return float
+         */
         float getSumWavesInterval() const {
             return _waveCount * WAVE_TIME_INTERVAL;
         };
 
+        /**
+         * @brief
+         *
+         * @param type
+         * @return true
+         * @return false
+         */
         const bool isMobTypeValid(const std::string& type) const {
             for (const auto& validType : VALID_MOBS_TYPES) {
                 if (type == validType) {
@@ -213,5 +211,72 @@ class StageLoader {
                 }
             }
             return false;
+        }
+
+        /**
+         * @brief Define waves durations
+         *
+         * @param void
+         *
+         * @return void
+         */
+        void defineWavesDurations() {
+            // init duration with constant values
+            for (std::size_t i = 0; i < _waveCount; i++) {
+                _wavesDurations.push_back((_config.time - this->getSumWavesInterval()) / _waveCount);
+            }
+            // regulate duration with random values
+            for (std::size_t i = 0; i < _waveCount; i++) {
+                float random_duration = (rand() % 4) + 1;
+                _wavesDurations[_waveCount - i - 1] += random_duration;
+                _wavesDurations[i] -= random_duration;
+            }
+            // check if durations fill the whole time of the stage
+            if (this->getSumWavesDurations() + this->getSumWavesInterval() != _config.time)
+                std::cerr << "Waves durations are incorrect: " << this->getSumWavesDurations() + this->getSumWavesInterval() << " > " << _config.time << std::endl;
+        }
+
+        /**
+         * @brief Define waves mobs count
+         *
+         * @param void
+         *
+         * @return void
+         */
+        void defineWavesMobsCount() {
+            for (std::size_t i = 0; i < _waveCount; i++) {
+                const std::size_t waveDuration = _wavesDurations[i];
+                const std::size_t countMobs = (rand() % (waveDuration * 3 - waveDuration)) + waveDuration;
+                _wavesMobsCount.push_back(countMobs);
+            }
+        }
+
+        /**
+         * @brief Define waves mobs types
+         *
+         * @param void
+         *
+         * @return void
+         */
+        void defineWavesMobsTypes() {
+            for (std::size_t i = 0; i < _waveCount; i++) {
+                std::vector<std::size_t> mobsTypes;
+                std::size_t nbMobsTypesForWave = (rand() % _config.mobs_types.size()) + 1;
+                std::vector<std::string> remainingTypeToChoose = _config.mobs_types;
+
+                for (std::size_t j = 0; j < nbMobsTypesForWave; j++) {
+                    std::size_t randomIndex = rand() % remainingTypeToChoose.size();
+                    std::string type = remainingTypeToChoose[randomIndex];
+
+                    remainingTypeToChoose.erase(remainingTypeToChoose.begin() + randomIndex);
+                    auto it = std::find(_config.mobs_types.begin(), _config.mobs_types.end(), type);
+                    if (it != _config.mobs_types.end()) {
+                        std::size_t index = std::distance(_config.mobs_types.begin(), it);
+                        mobsTypes.push_back(index);
+                    }
+                }
+
+                _wavesMobsTypes[i] = mobsTypes;
+            }
         }
 };
