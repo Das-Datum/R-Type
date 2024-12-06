@@ -5,6 +5,7 @@
 #include <fstream>
 #include <ctime>
 #include <iomanip>
+#include <sstream>
 
 /**
  * @class Logger
