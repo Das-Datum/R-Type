@@ -9,6 +9,7 @@ endif()
 
 file(GLOB CLIENT_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Network/src/*.cpp"
 )
 
 add_executable(client
@@ -18,6 +19,7 @@ add_executable(client
 target_include_directories(client PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/includes
     ${CMAKE_SOURCE_DIR}/ECS/includes
+    ${CMAKE_SOURCE_DIR}/Network/includes
     ${CMAKE_SOURCE_DIR}/shared/includes
 )
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "System.hpp"
-#include "DefaultComponents.hpp"
 #include "Coordinator.hpp"
 #include <iostream>
 #include <cstring>
@@ -15,7 +14,7 @@
 
 
 #ifdef _WIN32
-    #include <winsock2.h>
+    // #include <winsock2.h>
     #include <ws2tcpip.h>
     #pragma comment(lib, "ws2_32.lib")
 #else
@@ -103,7 +102,7 @@ public:
         std::vector<Entity> entityList(entities.begin(), entities.end());
         for (size_t i = 0; i < entityList.size(); ++i) {
             auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
-            sendto(_server_fd, "STOP", 4, MSG_DONTWAIT, (struct sockaddr*)&player.address, sizeof(player.address));
+            sendto(_server_fd, "STOP", 4, 64, (struct sockaddr*)&player.address, sizeof(player.address));
             gCoordinator.destroyEntity(entityList[i]);
         }
         #ifdef _WIN32
@@ -126,7 +125,7 @@ public:
         sockaddr_in client_addr;
         socklen_t client_len = sizeof(client_addr);
         std::memset(buffer, 0, BUFFER_SIZE);
-        int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT, (struct sockaddr*)&client_addr, &client_len);
+        int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 64, (struct sockaddr*)&client_addr, &client_len);
         if (bytes_received < 0) {
             return;
         }
@@ -151,7 +150,7 @@ public:
         if (!client_exists) {
             for (size_t i = 0; i < entityList.size(); ++i) {
                 auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
-                sendto(_server_fd, "NEW", 3, MSG_DONTWAIT, (struct sockaddr*)&player.address, client_len);
+                sendto(_server_fd, "NEW", 3, 64, (struct sockaddr*)&player.address, client_len);
             }
             Entity client = createNewClient(client_addr, "Player", Vector2{0, 0});
             auto &player = gCoordinator.getComponent<PlayerNetworkComponents>(client);
@@ -286,7 +285,7 @@ public:
 
         if (client_exists) {
             debug("Sent data to player " + std::to_string(ntohs(client_addr.sin_port)) + ": " + message);
-            sendto(_server_fd, message.c_str(), message.size(), MSG_DONTWAIT, (struct sockaddr*)&client_addr, sizeof(client_addr));
+            sendto(_server_fd, message.c_str(), message.size(), 64, (struct sockaddr*)&client_addr, sizeof(client_addr));
         } else {
             error("Client not found");
         }
@@ -325,6 +324,9 @@ private:
         prompt();
     }
 
+    #ifdef _WIN32
+        WSADATA _wsaData;
+    #endif
     struct sockaddr_in _address;
     int _port;
     std::string _ip;
@@ -409,7 +411,12 @@ public:
      */
     void disconnect() {
         if (isConnected()) {
-            close(_socket);
+            #ifdef _WIN32
+                closesocket(_socket);
+                WSACleanup();
+            #else
+                close(_socket);
+            #endif
             _connected = false;
             info("Disconnected from server");
         } else {
@@ -446,7 +453,7 @@ public:
             }
             info("Reconnected to server");
         }
-        if (sendto(_socket, data.c_str(), data.size(), MSG_DONTWAIT, (struct sockaddr*)&_address, sizeof(_address)) < 0) {
+        if (sendto(_socket, data.c_str(), data.size(), 64, (struct sockaddr*)&_address, sizeof(_address)) < 0) {
             error("Send failed");
             return false;
         }
@@ -461,7 +468,7 @@ public:
     std::string receiveData() {
         char buffer[BUFFER_SIZE];
         std::memset(buffer, 0, BUFFER_SIZE);
-        int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT, (struct sockaddr*)&_address, (socklen_t*)sizeof(_address));
+        int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, 64, (struct sockaddr*)&_address, (socklen_t*)sizeof(_address));
         if (bytes_received < 0) {
             if (buffer[0] == '\0')
                 return std::string(buffer);

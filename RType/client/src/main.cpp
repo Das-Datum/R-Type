@@ -1,18 +1,4 @@
-#include "../../../ECS/includes/ECS.hpp"
-#include "../includes/Components.hpp"
-#include "../includes/TexturesManager.hpp"
-#include "../includes/EntitiesManager.hpp"
-
-#include "../includes/Systems/ClientRelatives.hpp"
-#include "../includes/Systems/EnemiesRelatives.hpp"
-#include "../includes/Systems/SpriteRelatives.hpp"
-#include "../includes/Systems/Generics.hpp"
-#include "../includes/Systems/BackgroundScrollSystem.hpp"
-#include "../includes/Systems/ClientNetwork.hpp"
-
-#include "../../shared/includes/Components/GameComponents.hpp"
-#include "../../shared/includes/Systems/Game.hpp"
-#include "../../shared/includes/Systems/CollisionSystem.hpp"
+#include "../includes/client.hpp"
 
 Coordinator gCoordinator;
 
@@ -62,8 +48,7 @@ int main() {
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
 
     auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
-    // auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
-    auto clientNetworkSystem = gCoordinator.registerSystem<ClientNetworkSystem>();
+    auto clientNetworkSystem = gCoordinator.registerSystem<ClientSystem>();
 
     Signature signature;
 
@@ -154,7 +139,10 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        clientNetworkSystem->update();
+        std::string mes = clientNetworkSystem->update_read();
+        if (mes != "") {
+            std::cout << mes << std::endl;
+        }
 
         //? RENDER
         BeginDrawing();
