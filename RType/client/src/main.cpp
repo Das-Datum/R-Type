@@ -8,6 +8,7 @@
 #include "../includes/Systems/SpriteRelatives.hpp"
 #include "../includes/Systems/Generics.hpp"
 #include "../includes/Systems/BackgroundScrollSystem.hpp"
+#include "../includes/Systems/ClientNetwork.hpp"
 
 #include "../../shared/includes/Components/GameComponents.hpp"
 #include "../../shared/includes/Systems/Game.hpp"
@@ -62,10 +63,12 @@ int main() {
 
     auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
     // auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
+    auto clientNetworkSystem = gCoordinator.registerSystem<ClientNetworkSystem>();
+
     Signature signature;
 
     //? NetworkSystem
-    // networkSystem->init("127.0.0.0", 5000);
+    clientNetworkSystem->init("127.0.0.0", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -151,10 +154,7 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        // std::string response = networkSystem->update();
-        // if (response != "") {
-        //     networkSystem->sendData("Ok");
-        // }
+        clientNetworkSystem->update();
 
         //? RENDER
         BeginDrawing();
