@@ -57,12 +57,13 @@ int main() {
     networkSystem->init("127.0.0.0", 5000);
 
 
-    //! MAIN LOOP
-    while (networkSystem->isRunning()) {
-        //? LOGIC
 
-        //? NETWORK
-        networkSystem->update();
+     //! MAIN LOOP
+     while (networkSystem->isRunning()) {
+         //? LOGIC
+
+         //? NETWORK
+         networkSystem->update();
     }
     return 0;
 }

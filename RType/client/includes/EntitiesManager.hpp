@@ -25,7 +25,7 @@ public:
         gCoordinator.addComponent(ship, InputComponent());
         gCoordinator.addComponent(ship, TimerComponent());
 
-        std::string shipTexturePath = "../assets/textures/ships/ship_1.png";
+        std::string shipTexturePath = "./assets/textures/ships/ship_1.png";
         auto& texturesManager = TexturesManager::getInstance();
         Texture2D shipTexture = texturesManager.loadTexture(shipTexturePath);
         Rectangle initialFrame = texturesManager.getFrame(shipTexturePath, 2, 5);
@@ -61,7 +61,7 @@ public:
         gCoordinator.addComponent(bullet, PhysicsComponent{velocity});
 
         auto& texturesManager = TexturesManager::getInstance();
-        std::string bulletTexturePath = "../assets/textures/bullets/bullet_1.png";
+        std::string bulletTexturePath = "./assets/textures/bullets/bullet_1.png";
         Texture2D bulletTexture = texturesManager.loadTexture(bulletTexturePath);
         Rectangle initialFrame = texturesManager.getFrame(bulletTexturePath, 0, 2);
 
@@ -95,7 +95,7 @@ public:
         gCoordinator.addComponent(enemy, EnemyComponent());
 
         auto& texturesManager = TexturesManager::getInstance();
-        std::string enemyTexturePath = "../assets/textures/enemies/enemy_1.png";
+        std::string enemyTexturePath = "./assets/textures/enemies/enemy_1.png";
         Texture2D enemyTexture = texturesManager.loadTexture(enemyTexturePath);
         Rectangle initialFrame = texturesManager.getFrame(enemyTexturePath, 0, 12);
 

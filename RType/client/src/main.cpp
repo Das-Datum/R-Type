@@ -23,6 +23,7 @@ int main() {
     auto& entitiesManager = EntitiesManager::getInstance();
     entitiesManager.setWindowHeight(static_cast<float>(WINDOW_HEIGHT));
 
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
@@ -107,7 +108,7 @@ int main() {
 
     //* Backgrounds
     entitiesManager.createScrollingBackground(
-        "../assets/textures/backgrounds/bg-back.png",
+        "./assets/textures/backgrounds/bg-back.png",
         {0, 0},
         static_cast<float>(WINDOW_WIDTH),
         static_cast<float>(WINDOW_HEIGHT),
@@ -116,7 +117,7 @@ int main() {
     );
 
     entitiesManager.createScrollingBackground(
-        "../assets/textures/backgrounds/bg-stars.png",
+        "./assets/textures/backgrounds/bg-stars.png",
         {0, 0},
         static_cast<float>(WINDOW_WIDTH),
         static_cast<float>(WINDOW_HEIGHT),
