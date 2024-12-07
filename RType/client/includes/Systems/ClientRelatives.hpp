@@ -1,9 +1,9 @@
 #pragma once
-#include <cmath>
 #include "../../../../ECS/includes/ECS.hpp"
 #include "../../../shared/includes/Components/GameComponents.hpp"
-#include "../Components.hpp"
 #include "../../includes/EntitiesManager.hpp"
+#include "../Components.hpp"
+#include <cmath>
 
 class RenderSystem : public System {
   public:
@@ -14,10 +14,9 @@ class RenderSystem : public System {
             sortedEntities.emplace_back(sprite.zIndex, entity);
         }
 
-        std::sort(sortedEntities.begin(), sortedEntities.end(),
-            [](const std::pair<int, Entity> &a, const std::pair<int, Entity> &b) {
-                return a.first < b.first;
-            });
+        std::sort(sortedEntities.begin(), sortedEntities.end(), [](const std::pair<int, Entity> &a, const std::pair<int, Entity> &b) {
+            return a.first < b.first;
+        });
 
         for (auto const &pair : sortedEntities) {
             Entity entity = pair.second;
@@ -39,8 +38,7 @@ class RenderSystem : public System {
                         transform.position.x + (transform.size.x * i) - effectiveOffset,
                         transform.position.y,
                         transform.size.x,
-                        transform.size.y
-                    };
+                        transform.size.y};
 
                     DrawTexturePro(sprite.texture, sourceRect, destRect, Vector2{0, 0}, transform.rotation, WHITE);
                 }
@@ -49,6 +47,7 @@ class RenderSystem : public System {
 
                 //! IS A REGULAR SPRITE
                 auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+                auto &collider = gCoordinator.getComponent<CollisionComponent>(entity);
 
                 if (gCoordinator.hasComponent<SpriteComponent>(entity)) {
                     auto &sprite = gCoordinator.getComponent<SpriteComponent>(entity);
@@ -70,16 +69,25 @@ class RenderSystem : public System {
                         sprite.sourceRect.x = spriteFrame.frameIndex * sprite.sourceRect.width;
                     }
 
-                    DrawTexturePro(sprite.texture,
+                    float w = collider.collider.width;
+                    float h = collider.collider.height;
+                    float x = transform.position.x + collider.collider.x;
+                    float y = transform.position.y + collider.collider.y;
+
+                    Rectangle destRect = {x, y, w, h};
+                    Vector2 origin = {w * 0.5f, h * 0.5f};
+                    float rotationAngle = collider.rotation;
+
+                    DrawTexturePro(
+                        sprite.texture,
                         sprite.sourceRect,
-                        Rectangle{transform.position.x,
-                            transform.position.y,
-                            transform.size.x,
-                            transform.size.y},
-                        Vector2{0, 0},
-                        transform.rotation,
+                        destRect,
+                        origin,
+                        rotationAngle,
                         WHITE);
                 }
+
+                // DrawCircle(transform.position.x, transform.position.y, 5, GREEN);
             }
         }
 
@@ -90,13 +98,41 @@ class RenderSystem : public System {
                 if (gCoordinator.hasComponent<CollisionComponent>(entity)) {
                     auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
                     auto &collider = gCoordinator.getComponent<CollisionComponent>(entity);
-                    Rectangle rect = {
-                        transform.position.x + collider.collider.x,
-                        transform.position.y + collider.collider.y,
-                        collider.collider.width,
-                        collider.collider.height
+
+                    float angle = collider.rotation * (PI / 180.0f);
+                    float w = collider.collider.width;
+                    float h = collider.collider.height;
+                    float centerX = transform.position.x + collider.collider.x;
+                    float centerY = transform.position.y + collider.collider.y;
+
+                    float halfW = w * 0.5f;
+                    float halfH = h * 0.5f;
+
+                    Vector2 pivot = transform.position;
+                    Vector2 corners[4] = {
+                        {centerX - halfW, centerY - halfH}, // topleft
+                        {centerX + halfW, centerY - halfH}, // topright
+                        {centerX + halfW, centerY + halfH}, // bottomright
+                        {centerX - halfW, centerY + halfH}  // bottomleft
                     };
-                    DrawRectangleLinesEx(rect, 1.0f, RED);
+
+                    float cosA = cosf(angle);
+                    float sinA = sinf(angle);
+
+                    for (int i = 0; i < 4; i++) {
+                        float rx = corners[i].x - pivot.x;
+                        float ry = corners[i].y - pivot.y;
+                        float rotatedX = rx * cosA - ry * sinA;
+                        float rotatedY = rx * sinA + ry * cosA;
+
+                        corners[i].x = pivot.x + rotatedX;
+                        corners[i].y = pivot.y + rotatedY;
+                    }
+
+                    DrawLineEx(corners[0], corners[1], 1.0f, RED);
+                    DrawLineEx(corners[1], corners[2], 1.0f, RED);
+                    DrawLineEx(corners[2], corners[3], 1.0f, RED);
+                    DrawLineEx(corners[3], corners[0], 1.0f, RED);
                 }
             }
         }
@@ -135,7 +171,7 @@ class InputSystem : public System {
             }
 
             if (IsKeyReleased(KEY_SPACE) && timer.active) {
-                auto& entitiesManager = EntitiesManager::getInstance();
+                auto &entitiesManager = EntitiesManager::getInstance();
 
                 Vector2 bulletPosition = {transform.position.x + transform.size.x / 2,
                     transform.position.y};
