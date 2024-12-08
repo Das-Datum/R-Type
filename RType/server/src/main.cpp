@@ -10,7 +10,7 @@ int main() {
 
     gCoordinator.init();
 
-    // gCoordinator.registerComponent<PlayerNetworkComponents>();
+    // gCoordinator.registerComponent<NetworkComponents>();
     gCoordinator.registerComponent<ShipComponent>();
     gCoordinator.registerComponent<BulletComponent>();
     gCoordinator.registerComponent<EnemyComponent>();
@@ -40,7 +40,7 @@ int main() {
 
     //? NetworkSystem
     signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<PlayerNetworkComponents>(), true);
+    signature.set(gCoordinator.getComponentTypeID<NetworkComponents>(), true);
     gCoordinator.setSystemSignature<ServerSystem>(signature);
 
     networkSystem->init("127.0.0.0", 5000);
