@@ -321,7 +321,7 @@ std::string ClientSystem::receiveData() {
     address.sin_port = htons(_port);
     if (inet_pton(AF_INET, _ip.c_str(), &address.sin_addr) <= 0) {
         error("Invalid server address");
-        return false;
+        return "";
     }
 
     int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, 64, (struct sockaddr*)&address, (socklen_t*)sizeof(address));

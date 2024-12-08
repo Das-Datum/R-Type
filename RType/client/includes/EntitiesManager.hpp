@@ -142,7 +142,8 @@ public:
         float ENTITY_HEIGHT = WINDOW_HEIGHT * 0.025f;
         float ENTITY_WIDTH = ENTITY_HEIGHT * frameAspectRatio;
 
-        float rotation = atan2f(velocity.y, velocity.x) * RAD2DEG;
+        // float rotation = atan2f(velocity.y, velocity.x) * RAD2DEG;
+        float rotation = 0.5;
 
         gCoordinator.addComponent(bullet, SpriteComponent(
             bulletTexture,
