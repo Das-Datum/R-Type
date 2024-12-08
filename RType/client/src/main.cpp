@@ -53,7 +53,7 @@ int main() {
     Signature signature;
 
     //? NetworkSystem
-    clientNetworkSystem->init("127.0.0.0", 5000);
+    clientNetworkSystem->init("127.0.0.1", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
