@@ -112,7 +112,7 @@ void ServerSystem::readClients() {
         }
         if (client_addr.sin_addr.s_addr == client_addr.sin_addr.s_addr && client_addr.sin_port == client_addr.sin_port) {
             client_exists = true;
-            player.lastMessageReceived = buffer;
+            // player.lastMessageReceived = buffer;
             break;
         }
     }
