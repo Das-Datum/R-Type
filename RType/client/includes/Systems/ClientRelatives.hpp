@@ -3,11 +3,39 @@
 #include "../../../shared/includes/Components/GameComponents.hpp"
 #include "../../includes/EntitiesManager.hpp"
 #include "../Components.hpp"
+#include "raylib.h"
+#include "raymath.h"
+#include <algorithm>
 #include <cmath>
+#include <vector>
 
 class RenderSystem : public System {
   public:
+    float baseWidth = 1920.0f;
+    float baseHeight = 1080.0f;
+    float viewportX = 0.0f;
+    float viewportY = 0.0f;
+    float viewportWidth = 0.0f;
+    float viewportHeight = 0.0f;
+
+    void setViewport(float x, float y, float width, float height) {
+        viewportX = x;
+        viewportY = y;
+        viewportWidth = width;
+        viewportHeight = height;
+    }
+
     void update() {
+        int screenWidth = GetScreenWidth();
+        int screenHeight = GetScreenHeight();
+
+        float aspectRatio = 16.0f / 9.0f;
+        float scale = fmin(screenWidth / baseWidth, screenHeight / baseHeight);
+        viewportWidth = baseWidth * scale;
+        viewportHeight = baseHeight * scale;
+        viewportX = (screenWidth - viewportWidth) * 0.5f;
+        viewportY = (screenHeight - viewportHeight) * 0.5f;
+
         std::vector<std::pair<int, Entity>> sortedEntities;
         for (auto const &entity : entities) {
             auto &sprite = gCoordinator.getComponent<SpriteComponent>(entity);
@@ -21,31 +49,39 @@ class RenderSystem : public System {
         for (auto const &pair : sortedEntities) {
             Entity entity = pair.second;
 
-            //? HANDLE SPRITE TYPE
             if (gCoordinator.hasComponent<BackgroundScrollComponent>(entity)) {
-
-                //! IS A BACKGROUND (SCROLLING)
+                //! Background rendering
                 auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
                 auto &sprite = gCoordinator.getComponent<SpriteComponent>(entity);
                 auto &backgroundScroll = gCoordinator.getComponent<BackgroundScrollComponent>(entity);
 
-                float scaleX = transform.size.x / sprite.sourceRect.width;
+                float bgScaleX = viewportWidth / (float)sprite.texture.width;
+                float bgScaleY = viewportHeight / (float)sprite.texture.height;
+                float bgScale = fmin(bgScaleX, bgScaleY);
+                float scaledWidth = viewportWidth;
+                float scaledHeight = viewportHeight;
                 float effectiveOffset = fmod(backgroundScroll.offset, transform.size.x);
+                float ratio = scaledWidth / transform.size.x;
+                float scaledOffset = effectiveOffset * ratio;
 
                 for (int i = -1; i <= 1; i++) {
                     Rectangle sourceRect = sprite.sourceRect;
                     Rectangle destRect = {
-                        transform.position.x + (transform.size.x * i) - effectiveOffset,
-                        transform.position.y,
-                        transform.size.x,
-                        transform.size.y};
+                        viewportX + (scaledWidth * i) - scaledOffset,
+                        viewportY,
+                        scaledWidth,
+                        scaledHeight};
 
                     DrawTexturePro(sprite.texture, sourceRect, destRect, Vector2{0, 0}, transform.rotation, WHITE);
                 }
 
-            } else {
+                DrawRectangle(0, 0, screenWidth, (int)viewportY, BLACK);
+                DrawRectangle(0, (int)(viewportY + viewportHeight), screenWidth, (int)(screenHeight - (viewportY + viewportHeight)), BLACK);
+                DrawRectangle(0, (int)viewportY, (int)viewportX, (int)viewportHeight, BLACK);
+                DrawRectangle((int)(viewportX + viewportWidth), (int)viewportY, (int)(screenWidth - (viewportX + viewportWidth)), (int)viewportHeight, BLACK);
 
-                //! IS A REGULAR SPRITE
+            } else {
+                //! Entities rendering
                 auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
                 auto &collider = gCoordinator.getComponent<CollisionComponent>(entity);
 
@@ -56,10 +92,8 @@ class RenderSystem : public System {
                         auto &animation = gCoordinator.getComponent<SpriteAnimationComponent>(entity);
                         animation.elapsedTime += GetFrameTime();
                         if (animation.elapsedTime >= animation.frameDuration) {
-                            animation.currentFrame =
-                                (animation.currentFrame + 1) % animation.frameCount;
+                            animation.currentFrame = (animation.currentFrame + 1) % animation.frameCount;
                             animation.elapsedTime = 0.0f;
-
                             sprite.sourceRect.x = animation.currentFrame * sprite.sourceRect.width;
                         }
                     }
@@ -69,70 +103,83 @@ class RenderSystem : public System {
                         sprite.sourceRect.x = spriteFrame.frameIndex * sprite.sourceRect.width;
                     }
 
-                    float w = collider.collider.width;
-                    float h = collider.collider.height;
-                    float x = transform.position.x + collider.collider.x;
-                    float y = transform.position.y + collider.collider.y;
+                    float desiredHeight = transform.size.y * viewportHeight;
+                    float spriteAspectRatio = (float)sprite.sourceRect.width / sprite.sourceRect.height;
+                    float scaledWidth = desiredHeight * spriteAspectRatio;
+                    float scaledHeight = desiredHeight;
+                    float scaledX = viewportX + (transform.position.x * viewportWidth);
+                    float scaledY = viewportY + (transform.position.y * viewportHeight);
 
-                    Rectangle destRect = {x, y, w, h};
-                    Vector2 origin = {w * 0.5f, h * 0.5f};
-                    float rotationAngle = collider.rotation;
+                    Vector2 origin = {0, 0};
+                    if (gCoordinator.hasComponent<BulletComponent>(entity)) {
+                        origin = {scaledWidth - (sprite.sourceRect.width * 2), scaledHeight - (sprite.sourceRect.height * 2)};
+                    }
 
-                    DrawTexturePro(
-                        sprite.texture,
-                        sprite.sourceRect,
-                        destRect,
-                        origin,
-                        rotationAngle,
-                        WHITE);
+                    Rectangle destRect = {
+                        scaledX,
+                        scaledY,
+                        scaledWidth,
+                        scaledHeight};
+
+                    DrawTexturePro(sprite.texture, sprite.sourceRect, destRect, origin, collider.rotation, WHITE);
                 }
-
-                // DrawCircle(transform.position.x, transform.position.y, 5, GREEN);
             }
         }
 
         //! Developer Tool (Draw Colliders)
         if (IsKeyDown(KEY_C)) {
+
+            DrawRectangleLines((int)viewportX, (int)viewportY, (int)viewportWidth, (int)viewportHeight, RED);
+
             for (auto const &pair : sortedEntities) {
                 Entity entity = pair.second;
                 if (gCoordinator.hasComponent<CollisionComponent>(entity)) {
                     auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
                     auto &collider = gCoordinator.getComponent<CollisionComponent>(entity);
+                    auto &sprite = gCoordinator.getComponent<SpriteComponent>(entity);
 
                     float angle = collider.rotation * (PI / 180.0f);
-                    float w = collider.collider.width;
-                    float h = collider.collider.height;
-                    float centerX = transform.position.x + collider.collider.x;
-                    float centerY = transform.position.y + collider.collider.y;
 
-                    float halfW = w * 0.5f;
-                    float halfH = h * 0.5f;
+                    float desiredHeight = transform.size.y * viewportHeight;
+                    float spriteAspectRatio = (float)sprite.sourceRect.width / sprite.sourceRect.height;
+                    float scaledWidth = desiredHeight * spriteAspectRatio;
+                    float scaledHeight = desiredHeight;
+                    float scaledX = viewportX + (transform.position.x * viewportWidth);
+                    float scaledY = viewportY + (transform.position.y * viewportHeight);
 
-                    Vector2 pivot = transform.position;
-                    Vector2 corners[4] = {
-                        {centerX - halfW, centerY - halfH}, // topleft
-                        {centerX + halfW, centerY - halfH}, // topright
-                        {centerX + halfW, centerY + halfH}, // bottomright
-                        {centerX - halfW, centerY + halfH}  // bottomleft
-                    };
-
-                    float cosA = cosf(angle);
-                    float sinA = sinf(angle);
-
-                    for (int i = 0; i < 4; i++) {
-                        float rx = corners[i].x - pivot.x;
-                        float ry = corners[i].y - pivot.y;
-                        float rotatedX = rx * cosA - ry * sinA;
-                        float rotatedY = rx * sinA + ry * cosA;
-
-                        corners[i].x = pivot.x + rotatedX;
-                        corners[i].y = pivot.y + rotatedY;
+                    Vector2 origin = {0, 0};
+                    if (gCoordinator.hasComponent<BulletComponent>(entity)) {
+                        origin = {scaledWidth * 0.5f, scaledHeight * 0.5f};
+                        scaledX += origin.x;
+                        scaledY += origin.y;
                     }
 
-                    DrawLineEx(corners[0], corners[1], 1.0f, RED);
-                    DrawLineEx(corners[1], corners[2], 1.0f, RED);
-                    DrawLineEx(corners[2], corners[3], 1.0f, RED);
-                    DrawLineEx(corners[3], corners[0], 1.0f, RED);
+                    Vector2 corners[4] = {
+                        {scaledX - origin.x, scaledY - origin.y},
+                        {scaledX - origin.x + scaledWidth, scaledY - origin.y},
+                        {scaledX - origin.x + scaledWidth, scaledY - origin.y + scaledHeight},
+                        {scaledX - origin.x, scaledY - origin.y + scaledHeight}};
+
+                    if (angle != 0) {
+                        Vector2 center = {
+                            scaledX,
+                            scaledY};
+
+                        float cosA = cosf(angle);
+                        float sinA = sinf(angle);
+
+                        for (int i = 0; i < 4; i++) {
+                            float dx = corners[i].x - center.x;
+                            float dy = corners[i].y - center.y;
+                            corners[i].x = center.x + (dx * cosA - dy * sinA);
+                            corners[i].y = center.y + (dx * sinA + dy * cosA);
+                        }
+                    }
+
+                    DrawLineEx(corners[0], corners[1], 2.0f, RED);
+                    DrawLineEx(corners[1], corners[2], 2.0f, RED);
+                    DrawLineEx(corners[2], corners[3], 2.0f, RED);
+                    DrawLineEx(corners[3], corners[0], 2.0f, RED);
                 }
             }
         }
@@ -141,19 +188,21 @@ class RenderSystem : public System {
 
 class InputSystem : public System {
   public:
+    float baseWidth = 1920.0f;
+
     void update() {
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+            float normalizedSpeed = (500.0f / 1920.0f) * GetFrameTime();
 
-            float speed = 400.0f * GetFrameTime();
             if (IsKeyDown(KEY_RIGHT))
-                transform.position.x += speed;
+                transform.position.x += normalizedSpeed;
             if (IsKeyDown(KEY_LEFT))
-                transform.position.x -= speed;
+                transform.position.x -= normalizedSpeed;
             if (IsKeyDown(KEY_UP))
-                transform.position.y -= speed;
+                transform.position.y -= normalizedSpeed;
             if (IsKeyDown(KEY_DOWN))
-                transform.position.y += speed;
+                transform.position.y += normalizedSpeed;
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
 
@@ -173,12 +222,14 @@ class InputSystem : public System {
             if (IsKeyReleased(KEY_SPACE) && timer.active) {
                 auto &entitiesManager = EntitiesManager::getInstance();
 
-                Vector2 bulletPosition = {transform.position.x + transform.size.x / 2,
-                    transform.position.y};
+                Vector2 bulletPosition = transform.position;
+                bulletPosition.x += 0.02f;
+                bulletPosition.y += 0.01f;
+
                 if (timer.elapsedTime >= timer.duration) {
-                    entitiesManager.createBullet(bulletPosition, {200.0f, 0.0f});
+                    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
                 } else {
-                    entitiesManager.createBullet(bulletPosition, {400.0f, 0.0f});
+                    entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
                 }
                 timer.active = false;
                 timer.elapsedTime = 0.0f;
