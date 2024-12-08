@@ -1,12 +1,14 @@
 #pragma once
 #include <string>
+#include <vector>
 
-struct PlayerNetworkComponents {
+struct NetworkComponents {
     std::string name;
     std::string ip;
     int port;
-    std::string lastMessageReceived;
+    std::vector<std::string> latsMessagesReceived;
+    int id;
 
-    PlayerNetworkComponents(std::string n, std::string ip, int port)
-        : name(n), ip(ip), port(port){}
+    NetworkComponents(std::string n, std::string ip, int port, int id) : name(n), ip(ip), port(port), id(id) {}
 };
+

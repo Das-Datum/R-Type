@@ -38,7 +38,8 @@ void ServerSystem::init(const std::string& ip, int port) {
     getHelp();
     info("Server is listening on port " + std::to_string(port));
     if (!_restart)
-        _terminal_thread = std::thread(&ServerSystem::handleCommand, this);
+        _terminalThread = std::thread(&ServerSystem::handleCommand, this);
+        _receivedMsgThread = std::thread(&ServerSystem::readClients, this);
     _restart = false;
 }
 
@@ -54,12 +55,12 @@ void ServerSystem::getHelp() {
 
 
 void ServerSystem::stop() {
-    if (!_restart && _terminal_thread.joinable()) {
-        _terminal_thread.detach();
+    if (!_restart && _terminalThread.joinable()) {
+        _terminalThread.detach();
     }
     std::vector<Entity> entityList(entities.begin(), entities.end());
     for (size_t i = 0; i < entityList.size(); ++i) {
-        auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+        auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
         struct sockaddr_in client_addr;
         client_addr.sin_family = AF_INET;
         client_addr.sin_port = player.port;
@@ -85,8 +86,9 @@ void ServerSystem::readClients() {
     sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
     std::memset(buffer, 0, BUFFER_SIZE);
-    int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 64, (struct sockaddr*)&client_addr, &client_len);
+    int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&client_addr, &client_len);
     if (bytes_received < 0) {
+        perror("Receive failed");
         return;
     }
 
@@ -96,11 +98,11 @@ void ServerSystem::readClients() {
     info("Received message from " + client_ip + ":" + std::to_string(client_port) + " - " + buffer);
 
 
-    std::unique_lock<std::mutex> lock(_clients_mutex);
+    std::unique_lock<std::mutex> lock(_clientsMutex);
     bool client_exists = false;
     std::vector<Entity> entityList(entities.begin(), entities.end());
     for (size_t i = 0; i < entityList.size(); ++i) {
-        auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+        auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
         struct sockaddr_in client_addr;
         client_addr.sin_family = AF_INET;
         client_addr.sin_port = player.port;
@@ -116,7 +118,7 @@ void ServerSystem::readClients() {
     }
     if (!client_exists) {
         for (size_t i = 0; i < entityList.size(); ++i) {
-            auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+            auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
             sendto(_server_fd, "NEW", 3, 64, (struct sockaddr*)&client_addr, client_len);
         }
     }
@@ -126,7 +128,7 @@ void ServerSystem::update() {
     if (_restart) {
         init(_ip, _port);
     }
-    readClients();
+    // readClients();
 }
 
 void ServerSystem::handleCommand() {
@@ -161,7 +163,7 @@ std::string ServerSystem::getOption() {
 }
 
 void ServerSystem::restart() {
-    std::unique_lock<std::mutex> lock(_clients_mutex);
+    std::unique_lock<std::mutex> lock(_clientsMutex);
     stop();
     _running = true;
     _restart = true;
@@ -175,14 +177,14 @@ void ServerSystem::help() {
 }
 
 void ServerSystem::sendDataAllPlayer() {
-    std::unique_lock<std::mutex> lock(_clients_mutex);
+    std::unique_lock<std::mutex> lock(_clientsMutex);
     if (_commandOption.size() < 2) {
         error("Invalid command option");
         return;
     }
     std::vector<Entity> entityList(entities.begin(), entities.end());
     for (size_t i = 0; i < entityList.size(); ++i) {
-        auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+        auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
         struct sockaddr_in client_addr;
         client_addr.sin_family = AF_INET;
         client_addr.sin_port = player.port;

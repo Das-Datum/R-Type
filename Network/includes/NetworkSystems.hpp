@@ -151,8 +151,9 @@ private:
     bool _restart = false;
     std::vector<std::string> _commandOption;
     std::vector<std::string> _help;
-    std::mutex _clients_mutex;
-    std::thread _terminal_thread;
+    std::mutex _clientsMutex;
+    std::thread _terminalThread;
+    std::thread _receivedMsgThread;
     std::map<std::string, std::function<void()>> _commandMap = {
         {"stop", [this]() { stop(); }},
         {"restart", [this]() { restart(); }},
