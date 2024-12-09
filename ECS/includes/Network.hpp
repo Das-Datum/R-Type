@@ -1,5 +1,6 @@
 #pragma once
 #include "System.hpp"
+#include "Coordinator.hpp"
 #include <iostream>
 #include <cstring>
 #include <vector>
@@ -9,9 +10,11 @@
 #include <functional>
 #include <sstream>
 #include <fstream>
+#include <raylib.h>
+
 
 #ifdef _WIN32
-    #include <winsock2.h>
+    // #include <winsock2.h>
     #include <ws2tcpip.h>
     #pragma comment(lib, "ws2_32.lib")
 #else
@@ -22,6 +25,8 @@
 #endif
 
 #define BUFFER_SIZE 1024
+
+extern Coordinator gCoordinator;
 
 /**
  * @class ServerSystem
@@ -94,10 +99,12 @@ public:
         if (!_restart && _terminal_thread.joinable()) {
             _terminal_thread.detach();
         }
-        for (const auto& addr : _clients_addr) {
-            sendto(_server_fd, "Server stopped", 14, MSG_DONTWAIT, (struct sockaddr*)&addr, sizeof(addr));
+        std::vector<Entity> entityList(entities.begin(), entities.end());
+        for (size_t i = 0; i < entityList.size(); ++i) {
+            auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+            sendto(_server_fd, "STOP", 4, 64, (struct sockaddr*)&player.address, sizeof(player.address));
+            gCoordinator.destroyEntity(entityList[i]);
         }
-        _clients_addr.clear();
         #ifdef _WIN32
             closesocket(_server_fd);
             WSACleanup();
@@ -113,12 +120,12 @@ public:
      * @brief Read file descriptors.
      * @return void
      */
-    void read_fds() {
+    void readClients() {
         char buffer[BUFFER_SIZE];
         sockaddr_in client_addr;
         socklen_t client_len = sizeof(client_addr);
         std::memset(buffer, 0, BUFFER_SIZE);
-        int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT, (struct sockaddr*)&client_addr, &client_len);
+        int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 64, (struct sockaddr*)&client_addr, &client_len);
         if (bytes_received < 0) {
             return;
         }
@@ -131,18 +138,29 @@ public:
 
         std::unique_lock<std::mutex> lock(_clients_mutex);
         bool client_exists = false;
-        for (const auto& addr : _clients_addr) {
-            if (addr.sin_addr.s_addr == client_addr.sin_addr.s_addr && addr.sin_port == client_addr.sin_port) {
+        std::vector<Entity> entityList(entities.begin(), entities.end());
+        for (size_t i = 0; i < entityList.size(); ++i) {
+            auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+            if (player.address.sin_addr.s_addr == client_addr.sin_addr.s_addr && player.address.sin_port == client_addr.sin_port) {
                 client_exists = true;
+                player.lastMessageReceived = buffer;
                 break;
             }
         }
         if (!client_exists) {
-            _clients_addr.push_back(client_addr);
-            for (const auto& addr : _clients_addr) {
-                sendto(_server_fd, "New client connected", 20, MSG_DONTWAIT, (struct sockaddr*)&addr, client_len);
+            for (size_t i = 0; i < entityList.size(); ++i) {
+                auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+                sendto(_server_fd, "NEW", 3, 64, (struct sockaddr*)&player.address, client_len);
             }
+            Entity client = createNewClient(client_addr, "Player", Vector2{0, 0});
+            auto &player = gCoordinator.getComponent<PlayerNetworkComponents>(client);
+            player.lastMessageReceived = buffer;
         }
+    }
+
+    virtual Entity createNewClient(sockaddr_in client_addr, std::string name, Vector2 pos) {
+        warning("You must override this method");
+        return Entity();
     }
 
     /**
@@ -153,7 +171,7 @@ public:
         if (_restart) {
             init(_ip, _port);
         }
-        read_fds();
+        readClients();
     }
 
     /**
@@ -236,8 +254,10 @@ public:
             error("Invalid command option");
             return;
         }
-        for (const auto& addr : _clients_addr) {
-            sendDataToPlayer(_commandOption[1], addr);
+        std::vector<Entity> entityList(entities.begin(), entities.end());
+        for (size_t i = 0; i < entityList.size(); ++i) {
+            auto& player = gCoordinator.getComponent<PlayerNetworkComponents>(entityList[i]);
+            sendDataToPlayer(_commandOption[1], player.address);
         }
     }
 
@@ -261,16 +281,11 @@ public:
      * @return void
      */
     void sendDataToPlayer(const std::string& message, sockaddr_in client_addr) {
-        bool client_exists = false;
-        for (const auto& addr : _clients_addr) {
-            if (addr.sin_addr.s_addr == client_addr.sin_addr.s_addr && addr.sin_port == client_addr.sin_port) {
-                client_exists = true;
-                break;
-            }
-        }
+        bool client_exists = true;
+
         if (client_exists) {
             debug("Sent data to player " + std::to_string(ntohs(client_addr.sin_port)) + ": " + message);
-            sendto(_server_fd, message.c_str(), message.size(), MSG_DONTWAIT, (struct sockaddr*)&client_addr, sizeof(client_addr));
+            sendto(_server_fd, message.c_str(), message.size(), 64, (struct sockaddr*)&client_addr, sizeof(client_addr));
         } else {
             error("Client not found");
         }
@@ -309,6 +324,9 @@ private:
         prompt();
     }
 
+    #ifdef _WIN32
+        WSADATA _wsaData;
+    #endif
     struct sockaddr_in _address;
     int _port;
     std::string _ip;
@@ -320,7 +338,6 @@ private:
     std::vector<std::string> _help;
     std::mutex _clients_mutex;
     std::thread _terminal_thread;
-    std::vector<sockaddr_in> _clients_addr;
     std::map<std::string, std::function<void()>> _commandMap = {
         {"stop", [this]() { stop(); }},
         {"restart", [this]() { restart(); }},
@@ -394,7 +411,12 @@ public:
      */
     void disconnect() {
         if (isConnected()) {
-            close(_socket);
+            #ifdef _WIN32
+                closesocket(_socket);
+                WSACleanup();
+            #else
+                close(_socket);
+            #endif
             _connected = false;
             info("Disconnected from server");
         } else {
@@ -431,7 +453,7 @@ public:
             }
             info("Reconnected to server");
         }
-        if (sendto(_socket, data.c_str(), data.size(), MSG_DONTWAIT, (struct sockaddr*)&_address, sizeof(_address)) < 0) {
+        if (sendto(_socket, data.c_str(), data.size(), 64, (struct sockaddr*)&_address, sizeof(_address)) < 0) {
             error("Send failed");
             return false;
         }
@@ -446,7 +468,7 @@ public:
     std::string receiveData() {
         char buffer[BUFFER_SIZE];
         std::memset(buffer, 0, BUFFER_SIZE);
-        int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, MSG_DONTWAIT, (struct sockaddr*)&_address, (socklen_t*)sizeof(_address));
+        int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, 64, (struct sockaddr*)&_address, (socklen_t*)sizeof(_address));
         if (bytes_received < 0) {
             if (buffer[0] == '\0')
                 return std::string(buffer);
@@ -466,7 +488,7 @@ public:
      * @brief Update the client system.
      * @return std::string
      */
-    std::string update() {
+    std::string update_read() {
         if (isConnected())
             return receiveData();
         connectToServer();

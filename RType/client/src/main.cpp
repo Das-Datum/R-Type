@@ -1,16 +1,4 @@
-#include "../../../ECS/includes/ECS.hpp"
-#include "../includes/Components.hpp"
-#include "../includes/TexturesManager.hpp"
-#include "../includes/EntitiesManager.hpp"
-
-#include "../includes/Systems/ClientRelatives.hpp"
-#include "../includes/Systems/SpriteRelatives.hpp"
-#include "../includes/Systems/Generics.hpp"
-#include "../includes/Systems/CollisionSystem.hpp"
-#include "../includes/Systems/BackgroundScrollSystem.hpp"
-
-#include "../../shared/includes/Components/GameComponents.hpp"
-#include "../../shared/includes/Systems/Game.hpp"
+#include "../includes/client.hpp"
 
 Coordinator gCoordinator;
 
@@ -27,7 +15,6 @@ int main() {
     SetTargetFPS(60);
 
     gCoordinator.init();
-    gCoordinator.registerComponent<TransformComponent>();
     gCoordinator.registerComponent<InputComponent>();
     gCoordinator.registerComponent<TimerComponent>();
 
@@ -35,13 +22,19 @@ int main() {
     gCoordinator.registerComponent<SpriteAnimationComponent>();
     gCoordinator.registerComponent<SpriteFrameComponent>();
 
-    gCoordinator.registerComponent<ShipComponent>();
-    gCoordinator.registerComponent<BulletComponent>();
-    gCoordinator.registerComponent<EnemyComponent>();
     gCoordinator.registerComponent<StaticComponent>();
 
+    gCoordinator.registerComponent<EnemyComponent>();
+    gCoordinator.registerComponent<EnemyMovementComponent>();
+    gCoordinator.registerComponent<EnemyShootComponent>();
+
     //? Shared components
-    gCoordinator.registerComponent<PhysicsComponent>();
+    gCoordinator.registerComponent<TransformComponent>();
+    gCoordinator.registerComponent<ShipComponent>();
+    gCoordinator.registerComponent<BulletComponent>();
+    gCoordinator.registerComponent<FixedVelocityComponent>();
+    gCoordinator.registerComponent<DestroyOutOfBoundsComponent>();
+    gCoordinator.registerComponent<BlockOutOfBoundsComponent>();
     gCoordinator.registerComponent<CollisionComponent>();
     gCoordinator.registerComponent<BackgroundScrollComponent>();
 
@@ -53,11 +46,14 @@ int main() {
     auto spriteFrameSystem = gCoordinator.registerSystem<SpriteFrameSystem>();
     auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
-    // auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
+
+    auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
+    auto clientNetworkSystem = gCoordinator.registerSystem<ClientSystem>();
+
     Signature signature;
 
     //? NetworkSystem
-    // networkSystem->init("127.0.0.0", 5000);
+    clientNetworkSystem->init("127.0.0.0", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -72,7 +68,6 @@ int main() {
     //? PhysicsSystem
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<BulletComponent>(), true);
     gCoordinator.setSystemSignature<PhysicsSystem>(signature);
 
     //? TimerSystem
@@ -138,14 +133,16 @@ int main() {
         backgroundScrollSystem->update(deltaTime);
         physicsSystem->update(deltaTime);
 
+        enemiesSystem->update(deltaTime);
+
         //! DESTROY
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        // std::string response = networkSystem->update();
-        // if (response != "") {
-        //     networkSystem->sendData("Ok");
-        // }
+        std::string mes = clientNetworkSystem->update_read();
+        if (mes != "") {
+            std::cout << mes << std::endl;
+        }
 
         //? RENDER
         BeginDrawing();
