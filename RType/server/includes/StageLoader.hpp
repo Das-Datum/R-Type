@@ -12,24 +12,29 @@ struct stageConfig {
     std::vector<std::string> mobs_types;
 };
 
-struct Mob {
+struct mobType {
+    std::string name;
+    std::size_t maxHealth;
+};
+
+struct mob {
     float x;
     float y;
     int typeIndex;
-    float apparition_time;
+    float apparitionTime;
 };
 
 class StageLoader {
     #define WAVE_TIME_INTERVAL 3.0f
     #define WAVE_MIN_DURATION 5.0f
     #define WAVE_MAX_DURATION 20.0f
-    #define VALID_MOBS_TYPES std::vector<std::string>{"asteroid", "classic", "ship"}
     #define MAX_WIDTH 1920
     #define MAX_HEIGHT 1080
 
     public:
         StageLoader(const std::string& config_filepath, std::size_t seed) : _config_filepath(config_filepath) {
             std::srand(seed);
+            initMobsTypes();
         }
         ~StageLoader() = default;
 
@@ -107,15 +112,15 @@ class StageLoader {
                 float wave_ending = wave_beginning + static_cast<float>(_wavesDurations[i]);
                 std::cout << "Wave begin last from " << wave_beginning << " to " << wave_ending << std::endl;
                 for (std::size_t m = 0; m < waveMobsCount; m++) {
-                    Mob newMob;
+                    mob newMob;
                     newMob.x = MAX_WIDTH;
                     newMob.y = (rand() % (MAX_HEIGHT - 20)) + 10;
                     newMob.typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
 
                     // Gen apparition time for mob
                     float r = static_cast<float>(rand()) / RAND_MAX;
-                    newMob.apparition_time = wave_beginning + r * (wave_ending - wave_beginning);
-                    std::cout << "\tMOB " << m << ": " << "( " << newMob.x << " ; " << newMob.y << " ) -- Type: " << newMob.typeIndex << " -- Apparition time: " << newMob.apparition_time << std::endl;
+                    newMob.apparitionTime = wave_beginning + r * (wave_ending - wave_beginning);
+                    std::cout << "\tMOB " << m << ": " << "( " << newMob.x << " ; " << newMob.y << " ) -- Type: " << newMob.typeIndex << " -- Apparition time: " << newMob.apparitionTime << std::endl;
                 }
                 std::cout << std::endl;
             }
@@ -169,6 +174,8 @@ class StageLoader {
         std::string _config_filepath;
         stageConfig _config;
 
+        std::vector<mobType> _mobTypes;
+
         // waves attributs
         std::size_t _waveCount;
         std::vector<float> _wavesDurations;
@@ -205,8 +212,8 @@ class StageLoader {
          * @return false
          */
         const bool isMobTypeValid(const std::string& type) const {
-            for (const auto& validType : VALID_MOBS_TYPES) {
-                if (type == validType) {
+            for (const mobType& validType : _mobTypes) {
+                if (type == validType.name) {
                     return true;
                 }
             }
@@ -278,5 +285,29 @@ class StageLoader {
 
                 _wavesMobsTypes[i] = mobsTypes;
             }
+        }
+
+        /**
+         * @brief Initialize pre-defined mob classes
+         *
+         * @param void
+         *
+         * @return void
+         */
+        void initMobsTypes() {
+            mobType asteroid;
+            asteroid.name = "asteroid";
+            asteroid.maxHealth = 300;
+            _mobTypes.push_back(asteroid);
+
+            mobType classic;
+            classic.name = "classic";
+            classic.maxHealth = 100;
+            _mobTypes.push_back(classic);
+
+            mobType ship;
+            ship.name = "ship";
+            ship.maxHealth = 100;
+            _mobTypes.push_back(ship);
         }
 };
