@@ -86,30 +86,20 @@ class StageLoader {
         void genMobsEntities(EntitiesManager& manager) {
             for (std::size_t i = 0; i < _waveCount; i++) {
                 std::size_t waveMobsCount = _wavesMobsCount[i];
-                std::cout << "Gen mobs for wave " << i << " ..." << std::endl;
-                std::cout << "Wave contains " << _wavesMobsCount[i] << " mobs of type with index: ";
-                for (auto type : _wavesMobsTypes[i]) {
-                    std::cout << type << " / ";
-                }
-                std::cout << std::endl;
+
                 float wave_beginning = 0.0f;
                 for (std::size_t w = 0; w < i; w++) wave_beginning += static_cast<float>(_wavesDurations[w]) + WAVE_TIME_INTERVAL;
+
                 float wave_ending = wave_beginning + static_cast<float>(_wavesDurations[i]);
-                std::cout << "Wave begin last from " << wave_beginning << " to " << wave_ending << std::endl;
+
                 for (std::size_t m = 0; m < waveMobsCount; m++) {
                     float enemyPosX = 1.0f;
-                    // float enemyPosY = (rand() % (MAX_HEIGHT - 20)) + 10;
                     float enemyPosY = genRandomFloat(0.1, 0.9);
+                    float enemySpawnTime = genRandomFloat(wave_beginning, wave_ending);
                     int typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
                     EnemyType enemyType = getEnemyTypeByName(_config.mobs_types[typeIndex]);
 
-                    // Gen apparition time for mob
-                    float enemySpawnTime = genRandomFloat(wave_beginning, wave_ending);
-
                     Enemy newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType);
-                    // std::cout << "\tENEMY " << m << ": " << "( " << newEnemy.x << " ; " << newEnemy.y << " ) -- Type: " << newEnemy.type.name << " -- Apparition time: " << newEnemy.spawnTime << std::endl;
-
-                    // call manager.createEnemy()
                     manager.createEnemy(newEnemy);
                 }
                 std::cout << std::endl;
@@ -299,6 +289,13 @@ class StageLoader {
             _enemyTypes.push_back(EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
         }
 
+        /**
+         * @brief Generate a random float number
+         *
+         * @param min
+         * @param max
+         * @return float
+         */
         float genRandomFloat(float min, float max) {
             float r = static_cast<float>(rand()) / RAND_MAX;
             float value = min + r * (max - min);
