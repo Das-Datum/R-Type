@@ -1,6 +1,7 @@
 #ifndef ENTITIES_MANAGER_HPP
 #define ENTITIES_MANAGER_HPP
 
+#include <cmath>
 #include "../../../ECS/includes/ECS.hpp"
 #include "../../shared/includes/Components/GameComponents.hpp"
 #include "Components.hpp"
@@ -77,7 +78,7 @@ class EntitiesManager {
         gCoordinator.addComponent(bullet, BulletComponent());
         gCoordinator.addComponent(bullet, FixedVelocityComponent{normalizedVelocity});
         gCoordinator.addComponent(bullet, DestroyOutOfBoundsComponent());
-        gCoordinator.addComponent(bullet, CollisionComponent(collider));
+        gCoordinator.addComponent(bullet, CollisionComponent(collider, 0.0f));
         gCoordinator.addComponent(bullet, SpriteFrameComponent(1, 2));
 
         return bullet;
@@ -102,9 +103,9 @@ class EntitiesManager {
         gCoordinator.addComponent(enemy, SpriteComponent(enemyTexture, initialFrame, 1));
         gCoordinator.addComponent(enemy, CollisionComponent(collider));
         gCoordinator.addComponent(enemy, SpriteAnimationComponent(12, 0.15f));
-        gCoordinator.addComponent(enemy, EnemyComponent({BehaviorType::RandomMovement, BehaviorType::ShootAtPlayer}));
+        gCoordinator.addComponent(enemy, EnemyComponent({BehaviorType::ChasePlayer, BehaviorType::ShootAtPlayer}));
         gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 200.0f));
-        gCoordinator.addComponent(enemy, EnemyMovementComponent(0.1f, normalizedPos, Vector2{normalizedPos.x + 0.2f, normalizedPos.y}, 0.1f, 1.0f));
+        gCoordinator.addComponent(enemy, EnemyMovementComponent(1.0f, normalizedPos, Vector2{normalizedPos.x + 0.2f, normalizedPos.y}, 0.1f, 1.0f));
         gCoordinator.addComponent(enemy, DestroyOutOfBoundsComponent());
 
         return enemy;

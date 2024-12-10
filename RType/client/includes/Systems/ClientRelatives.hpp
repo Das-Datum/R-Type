@@ -110,10 +110,7 @@ class RenderSystem : public System {
                     float scaledX = viewportX + (transform.position.x * viewportWidth);
                     float scaledY = viewportY + (transform.position.y * viewportHeight);
 
-                    Vector2 origin = {0, 0};
-                    if (gCoordinator.hasComponent<BulletComponent>(entity)) {
-                        origin = {scaledWidth - (sprite.sourceRect.width * 2), scaledHeight - (sprite.sourceRect.height * 2)};
-                    }
+                    Vector2 origin = {scaledWidth * 0.5f, scaledHeight * 0.5f};
 
                     Rectangle destRect = {
                         scaledX,
@@ -147,12 +144,7 @@ class RenderSystem : public System {
                     float scaledX = viewportX + (transform.position.x * viewportWidth);
                     float scaledY = viewportY + (transform.position.y * viewportHeight);
 
-                    Vector2 origin = {0, 0};
-                    if (gCoordinator.hasComponent<BulletComponent>(entity)) {
-                        origin = {scaledWidth * 0.5f, scaledHeight * 0.5f};
-                        scaledX += origin.x;
-                        scaledY += origin.y;
-                    }
+                    Vector2 origin = {scaledWidth * 0.5f, scaledHeight * 0.5f};
 
                     Vector2 corners[4] = {
                         {scaledX - origin.x, scaledY - origin.y},
@@ -193,16 +185,16 @@ class InputSystem : public System {
     void update() {
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
-            float normalizedSpeed = (500.0f / 1920.0f) * GetFrameTime();
+            float speed = (1000.0f / 1920.0f) * GetFrameTime();
 
             if (IsKeyDown(KEY_RIGHT))
-                transform.position.x += normalizedSpeed;
+                transform.position.x += speed;
             if (IsKeyDown(KEY_LEFT))
-                transform.position.x -= normalizedSpeed;
+                transform.position.x -= speed;
             if (IsKeyDown(KEY_UP))
-                transform.position.y -= normalizedSpeed;
+                transform.position.y -= speed * (16.0 / 9.0);
             if (IsKeyDown(KEY_DOWN))
-                transform.position.y += normalizedSpeed;
+                transform.position.y += speed * (16.0 / 9.0);
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
 

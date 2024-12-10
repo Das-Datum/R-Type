@@ -19,7 +19,7 @@ if [ $? -ne 0 ]; then
 fi
 
 if [ "$1" == "--server" ]; then
-    cd Rtype/server/Debug && ./server.exe
+    cd Rtype/server/ && ./server.exe
 else
-    cd Rtype/client/Debug && ./client.exe
+    cd Rtype/client/ && ./client.exe
 fi
