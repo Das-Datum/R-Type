@@ -50,7 +50,7 @@ class StageLoader {
             _config.music_path = j["music_path"];
             _config.time = j["time"];
             for (auto type : j["mobs_types"]) {
-                if (isMobTypeValid(type)) {
+                if (this->isMobTypeValid(type)) {
                     _config.mobs_types.push_back(type);
                 } else {
                     std::cerr << "Invalid mob type: " << type << std::endl;
@@ -94,10 +94,10 @@ class StageLoader {
 
                 for (std::size_t m = 0; m < waveMobsCount; m++) {
                     float enemyPosX = 1.0f;
-                    float enemyPosY = genRandomFloat(0.1, 0.9);
-                    float enemySpawnTime = genRandomFloat(wave_beginning, wave_ending);
+                    float enemyPosY = this->genRandomFloat(0.1, 0.9);
+                    float enemySpawnTime = this->genRandomFloat(wave_beginning, wave_ending);
                     int typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
-                    EnemyType enemyType = getEnemyTypeByName(_config.mobs_types[typeIndex]);
+                    EnemyType enemyType = this->getEnemyTypeByName(_config.mobs_types[typeIndex]);
 
                     Enemy newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType);
                     manager.createEnemy(newEnemy);
