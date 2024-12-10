@@ -238,13 +238,14 @@ public:
      * @brief Receive data from the server.
      * @return std::string
      */
-    std::string receiveData();
+    void receiveData();
 
+    void update_read();
     /**
      * @brief Update the client system.
-     * @return std::string
+     * @return void
      */
-    std::string update_read();
+    std::string update();
 
 private:
     bool _connected = false;
@@ -252,6 +253,9 @@ private:
     int _port;
     std::string _name;
     std::string _ip;
+    std::thread _receivedMsgThread;
+    std::mutex _mutex;
+    std::vector<std::string> _lastMessage;
 
     void info(const std::string& message) {
         std::cout << "[INFO]: " << message << std::endl;

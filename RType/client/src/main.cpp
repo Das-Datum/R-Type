@@ -139,7 +139,7 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        std::string mes = clientNetworkSystem->update_read();
+        std::string mes = clientNetworkSystem->update();
         if (mes != "") {
             std::cout << mes << std::endl;
         }
@@ -150,7 +150,7 @@ int main() {
         renderSystem->update();
         EndDrawing();
     }
-    // networkSystem->disconnect();
+    clientNetworkSystem->disconnect();
     TexturesManager.unloadAllTextures();
     CloseWindow();
     return 0;

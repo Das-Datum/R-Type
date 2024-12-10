@@ -106,6 +106,7 @@ void ServerSystem::readClients() {
     int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&new_client_addr, &client_len);
     if (bytes_received < 0) {
         perror("Receive failed");
+        prompt();
         return;
     }
 
@@ -150,18 +151,25 @@ void ServerSystem::readClients() {
         }
         for (size_t i = 0; i < entityList.size(); ++i) {
             auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
-            sendTo(_server_fd, std::string("NEW") + std::to_string(new_client_id) + new_client_name, player.ip, player.port);
+            debug("Sent new client info to " + player.id);
+            if (sendTo(_server_fd, std::string("NEW") + std::to_string(new_client_id) + new_client_name, player.ip, player.port) <= 0) {
+                perror("Connection failed");
+                return;
+            }
         }
         Entity new_client = gCoordinator.createEntity();
-        gCoordinator.addComponent(new_client, NetworkComponents("Name", std::string(inet_ntoa(new_client_addr.sin_addr)), new_client_addr.sin_port, new_client_id));
+        gCoordinator.addComponent(new_client, NetworkComponents(new_client_name, client_ip, client_port, new_client_id));
         info("New client added: " + new_client_name);
-        sendTo(_server_fd, "OK" + std::to_string(new_client_id), client_ip, client_port);
+        if (sendTo(_server_fd, "OK" + std::to_string(new_client_id), client_ip, client_port) <= 0) {
+            error("Connection failed");
+            return;
+        }
     }
 }
 
 std::string ServerSystem::checkNewClient(std::string msg) {
     if (msg.rfind("NEW", 0) == 0) {
-        return msg.substr(4);
+        return msg.substr(3);
     }
     return "";
 }
@@ -185,7 +193,6 @@ void ServerSystem::update() {
     if (_restart) {
         init(_ip, _port);
     }
-    // readClients();
 }
 
 void ServerSystem::handleCommand() {
@@ -313,11 +320,17 @@ bool ClientSystem::connectToServer() {
     }
     info("Connected to server at " + _ip + ":" + std::to_string(_port));
     _connected = true;
+    _receivedMsgThread = std::thread(&ClientSystem::update_read, this);
     return true;
 }
 
 void ClientSystem::disconnect() {
     if (isConnected()) {
+        info("Disconnected from server 1");
+        if (_receivedMsgThread.joinable()) {
+            _receivedMsgThread.detach();
+        }
+        info("Disconnected from server 2");
         #ifdef _WIN32
             closesocket(_socket);
             WSACleanup();
@@ -363,7 +376,7 @@ bool ClientSystem::sendData(const std::string &data) {
     return true;
 }
 
-std::string ClientSystem::receiveData() {
+void ClientSystem::receiveData() {
     char buffer[BUFFER_SIZE];
     std::memset(buffer, 0, BUFFER_SIZE);
     struct sockaddr_in address;
@@ -371,29 +384,38 @@ std::string ClientSystem::receiveData() {
     address.sin_addr.s_addr = INADDR_ANY;
     address.sin_port = htons(_port);
     if (inet_pton(AF_INET, _ip.c_str(), &address.sin_addr) <= 0) {
-        error("Invalid server address");
-        return "";
+        perror("Invalid server address");
+        return;
     }
-
-    int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, 64, (struct sockaddr*)&address, (socklen_t*)sizeof(address));
+    socklen_t addr_len = sizeof(address);
+    int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&address, &addr_len);
     if (bytes_received < 0) {
-        if (buffer[0] == '\0')
-            return std::string(buffer);
-        // return "";
+        return;
     }
     if (bytes_received == 0) {
         warning("Server disconnected");
         disconnect();
-        return "";
+        return;
     }
-    std::string message = std::string(buffer);
-    debug("Received data from server: " + message);
-    return message;
+    std::lock_guard<std::mutex> lock(_mutex);
+    _lastMessage.push_back(binaryToText(std::string(buffer)));
+    debug("Received data from server: " + binaryToText(std::string(buffer)));
+    return;
 }
 
-std::string ClientSystem::update_read() {
-    if (isConnected())
-        return receiveData();
+void ClientSystem::update_read() {
+    while (isConnected())
+        receiveData();
+}
+
+std::string ClientSystem::update() {
+    if (isConnected()) {
+        std::lock_guard<std::mutex> lock(_mutex);
+        if (_lastMessage.empty())
+            return "";
+        std::string message = _lastMessage.front();
+        _lastMessage.erase(_lastMessage.begin());
+        return message;
+    }
     connectToServer();
-    return "";
 }
