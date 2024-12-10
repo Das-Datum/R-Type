@@ -1,14 +1,11 @@
 #ifndef ENTITIES_MANAGER_HPP
 #define ENTITIES_MANAGER_HPP
 
-#include "../../../ECS/includes/ECS.hpp"
+#include "AEntitiesManager.hpp"
 #include "Components.hpp"
 #include "TexturesManager.hpp"
-#include "../../shared/includes/Components/GameComponents.hpp"
 
-extern Coordinator gCoordinator;
-
-class EntitiesManager {
+class EntitiesManager : public AEntitiesManager {
 public:
     static EntitiesManager& getInstance() {
         static EntitiesManager instance;
@@ -92,8 +89,9 @@ public:
         return bullet;
     }
 
-    Entity createEnemy(Vector2 position) {
+    Entity createEnemy(Enemy enemyInfos) override {
         Entity enemy = gCoordinator.createEntity();
+        Vector2 position = Vector2{enemyInfos.x, enemyInfos.y};
 
         auto& texturesManager = TexturesManager::getInstance();
         std::string enemyTexturePath = "./assets/textures/enemies/enemy_1.png";

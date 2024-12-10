@@ -1,7 +1,7 @@
 #include "../../../ECS/includes/ECS.hpp"
 #include "../includes/Components.hpp"
 #include "TexturesManager.hpp"
-#include "EntitiesManager.hpp"
+#include "ClientEntitiesManager.hpp"
 
 #include "Systems/ClientRelatives.hpp"
 #include "Systems/EnemiesRelatives.hpp"

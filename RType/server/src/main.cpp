@@ -1,5 +1,6 @@
 #include "server.hpp"
 #include "StageLoader.hpp"
+#include "ServerEntitiesManager.hpp"
 
 Coordinator gCoordinator;
 
@@ -51,7 +52,7 @@ int main() {
 
     networkSystem->init("127.0.0.0", 5000);
 
-    auto& manager = EntitiesManager::getInstance();
+    auto& manager = ServerEntitiesManager::getInstance();
 
     try {
         const std::string path = "./RType/shared/stages/stage1.json";

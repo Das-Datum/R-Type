@@ -100,7 +100,8 @@ int main() {
 
     //* Test entity
     Vector2 enemyPosition = {WINDOW_WIDTH * 0.9f, WINDOW_HEIGHT * 0.2f};
-    entitiesManager.createEnemy(enemyPosition);
+    Enemy enemyInfos = Enemy(enemyPosition.x, enemyPosition.y, 0.0, EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
+    entitiesManager.createEnemy(enemyInfos);
     // entitiesManager.removeEntity(enemy);
 
     //* Backgrounds

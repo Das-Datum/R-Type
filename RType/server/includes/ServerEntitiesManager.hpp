@@ -1,40 +1,15 @@
 #pragma once
 
-#include "Components/GameComponents.hpp"
-#include "ECS.hpp"
+#include "AEntitiesManager.hpp"
 
-extern Coordinator gCoordinator;
-
-struct EnemyType {
-    std::string name;
-    std::size_t maxHealth;
-    bool isShooting;
-    bool isDestructible;
-    Vector2 size;
-    int nbFrame;
-
-    EnemyType(const std::string& enemyName, Vector2 assetSize, int nbAssetFrame, const std::size_t& enemyHP = 100, bool isEnemyShooting = true, bool isEnemyDestructible = true)
-    : name(enemyName), size(assetSize), nbFrame(nbAssetFrame), maxHealth(enemyHP), isShooting(isEnemyShooting), isDestructible(isEnemyDestructible) {}
-};
-
-struct Enemy {
-    float x;
-    float y;
-    float spawnTime;
-    EnemyType type;
-
-    Enemy(float xPos, float yPos, float enemySpawnTime, EnemyType enemyType)
-    : x(xPos), y(yPos), spawnTime(enemySpawnTime), type(enemyType) {}
-};
-
-class EntitiesManager {
+class ServerEntitiesManager : public AEntitiesManager {
 public:
-    static EntitiesManager& getInstance() {
-        static EntitiesManager instance;
+    static ServerEntitiesManager& getInstance() {
+        static ServerEntitiesManager instance;
         return instance;
     }
 
-    Entity createEnemy(Enemy enemyInfos) {
+    Entity createEnemy(Enemy enemyInfos) override {
         Entity enemy = gCoordinator.createEntity();
         Vector2 position = Vector2{enemyInfos.x, enemyInfos.y};
 
@@ -90,13 +65,9 @@ public:
         return enemy;
     }
 
-    void removeEntity(Entity entity) {
-        gCoordinator.destroyEntity(entity);
-    }
-
 private:
-    EntitiesManager() = default;
-    ~EntitiesManager() = default;
+    ServerEntitiesManager() = default;
+    ~ServerEntitiesManager() = default;
 
     float WINDOW_HEIGHT = 600.0f;
 };
