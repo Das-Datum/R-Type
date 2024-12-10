@@ -28,6 +28,9 @@ int main() {
     gCoordinator.registerComponent<EnemyMovementComponent>();
     gCoordinator.registerComponent<EnemyShootComponent>();
 
+    gCoordinator.registerComponent<SpawnComponent>();
+    gCoordinator.registerComponent<EnemyHealthComponent>();
+
     //? Shared components
     gCoordinator.registerComponent<TransformComponent>();
     gCoordinator.registerComponent<ShipComponent>();

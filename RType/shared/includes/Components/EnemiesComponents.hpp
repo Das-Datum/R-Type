@@ -11,11 +11,21 @@ enum class BehaviorType {
     None
 };
 
+struct EnemyHealthComponent {
+    std::size_t health;
+
+    EnemyHealthComponent(const std::size_t &hp) : health(hp) {}
+};
+
 struct EnemyComponent {
     std::vector<BehaviorType> behaviors;
+    std::string name;
 
-    EnemyComponent(std::initializer_list<BehaviorType> behaviorList = {})
-        : behaviors(behaviorList) {}
+    EnemyComponent(std::initializer_list<BehaviorType> behaviorList = {}, const std::string& typeName = "classic")
+        : behaviors(behaviorList), name(typeName) {}
+
+    EnemyComponent(std::vector<BehaviorType> behaviorList = {}, const std::string& typeName = "classic")
+        : behaviors(behaviorList), name(typeName) {}
 
     void addBehavior(BehaviorType behavior) {
         behaviors.push_back(behavior);

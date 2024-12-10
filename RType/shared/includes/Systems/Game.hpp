@@ -45,3 +45,14 @@ class PhysicsSystem : public System {
         float gameWidth = 1920;
         float gameHeight = 1080;
 };
+
+class SpawnSystem : public System {
+    public:
+        void update(float frameTime = 0.0f) {
+            for (const auto& entity : entities) {
+                auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
+
+                spawn.time_left -= frameTime;
+            }
+        }
+};

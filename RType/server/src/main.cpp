@@ -1,9 +1,11 @@
-#include "../includes/server.hpp"
+#include "server.hpp"
+#include "StageLoader.hpp"
 
 Coordinator gCoordinator;
 
-
 int main() {
+    std::srand(42);
+
     const int WINDOW_WIDTH = 1280;
     const int WINDOW_HEIGHT = 720;
     const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
@@ -13,9 +15,13 @@ int main() {
     // gCoordinator.registerComponent<PlayerNetworkComponents>();
     gCoordinator.registerComponent<ShipComponent>();
     gCoordinator.registerComponent<BulletComponent>();
-    gCoordinator.registerComponent<EnemyComponent>();
     gCoordinator.registerComponent<TransformComponent>();
-
+    gCoordinator.registerComponent<SpawnComponent>();
+    gCoordinator.registerComponent<DestroyOutOfBoundsComponent>();
+    gCoordinator.registerComponent<EnemyComponent>();
+    gCoordinator.registerComponent<EnemyHealthComponent>();
+    gCoordinator.registerComponent<EnemyShootComponent>();
+    gCoordinator.registerComponent<EnemyMovementComponent>();
     //? Shared components
     gCoordinator.registerComponent<CollisionComponent>();
 
@@ -45,7 +51,17 @@ int main() {
 
     networkSystem->init("127.0.0.0", 5000);
 
+    auto& manager = EntitiesManager::getInstance();
 
+    try {
+        const std::string path = "./RType/shared/stages/stage1.json";
+        StageLoader loader(path);
+        loader.loadConfig();
+        loader.genWaves();
+        loader.genMobsEntities(manager);
+    } catch(std::exception& e) {
+        std::cerr << "Error while loading the stage: " << e.what() << std::endl;
+    }
 
      //! MAIN LOOP
      while (networkSystem->isRunning()) {
