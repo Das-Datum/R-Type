@@ -21,5 +21,6 @@ fi
 if [ "$1" == "--server" ]; then
     cd Rtype/server/ && ./server.exe
 else
+    echo "Starting client..."
     cd Rtype/client/ && ./client.exe
 fi
