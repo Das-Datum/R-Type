@@ -99,7 +99,7 @@ int main() {
     entitiesManager.createShip(shipPosition);
 
     //* Test entity
-    Vector2 enemyPosition = {WINDOW_WIDTH * 0.9f, WINDOW_HEIGHT * 0.2f};
+    Vector2 enemyPosition = {0.9f, 0.5f};
     entitiesManager.createEnemy(enemyPosition);
     // entitiesManager.removeEntity(enemy);
 
@@ -122,11 +122,27 @@ int main() {
         -1
     );
 
-    physicsSystem->setGameDimensions(static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT));
-
     //! MAIN LOOP
     while (!WindowShouldClose()) {
         float deltaTime = GetFrameTime();
+
+        float screenWidth = static_cast<float>(GetScreenWidth());
+        float screenHeight = static_cast<float>(GetScreenHeight());
+
+        float aspectRatio = 16.0f / 9.0f;
+        float viewportWidth = screenWidth;
+        float viewportHeight = viewportWidth / aspectRatio;
+
+        if (viewportHeight > screenHeight) {
+            viewportHeight = screenHeight;
+            viewportWidth = viewportHeight * aspectRatio;
+        }
+
+        float viewportX = (screenWidth - viewportWidth) * 0.5f;
+        float viewportY = (screenHeight - viewportHeight) * 0.5f;
+
+        physicsSystem->setViewport(viewportWidth, viewportHeight);
+        renderSystem->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
 
         //? LOGIC
         inputSystem->update();
@@ -150,7 +166,9 @@ int main() {
         //? RENDER
         BeginDrawing();
         ClearBackground(BLACK);
+
         renderSystem->update();
+
         EndDrawing();
     }
     // networkSystem->disconnect();
