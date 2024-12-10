@@ -6,6 +6,27 @@
 
 extern Coordinator gCoordinator;
 
+int NetworkSystem::sendTo(int socket, const std::string& message, std::string ip, int port) {
+    std::string binary = textToBinary(message);
+    struct sockaddr_in client_addr;
+    client_addr.sin_family = AF_INET;
+    client_addr.sin_port = htons(port);
+    if (inet_pton(AF_INET, ip.c_str(), &client_addr.sin_addr) <= 0) {
+        std::cerr << "Invalid client IP address" << std::endl;
+        return -1;
+    }
+    return sendto(socket, binary.c_str(), binary.size(), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
+}
+
+struct sockaddr_in get_sockaddr_in(const char* ip, int port) {
+    struct sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+    addr.sin_addr.s_addr = inet_addr(ip);
+    return addr;
+}
+
 void ServerSystem::init(const std::string& ip, int port) {
     _ip = ip;
     _port = port;
@@ -61,14 +82,7 @@ void ServerSystem::stop() {
     std::vector<Entity> entityList(entities.begin(), entities.end());
     for (size_t i = 0; i < entityList.size(); ++i) {
         auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
-        struct sockaddr_in client_addr;
-        client_addr.sin_family = AF_INET;
-        client_addr.sin_port = player.port;
-        if (inet_pton(AF_INET, player.ip.c_str(), &client_addr.sin_addr) <= 0) {
-            error("Invalid client IP address");
-            continue;
-        }
-        sendto(_server_fd, "STOP", 4, 64, (struct sockaddr*)&client_addr, sizeof(client_addr));
+        sendTo(_server_fd, "STOP", player.ip, player.port);
         gCoordinator.destroyEntity(entityList[i]);
     }
     #ifdef _WIN32
@@ -83,17 +97,17 @@ void ServerSystem::stop() {
 
 void ServerSystem::readClients() {
     char buffer[BUFFER_SIZE];
-    sockaddr_in client_addr;
-    socklen_t client_len = sizeof(client_addr);
+    sockaddr_in new_client_addr;
+    socklen_t client_len = sizeof(new_client_addr);
     std::memset(buffer, 0, BUFFER_SIZE);
-    int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&client_addr, &client_len);
+    int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&new_client_addr, &client_len);
     if (bytes_received < 0) {
         perror("Receive failed");
         return;
     }
 
-    std::string client_ip = inet_ntoa(client_addr.sin_addr);
-    int client_port = ntohs(client_addr.sin_port);
+    std::string client_ip = inet_ntoa(new_client_addr.sin_addr);
+    int client_port = ntohs(new_client_addr.sin_port);
 
     info("Received message from " + client_ip + ":" + std::to_string(client_port) + " - " + buffer);
 
@@ -101,27 +115,62 @@ void ServerSystem::readClients() {
     std::unique_lock<std::mutex> lock(_clientsMutex);
     bool client_exists = false;
     std::vector<Entity> entityList(entities.begin(), entities.end());
+    std::vector<int> client_ids;
     for (size_t i = 0; i < entityList.size(); ++i) {
         auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
-        struct sockaddr_in client_addr;
-        client_addr.sin_family = AF_INET;
-        client_addr.sin_port = player.port;
-        if (inet_pton(AF_INET, player.ip.c_str(), &client_addr.sin_addr) <= 0) {
-            error("Invalid client IP address");
-            continue;
-        }
-        if (client_addr.sin_addr.s_addr == client_addr.sin_addr.s_addr && client_addr.sin_port == client_addr.sin_port) {
+        client_ids.push_back(player.id);
+        struct in_addr player_addr;
+        inet_pton(AF_INET, player.ip.c_str(), &player_addr);
+        if (new_client_addr.sin_addr.s_addr == player_addr.s_addr && new_client_addr.sin_port == player.port) {
             client_exists = true;
-            // player.lastMessageReceived = buffer;
+            player.lastMessagesReceived.push_back(binaryToText(std::string(buffer)));
             break;
         }
     }
+    info("Client exists: " + std::to_string(client_exists));
+    info("Client IDs: " + std::to_string(client_ids.size()));
+    int new_client_id = getNewClientId(client_ids);
+    info("New client ID: " + std::to_string(new_client_id));
+    if (new_client_id > 4) {
+        sendTo(_server_fd, "ERRServer is full", client_ip, client_port);
+        error("No available client ID");
+        return;
+    }
     if (!client_exists) {
+        info(binaryToText(std::string(buffer)));
+        std::string new_client_name = checkNewClient(binaryToText(std::string(buffer)));
+        info("New client name: " + new_client_name);
+        if (new_client_name == "") {
+            error("Invalid client name");
+            sendTo(_server_fd, "ERRInvalid client name", client_ip, client_port);
+            return;
+        }
         for (size_t i = 0; i < entityList.size(); ++i) {
             auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
-            sendto(_server_fd, "NEW", 3, 64, (struct sockaddr*)&client_addr, client_len);
+            sendTo(_server_fd, std::string("NEW") + std::to_string(new_client_id) + new_client_name, player.ip, player.port);
         }
+        Entity new_client = gCoordinator.createEntity();
+        gCoordinator.addComponent(new_client, NetworkComponents("Name", std::string(inet_ntoa(new_client_addr.sin_addr)), new_client_addr.sin_port, new_client_id));
+        info("New client added: " + new_client_name);
+        sendTo(_server_fd, "OK" + std::to_string(new_client_id), client_ip, client_port);
     }
+}
+
+std::string ServerSystem::checkNewClient(std::string msg) {
+    if (msg.rfind("NEW", 0) == 0) {
+        return msg.substr(4);
+    }
+    return "";
+}
+
+int ServerSystem::getNewClientId(std::vector<int> client_ids) {
+    int id = 1;
+    for (size_t i = 0; i < client_ids.size(); ++i)
+        if (client_ids[i] == id)
+            id++;
+        else
+            break;
+    return id;
 }
 
 void ServerSystem::update() {
@@ -225,9 +274,10 @@ void ServerSystem::sendDataToPlayer(const std::string& message, std::string ip, 
 
 
 
-void ClientSystem::init(const std::string& ip, int port) {
+void ClientSystem::init(const std::string& name, const std::string& ip, int port) {
     _ip = ip;
     _port = port;
+    _name = name;
     connectToServer();
 }
 
@@ -249,17 +299,8 @@ bool ClientSystem::connectToServer() {
         return false;
     }
 
-    struct sockaddr_in address;
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(_port);
-
-    if (inet_pton(AF_INET, _ip.c_str(), &address.sin_addr) <= 0) {
-        error("Invalid server address");
-        return false;
-    }
-    if (sendto(_socket, "Start", 6, 0, (struct sockaddr*)&address, sizeof(address)) < 0) {
-        error("Connection failed");
+    if (sendTo(_socket, "NEW" + _name, _ip, _port) < 0) {
+        // error("Connection failed");
         return false;
     }
     info("Connected to server at " + _ip + ":" + std::to_string(_port));

@@ -24,7 +24,8 @@ class CollisionSystem : public System {
                 std::vector<Vector2> polyB = getPolygon(transformB, colliderB);
 
                 if (checkPolygonCollision(polyA, polyB)) {
-                    printf("Collision detected between entities %d and %d\n", entityA, entityB);
+                    return;
+                    // printf("Collision detected between entities %d and %d\n", entityA, entityB);
                 }
             }
         }

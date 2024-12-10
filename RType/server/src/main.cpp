@@ -10,7 +10,7 @@ int main() {
 
     gCoordinator.init();
 
-    // gCoordinator.registerComponent<NetworkComponents>();
+    gCoordinator.registerComponent<NetworkComponents>();
     gCoordinator.registerComponent<ShipComponent>();
     gCoordinator.registerComponent<BulletComponent>();
     gCoordinator.registerComponent<EnemyComponent>();
@@ -52,7 +52,8 @@ int main() {
          //? LOGIC
 
          //? NETWORK
-         networkSystem->update();
+        networkSystem->update();
+    
     }
     return 0;
 }

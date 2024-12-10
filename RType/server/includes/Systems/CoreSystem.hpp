@@ -10,8 +10,8 @@ public:
     void updateServer(Entity& server) {
         auto& network = gCoordinator.getComponent<NetworkComponents>(server);
 
-        for (auto const &lastMsg : network.latsMessagesReceived) {
-            if (lastMsg == "START") {
+        for (auto const &lastMsg : network.lastMessagesReceived) {
+            if (lastMsg == "NEW") {
                 auto& entitiesManager = EntitiesManager::getInstance();
                 entitiesManager.createPlayer({100, 100}, "Player", network.ip, network.port, network.id);
             } else

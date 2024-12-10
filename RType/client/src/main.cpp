@@ -53,7 +53,7 @@ int main() {
     Signature signature;
 
     //? NetworkSystem
-    clientNetworkSystem->init("127.0.0.1", 5000);
+    clientNetworkSystem->init("Player", "127.0.0.1", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -96,8 +96,8 @@ int main() {
     entitiesManager.createShip(shipPosition);
 
     //* Test entity
-    Vector2 enemyPosition = {WINDOW_WIDTH * 0.9f, WINDOW_HEIGHT * 0.2f};
-    entitiesManager.createEnemy(enemyPosition);
+    // Vector2 enemyPosition = {WINDOW_WIDTH * 0.9f, WINDOW_HEIGHT * 0.2f};
+    // entitiesManager.createEnemy(enemyPosition);
     // entitiesManager.removeEntity(enemy);
 
     //* Backgrounds

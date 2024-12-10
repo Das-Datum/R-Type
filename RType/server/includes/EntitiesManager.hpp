@@ -22,6 +22,14 @@ public:
         WINDOW_HEIGHT = windowHeight;
     }
 
+    Entity createServer(const std::string& ip, int port) {
+        Entity server = gCoordinator.createEntity();
+
+        gCoordinator.addComponent(server, NetworkComponents("Server", ip, port, 0));
+
+        return server;
+    }
+
     Entity createPlayer(Vector2 position, const std::string& name, const std::string& ip, int port, int id) {
         Entity ship = gCoordinator.createEntity();
 
@@ -43,7 +51,7 @@ public:
 
         Rectangle collider = {0, 0, ENTITY_WIDTH, ENTITY_HEIGHT};
         gCoordinator.addComponent(ship, ShipComponent());
-        gCoordinator.addComponent(ship, TimerComponent());
+        // gCoordinator.addComponent(ship, TimerComponent());
         gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
         gCoordinator.addComponent(ship, CollisionComponent(collider));
         gCoordinator.addComponent(ship, NetworkComponents(name, ip, port, id));

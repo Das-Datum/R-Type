@@ -7,5 +7,6 @@
 #include "../../shared/includes/Systems/CollisionSystem.hpp"
 
 #include "Components.hpp"
+#include "EntitiesManager.hpp"
 
 #include <string>
