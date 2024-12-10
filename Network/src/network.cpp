@@ -257,7 +257,7 @@ bool ClientSystem::connectToServer() {
         return false;
     }
     if (sendto(_socket, "Start", 6, 0, (struct sockaddr*)&address, sizeof(address)) < 0) {
-        error("Connection failed");
+        // error("Connection failed");
         return false;
     }
     info("Connected to server at " + _ip + ":" + std::to_string(_port));
