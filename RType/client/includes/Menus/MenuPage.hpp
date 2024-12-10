@@ -21,7 +21,6 @@ public:
     }
 
     void Draw() {
-        // Draw semi-transparent background panel
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), style->panelColor);
         for (auto& w : widgets) {
             w->Draw();
