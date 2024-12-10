@@ -121,7 +121,8 @@ private:
 
                 Vector2 direction = Vector2Normalize(Vector2Subtract(playerPos, transform.position));
                 Vector2 bulletPos = transform.position;
-                entitiesManager.createEnemyBullet(bulletPos, Vector2Scale(direction, shoot.bulletSpeed));
+                Vector2 normalizedVel = Vector2Normalize(Vector2Scale(direction, shoot.bulletSpeed));
+                entitiesManager.createEnemyBullet(bulletPos, normalizedVel);
             }
         }
     }

@@ -6,7 +6,14 @@ FetchContent_Declare(
   GIT_TAG 4.5.0
 )
 
-FetchContent_MakeAvailable(raylib)
+FetchContent_Declare(
+  nlohmann_json
+  GIT_REPOSITORY https://github.com/nlohmann/json.git
+  GIT_TAG v3.2.0
+)
+
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+FetchContent_MakeAvailable(raylib nlohmann_json)
 
 add_library(Shared INTERFACE)
 
@@ -14,7 +21,7 @@ target_include_directories(Shared INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/includes
 )
 
-target_link_libraries(Shared INTERFACE raylib)
+target_link_libraries(Shared INTERFACE raylib nlohmann_json::nlohmann_json)
 
 if(WIN32)
     target_link_libraries(Shared INTERFACE ws2_32 opengl32 gdi32 winmm)
