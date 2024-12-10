@@ -2,9 +2,9 @@
 #include <iostream>
 #include <map>
 #include <nlohmann/json.hpp>
-#include "../../../ECS/includes/ECS.hpp"
+#include "EntitiesManager.hpp"
 
-struct stageConfig {
+struct StageConfig {
     int numero;
     std::string background_path;
     std::string music_path;
@@ -12,28 +12,13 @@ struct stageConfig {
     std::vector<std::string> mobs_types;
 };
 
-struct mobType {
-    std::string name;
-    std::size_t maxHealth;
-};
-
-struct mob {
-    float x;
-    float y;
-    int typeIndex;
-    float apparitionTime;
-};
-
 class StageLoader {
     #define WAVE_TIME_INTERVAL 3.0f
     #define WAVE_MIN_DURATION 5.0f
     #define WAVE_MAX_DURATION 20.0f
-    #define MAX_WIDTH 1920
-    #define MAX_HEIGHT 1080
 
     public:
-        StageLoader(const std::string& config_filepath, std::size_t seed) : _config_filepath(config_filepath) {
-            std::srand(seed);
+        StageLoader(const std::string& config_filepath) : _config_filepath(config_filepath) {
             initMobsTypes();
         }
         ~StageLoader() = default;
@@ -98,7 +83,7 @@ class StageLoader {
          *
          * @return void
          */
-        void genMobsEntities(Coordinator& gCoordinator) {
+        void genMobsEntities(EntitiesManager& manager) {
             for (std::size_t i = 0; i < _waveCount; i++) {
                 std::size_t waveMobsCount = _wavesMobsCount[i];
                 std::cout << "Gen mobs for wave " << i << " ..." << std::endl;
@@ -112,15 +97,20 @@ class StageLoader {
                 float wave_ending = wave_beginning + static_cast<float>(_wavesDurations[i]);
                 std::cout << "Wave begin last from " << wave_beginning << " to " << wave_ending << std::endl;
                 for (std::size_t m = 0; m < waveMobsCount; m++) {
-                    mob newMob;
-                    newMob.x = MAX_WIDTH;
-                    newMob.y = (rand() % (MAX_HEIGHT - 20)) + 10;
-                    newMob.typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
+                    float enemyPosX = 1.0f;
+                    // float enemyPosY = (rand() % (MAX_HEIGHT - 20)) + 10;
+                    float enemyPosY = genRandomFloat(0.1, 0.9);
+                    int typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
+                    EnemyType enemyType = getEnemyTypeByName(_config.mobs_types[typeIndex]);
 
                     // Gen apparition time for mob
-                    float r = static_cast<float>(rand()) / RAND_MAX;
-                    newMob.apparitionTime = wave_beginning + r * (wave_ending - wave_beginning);
-                    std::cout << "\tMOB " << m << ": " << "( " << newMob.x << " ; " << newMob.y << " ) -- Type: " << newMob.typeIndex << " -- Apparition time: " << newMob.apparitionTime << std::endl;
+                    float enemySpawnTime = genRandomFloat(wave_beginning, wave_ending);
+
+                    Enemy newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType);
+                    // std::cout << "\tENEMY " << m << ": " << "( " << newEnemy.x << " ; " << newEnemy.y << " ) -- Type: " << newEnemy.type.name << " -- Apparition time: " << newEnemy.spawnTime << std::endl;
+
+                    // call manager.createEnemy()
+                    manager.createEnemy(newEnemy);
                 }
                 std::cout << std::endl;
             }
@@ -128,7 +118,7 @@ class StageLoader {
 
 
         // Getters
-        stageConfig getStageConfig() const { return _config; };
+        StageConfig getStageConfig() const { return _config; };
         std::size_t getWaveCount() const { return _waveCount; };
         std::vector<float> getWavesDurations() const { return _wavesDurations; };
         std::vector<std::size_t> getWavesMobsCount() const { return _wavesMobsCount; };
@@ -172,15 +162,24 @@ class StageLoader {
 
     private:
         std::string _config_filepath;
-        stageConfig _config;
+        StageConfig _config;
 
-        std::vector<mobType> _mobTypes;
+        std::vector<EnemyType> _enemyTypes;
 
         // waves attributs
         std::size_t _waveCount;
         std::vector<float> _wavesDurations;
         std::vector<std::size_t> _wavesMobsCount;
         std::map<std::size_t, std::vector<std::size_t>> _wavesMobsTypes;
+
+        EnemyType getEnemyTypeByName(const std::string& name) {
+            for (const EnemyType& type : _enemyTypes) {
+                if (type.name == name)
+                    return type;
+            }
+            std::cerr << "getEnemyTypeByName(): Cannot find enemy type of name " << name << std::endl;
+            return _enemyTypes[0];
+        }
 
         /**
          * @brief Get the Sum Waves Durations object
@@ -212,7 +211,7 @@ class StageLoader {
          * @return false
          */
         const bool isMobTypeValid(const std::string& type) const {
-            for (const mobType& validType : _mobTypes) {
+            for (const EnemyType& validType : _enemyTypes) {
                 if (type == validType.name) {
                     return true;
                 }
@@ -295,19 +294,14 @@ class StageLoader {
          * @return void
          */
         void initMobsTypes() {
-            mobType asteroid;
-            asteroid.name = "asteroid";
-            asteroid.maxHealth = 300;
-            _mobTypes.push_back(asteroid);
+            _enemyTypes.push_back(EnemyType("asteroid", Vector2{35.0, 37.0}, 1, 300, false, true));
+            _enemyTypes.push_back(EnemyType("classic", Vector2{266.0, 36.0}, 8, 100, true, true));
+            _enemyTypes.push_back(EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
+        }
 
-            mobType classic;
-            classic.name = "classic";
-            classic.maxHealth = 100;
-            _mobTypes.push_back(classic);
-
-            mobType ship;
-            ship.name = "ship";
-            ship.maxHealth = 100;
-            _mobTypes.push_back(ship);
+        float genRandomFloat(float min, float max) {
+            float r = static_cast<float>(rand()) / RAND_MAX;
+            float value = min + r * (max - min);
+            return value;
         }
 };
