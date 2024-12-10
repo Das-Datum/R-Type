@@ -2,7 +2,7 @@
 #define ENTITIES_MANAGER_HPP
 
 #include "../../../ECS/includes/ECS.hpp"
-#include "../../../Network/includes/NetworkComponents.hpp"
+#include "../../../Network/includes/NetworkComponent.hpp"
 
 #include "../../shared/includes/Components/GameComponents.hpp"
 
@@ -25,7 +25,7 @@ public:
     Entity createServer(const std::string& ip, int port) {
         Entity server = gCoordinator.createEntity();
 
-        gCoordinator.addComponent(server, NetworkComponents("Server", ip, port, 0));
+        gCoordinator.addComponent(server, NetworkComponent("Server", ip, port, 0));
 
         return server;
     }
@@ -54,7 +54,7 @@ public:
         // gCoordinator.addComponent(ship, TimerComponent());
         gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
         gCoordinator.addComponent(ship, CollisionComponent(collider));
-        gCoordinator.addComponent(ship, NetworkComponents(name, ip, port, id));
+        gCoordinator.addComponent(ship, NetworkComponent(name, ip, port, id));
 
         return ship;
     }
