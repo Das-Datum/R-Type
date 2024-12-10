@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../shared/includes/Components/GameComponents.hpp"
-#include "../../../ECS/includes/ECS.hpp"
+#include "Components/GameComponents.hpp"
+#include "ECS.hpp"
 
 extern Coordinator gCoordinator;
 

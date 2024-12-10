@@ -1,8 +1,7 @@
-#include "../includes/server.hpp"
-#include "../includes/StageLoader.hpp"
+#include "server.hpp"
+#include "StageLoader.hpp"
 
 Coordinator gCoordinator;
-
 
 int main() {
     std::srand(42);
@@ -55,7 +54,8 @@ int main() {
     auto& manager = EntitiesManager::getInstance();
 
     try {
-        StageLoader loader("./RType/shared/stages/stage1.json");
+        const std::string path = "./RType/shared/stages/stage1.json";
+        StageLoader loader(path);
         loader.loadConfig();
         loader.genWaves();
         loader.genMobsEntities(manager);
