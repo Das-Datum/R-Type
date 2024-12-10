@@ -84,7 +84,7 @@ void ServerSystem::stop() {
     }
     std::vector<Entity> entityList(entities.begin(), entities.end());
     for (size_t i = 0; i < entityList.size(); ++i) {
-        auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
+        auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
         sendTo(_server_fd, "QIT", player.ip, player.port);
         gCoordinator.destroyEntity(entityList[i]);
     }
@@ -121,11 +121,9 @@ void ServerSystem::readClients() {
     std::vector<Entity> entityList(entities.begin(), entities.end());
     std::vector<int> client_ids;
     for (size_t i = 0; i < entityList.size(); ++i) {
-        auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
+        auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
         client_ids.push_back(player.id);
-        struct in_addr player_addr;
-        inet_pton(AF_INET, player.ip.c_str(), &player_addr);
-        if (new_client_addr.sin_addr.s_addr == player_addr.s_addr && new_client_addr.sin_port == player.port) {
+        if (client_ip == player.ip && client_port == player.port) {
             client_exists = true;
             player.lastMessagesReceived.push_back(binaryToText(std::string(buffer)));
             break;
@@ -150,7 +148,7 @@ void ServerSystem::readClients() {
             return;
         }
         for (size_t i = 0; i < entityList.size(); ++i) {
-            auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
+            auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
             debug("Sent new client info to " + player.id);
             if (sendTo(_server_fd, std::string("NEW") + std::to_string(new_client_id) + new_client_name, player.ip, player.port) <= 0) {
                 perror("Connection failed");
@@ -158,9 +156,9 @@ void ServerSystem::readClients() {
             }
         }
         Entity new_client = gCoordinator.createEntity();
-        gCoordinator.addComponent(new_client, NetworkComponents(new_client_name, client_ip, client_port, new_client_id));
+        gCoordinator.addComponent(new_client, NetworkComponent(new_client_name, client_ip, client_port, new_client_id));
         info("New client added: " + new_client_name);
-        if (sendTo(_server_fd, "OK" + std::to_string(new_client_id), client_ip, client_port) <= 0) {
+        if (sendTo(_server_fd, "BGN" + std::to_string(new_client_id), client_ip, client_port) <= 0) {
             error("Connection failed");
             return;
         }
@@ -248,15 +246,8 @@ void ServerSystem::sendDataAllPlayer() {
     }
     std::vector<Entity> entityList(entities.begin(), entities.end());
     for (size_t i = 0; i < entityList.size(); ++i) {
-        auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
-        struct sockaddr_in client_addr;
-        client_addr.sin_family = AF_INET;
-        client_addr.sin_port = player.port;
-        if (inet_pton(AF_INET, player.ip.c_str(), &client_addr.sin_addr) <= 0) {
-            error("Invalid client IP address");
-            continue;
-        }
-        sendDataToPlayer(_commandOption[1], player.ip, ntohs(player.port));
+        auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
+        sendDataToPlayer(_commandOption[1], player.ip, player.port);
     }
 }
 
@@ -270,21 +261,10 @@ void ServerSystem::sendToPlayer() {
 }
 
 void ServerSystem::sendDataToPlayer(const std::string& message, std::string ip, int port) {
-    bool client_exists = true;
-    struct sockaddr_in client_addr;
-    client_addr.sin_family = AF_INET;
-    client_addr.sin_port = port;
-    if (inet_pton(AF_INET, ip.c_str(), &client_addr.sin_addr) <= 0) {
-        error("Invalid client IP address");
-        return;
+    if (sendTo(_server_fd, message, ip, port) < 0) {
+        error("Send failed");
     }
-
-    if (client_exists) {
-        debug("Sent data to player " + std::to_string(ntohs(client_addr.sin_port)) + ": " + message);
-        sendto(_server_fd, message.c_str(), message.size(), 64, (struct sockaddr*)&client_addr, sizeof(client_addr));
-    } else {
-        error("Client not found");
-    }
+    info("Sent data to " + ip + ":" + std::to_string(port) + " - " + message);
 };
 
 
@@ -359,16 +339,7 @@ bool ClientSystem::sendData(const std::string &data) {
         }
         info("Reconnected to server");
     }
-    struct sockaddr_in address;
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(_port);
-    if (inet_pton(AF_INET, _ip.c_str(), &address.sin_addr) <= 0) {
-        error("Invalid server address");
-        return false;
-    }
-
-    if (sendto(_socket, data.c_str(), data.size(), 64, (struct sockaddr*)&address, sizeof(address)) < 0) {
+    if (sendTo(_socket, data, _ip, _port) < 0) {
         error("Send failed");
         return false;
     }

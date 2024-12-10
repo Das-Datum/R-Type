@@ -1,6 +1,6 @@
 #pragma once
 #include "../../ECS/includes/ECS.hpp"
-#include "NetworkComponents.hpp"
+#include "NetworkComponent.hpp"
 #include <iostream>
 #include <cstring>
 #include <vector>
