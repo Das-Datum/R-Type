@@ -3,3 +3,4 @@ build/
 RType/client/build
 RType/server/build
 .vscode/
+help_compilation.md

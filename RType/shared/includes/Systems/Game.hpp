@@ -47,3 +47,14 @@ class PhysicsSystem : public System {
     float viewportWidth = 1920.0f;
     float viewportHeight = 1080.0f;
 };
+
+class SpawnSystem : public System {
+    public:
+        void update(float frameTime = 0.0f) {
+            for (const auto& entity : entities) {
+                auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
+
+                spawn.time_left -= frameTime;
+            }
+        }
+};

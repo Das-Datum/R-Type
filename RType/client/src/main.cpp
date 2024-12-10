@@ -1,17 +1,4 @@
-#include "../../../ECS/includes/ECS.hpp"
-#include "../includes/Components.hpp"
-#include "../includes/TexturesManager.hpp"
-#include "../includes/EntitiesManager.hpp"
-
-#include "../includes/Systems/ClientRelatives.hpp"
-#include "../includes/Systems/EnemiesRelatives.hpp"
-#include "../includes/Systems/SpriteRelatives.hpp"
-#include "../includes/Systems/Generics.hpp"
-#include "../includes/Systems/BackgroundScrollSystem.hpp"
-
-#include "../../shared/includes/Components/GameComponents.hpp"
-#include "../../shared/includes/Systems/Game.hpp"
-#include "../../shared/includes/Systems/CollisionSystem.hpp"
+#include "../includes/client.hpp"
 
 Coordinator gCoordinator;
 
@@ -41,6 +28,9 @@ int main() {
     gCoordinator.registerComponent<EnemyMovementComponent>();
     gCoordinator.registerComponent<EnemyShootComponent>();
 
+    gCoordinator.registerComponent<SpawnComponent>();
+    gCoordinator.registerComponent<EnemyHealthComponent>();
+
     //? Shared components
     gCoordinator.registerComponent<TransformComponent>();
     gCoordinator.registerComponent<ShipComponent>();
@@ -61,11 +51,12 @@ int main() {
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
 
     auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
-    // auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
+    auto clientNetworkSystem = gCoordinator.registerSystem<ClientSystem>();
+
     Signature signature;
 
     //? NetworkSystem
-    // networkSystem->init("127.0.0.0", 5000);
+    clientNetworkSystem->init("127.0.0.0", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -167,10 +158,10 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        // std::string response = networkSystem->update();
-        // if (response != "") {
-        //     networkSystem->sendData("Ok");
-        // }
+        std::string mes = clientNetworkSystem->update_read();
+        if (mes != "") {
+            std::cout << mes << std::endl;
+        }
 
         //? RENDER
         BeginDrawing();
