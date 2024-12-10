@@ -144,16 +144,25 @@ class InputSystem : public System {
     void update() {
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+            auto &playerNetwork = gCoordinator.getComponent<PlayerNetworkComponent>(entity);
 
             float speed = 400.0f * GetFrameTime();
-            if (IsKeyDown(KEY_RIGHT))
+            if (IsKeyDown(KEY_RIGHT)) {
                 transform.position.x += speed;
-            if (IsKeyDown(KEY_LEFT))
+                playerNetwork.lastMessagesReceived.push_back("MRT" + std::to_string(playerNetwork.id));
+            }
+            if (IsKeyDown(KEY_LEFT)) {
                 transform.position.x -= speed;
-            if (IsKeyDown(KEY_UP))
+                playerNetwork.lastMessagesReceived.push_back("MLF" + std::to_string(playerNetwork.id));
+            }
+            if (IsKeyDown(KEY_UP)) {
                 transform.position.y -= speed;
-            if (IsKeyDown(KEY_DOWN))
+                playerNetwork.lastMessagesReceived.push_back("MUP" + std::to_string(playerNetwork.id));
+            }
+            if (IsKeyDown(KEY_DOWN)) {
                 transform.position.y += speed;
+                playerNetwork.lastMessagesReceived.push_back("MDW" + std::to_string(playerNetwork.id));
+            }
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
 
@@ -177,7 +186,9 @@ class InputSystem : public System {
                     transform.position.y};
                 if (timer.elapsedTime >= timer.duration) {
                     entitiesManager.createBullet(bulletPosition, {200.0f, 0.0f});
+                    playerNetwork.lastMessagesReceived.push_back("DEM" + std::to_string(playerNetwork.id));
                 } else {
+                    playerNetwork.lastMessagesReceived.push_back("SHT" + std::to_string(playerNetwork.id));
                     entitiesManager.createBullet(bulletPosition, {400.0f, 0.0f});
                 }
                 timer.active = false;

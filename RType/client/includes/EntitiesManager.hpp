@@ -2,6 +2,7 @@
 #define ENTITIES_MANAGER_HPP
 
 #include "../../../ECS/includes/ECS.hpp"
+#include "../../../Network/includes/NetworkComponent.hpp"
 #include "Components.hpp"
 #include "TexturesManager.hpp"
 #include "../../shared/includes/Components/GameComponents.hpp"
@@ -19,10 +20,10 @@ public:
         WINDOW_HEIGHT = windowHeight;
     }
 
-    Entity createShip(Vector2 position) {
+    Entity createShip(Vector2 position, int id, const std::string& name, bool isPlayer = true) {
         Entity ship = gCoordinator.createEntity();
 
-        std::string shipTexturePath = "./assets/textures/ships/ship_1.png";
+        std::string shipTexturePath = "./assets/textures/ships/ship_" + std::to_string(id) + ".png";
         auto& texturesManager = TexturesManager::getInstance();
         Texture2D shipTexture = texturesManager.loadTexture(shipTexturePath);
         Rectangle initialFrame = texturesManager.getFrame(shipTexturePath, 2, 5);
@@ -47,7 +48,12 @@ public:
 
         Rectangle collider = {0, 0, ENTITY_WIDTH, ENTITY_HEIGHT};
         gCoordinator.addComponent(ship, ShipComponent());
-        gCoordinator.addComponent(ship, InputComponent());
+        if (isPlayer) {
+            gCoordinator.addComponent(ship, InputComponent());
+            gCoordinator.addComponent(ship, PlayerNetworkComponent(name, id));
+        }
+        else
+            gCoordinator.addComponent(ship, NetworkComponent(name, "", 0, id));
         gCoordinator.addComponent(ship, TimerComponent());
         gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
         gCoordinator.addComponent(ship, CollisionComponent(collider));

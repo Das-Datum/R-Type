@@ -8,10 +8,11 @@
 #include "Systems/SpriteRelatives.hpp"
 #include "Systems/Generics.hpp"
 #include "Systems/BackgroundScrollSystem.hpp"
+#include "Systems/NetworkClientSystem.hpp"
 
 #include "../../shared/includes/Components/GameComponents.hpp"
 #include "../../shared/includes/Systems/Game.hpp"
 #include "../../shared/includes/Systems/CollisionSystem.hpp"
 
-#include "../../../Network/includes/NetworkComponents.hpp"
+#include "../../../Network/includes/NetworkComponent.hpp"
 #include "../../../Network/includes/NetworkSystems.hpp"

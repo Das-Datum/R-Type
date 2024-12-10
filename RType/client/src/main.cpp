@@ -37,6 +37,8 @@ int main() {
     gCoordinator.registerComponent<BlockOutOfBoundsComponent>();
     gCoordinator.registerComponent<CollisionComponent>();
     gCoordinator.registerComponent<BackgroundScrollComponent>();
+    gCoordinator.registerComponent<NetworkComponent>();
+    gCoordinator.registerComponent<PlayerNetworkComponent>();
 
     //* Systems
     auto renderSystem = gCoordinator.registerSystem<RenderSystem>();
@@ -48,12 +50,12 @@ int main() {
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
 
     auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
-    auto clientNetworkSystem = gCoordinator.registerSystem<ClientSystem>();
+    auto NetworkSystem = gCoordinator.registerSystem<ClientSystem>();
+    auto clientNetworkSystem = gCoordinator.registerSystem<NetworkClientSystem>();
+    auto playerNetworkSystem = gCoordinator.registerSystem<PlayerNetworkSystem>();
 
     Signature signature;
 
-    //? NetworkSystem
-    clientNetworkSystem->init("Player", "127.0.0.1", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -91,9 +93,23 @@ int main() {
     signature.set(gCoordinator.getComponentTypeID<BackgroundScrollComponent>(), true);
     gCoordinator.setSystemSignature<BackgroundScrollSystem>(signature);
 
+    //? NetworkClientSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
+    gCoordinator.setSystemSignature<NetworkClientSystem>(signature);
+
+    //? PlayerNetworkSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<PlayerNetworkComponent>(), true);
+    gCoordinator.setSystemSignature<PlayerNetworkSystem>(signature);
+
+    //? NetworkSystem
+    NetworkSystem->init("Player", "127.0.0.1", 5000);
+    playerNetworkSystem->init(*NetworkSystem);
+
     //? User 1 (main player)
     Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
-    entitiesManager.createShip(shipPosition);
+    entitiesManager.createShip({0, 0}, 1, "Player");
 
     //* Test entity
     // Vector2 enemyPosition = {WINDOW_WIDTH * 0.9f, WINDOW_HEIGHT * 0.2f};
@@ -139,9 +155,10 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        std::string mes = clientNetworkSystem->update();
+        playerNetworkSystem->update();
+        std::string mes = NetworkSystem->update();
         if (mes != "") {
-            std::cout << mes << std::endl;
+            clientNetworkSystem->update(mes);
         }
 
         //? RENDER
@@ -150,7 +167,7 @@ int main() {
         renderSystem->update();
         EndDrawing();
     }
-    clientNetworkSystem->disconnect();
+    NetworkSystem->disconnect();
     TexturesManager.unloadAllTextures();
     CloseWindow();
     return 0;
