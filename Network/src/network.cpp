@@ -60,7 +60,7 @@ void ServerSystem::init(const std::string& ip, int port) {
     info("Server is listening on port " + std::to_string(port));
     if (!_restart)
         _terminalThread = std::thread(&ServerSystem::handleCommand, this);
-        _receivedMsgThread = std::thread(&ServerSystem::readClients, this);
+        _receivedMsgThread = std::thread(&ServerSystem::updateRead, this);
     _restart = false;
 }
 
@@ -79,10 +79,13 @@ void ServerSystem::stop() {
     if (!_restart && _terminalThread.joinable()) {
         _terminalThread.detach();
     }
+    if (!_restart && _receivedMsgThread.joinable()) {
+        _receivedMsgThread.detach();
+    }
     std::vector<Entity> entityList(entities.begin(), entities.end());
     for (size_t i = 0; i < entityList.size(); ++i) {
         auto& player = gCoordinator.getComponent<NetworkComponents>(entityList[i]);
-        sendTo(_server_fd, "STOP", player.ip, player.port);
+        sendTo(_server_fd, "QIT", player.ip, player.port);
         gCoordinator.destroyEntity(entityList[i]);
     }
     #ifdef _WIN32
@@ -171,6 +174,11 @@ int ServerSystem::getNewClientId(std::vector<int> client_ids) {
         else
             break;
     return id;
+}
+
+void ServerSystem::updateRead() {
+    while (isRunning())
+        readClients();
 }
 
 void ServerSystem::update() {

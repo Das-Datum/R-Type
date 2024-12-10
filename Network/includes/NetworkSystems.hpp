@@ -71,6 +71,8 @@ public:
      */
     void readClients();
 
+    void updateRead();
+
     /**
      * @brief Update the server system.
      * @return void
@@ -163,8 +165,8 @@ private:
         std::cout << "\033[2K\r[WARNING]: " << message << std::endl;
         prompt();
     }
-    std::string ServerSystem::checkNewClient(std::string msg);
-    int ServerSystem::getNewClientId(std::vector<int> client_ids);
+    std::string checkNewClient(std::string msg);
+    int getNewClientId(std::vector<int> client_ids);
 
     int _port;
     std::string _ip;
