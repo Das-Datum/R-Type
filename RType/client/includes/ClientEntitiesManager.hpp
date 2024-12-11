@@ -19,10 +19,7 @@ public:
     }
 
     Entity createShip(Vector2 position, int id, const std::string &name, bool playableEntity = true) {
-        Vector2 normalizedPos = {
-            position.x / baseWidth,
-            position.y / baseHeight
-        };
+        Vector2 normalizedPos = position;
 
         Entity ship = gCoordinator.createEntity();
 
