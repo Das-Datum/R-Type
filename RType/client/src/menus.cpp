@@ -1,14 +1,15 @@
 #include "client.hpp"
 
-void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> settings, int windowWidth, int windowHeight) {
+void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int windowHeight) {
     std::cout << "Initializing menus\n";
-    settings->Load();
+    Settings::getInstance().Load();
+
     auto &shadersManager = ShadersManager::getInstance();
     shadersManager.initializeShaders();
 
     auto style = std::make_shared<UIStyle>();
     style->font = GetFontDefault();
-    style->fontSize = settings->getFontSize();
+    style->fontSize = Settings::getInstance().getFontSize();
     style->baseColor = LIGHTGRAY;
     style->hoverColor = GRAY;
     style->textColor = WHITE;
@@ -47,6 +48,10 @@ void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> s
         []() {
             auto &TexturesManager = TexturesManager::getInstance();
             TexturesManager.unloadAllTextures();
+
+            auto &ShadersManager = ShadersManager::getInstance();
+            ShadersManager.unloadAllShaders();
+
             CloseWindow();
             exit(0);
         },
@@ -59,36 +64,36 @@ void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> s
         "Master Volume",
         2, 1,
         0.0f, 1.0f,
-        [&settings](float value) { settings->setMasterVolume(value); },
+        [](float value) { Settings::getInstance().setMasterVolume(value); },
         style,
-        [&settings]() -> float { return settings->getMasterVolume(); }));
+        []() -> float { return Settings::getInstance().getMasterVolume(); }));
 
     pageSettings->AddWidget(std::make_shared<SliderWidget>(
         "Music Volume",
         3, 1,
         0.0f, 1.0f,
-        [&settings](float value) { settings->setMusicVolume(value); },
+        [](float value) { Settings::getInstance().setMusicVolume(value); },
         style,
-        [&settings]() -> float { return settings->getMusicVolume(); }));
+        []() -> float { return Settings::getInstance().getMusicVolume(); }));
 
     pageSettings->AddWidget(std::make_shared<SliderWidget>(
         "SFX Volume",
         4, 1,
         0.0f, 1.0f,
-        [&settings](float value) { settings->setSfxVolume(value); },
+        [](float value) { Settings::getInstance().setSfxVolume(value); },
         style,
-        [&settings]() -> float { return settings->getSfxVolume(); }));
+        []() -> float { return Settings::getInstance().getSfxVolume(); }));
 
     pageSettings->AddWidget(std::make_shared<SliderWidget>(
         "Font Size",
         5, 1,
         10.0f, 40.0f,
-        [settings, style](float value) {
-            settings->setFontSize(value);
+        [style](float value) {
+            Settings::getInstance().setFontSize(value);
             style->fontSize = value;
         },
         style,
-        [settings]() -> float { return settings->getFontSize(); }
+        []() -> float { return Settings::getInstance().getFontSize(); }
     ));
 
     pageSettings->AddWidget(std::make_shared<LabelWidget>(
@@ -99,13 +104,13 @@ void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> s
     pageSettings->AddWidget(std::make_shared<ButtonWidget>(
         "Color Blind Mode",
         7, 1,
-        [settings]() {
-            settings->switchColorBlindMode();
-            std::cout << "Switching color blind mode to " << settings->getColorBlindMode() << std::endl;
+        []() {
+            Settings::getInstance().switchColorBlindMode();
+            std::cout << "Switching color blind mode to " << Settings::getInstance().getColorBlindMode() << std::endl;
         },
         style,
-        [settings]() -> std::string {
-            switch (settings->getColorBlindMode()) {
+        []() -> std::string {
+            switch (Settings::getInstance().getColorBlindMode()) {
                 case NORMAL: return "Normal";
                 case DEUTERANOPIA: return "Deuteranopia";
                 case PROTANOPIA: return "Protanopia";
@@ -117,24 +122,24 @@ void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> s
 
     std::vector<std::pair<std::string, std::pair<std::function<int()>, std::function<void(int)>>>> keyBindings = {
         {"Shoot", {
-            [&settings]() { return settings->getShootKey(); },
-            [&settings](int key) { settings->setShootKey(key); }
+            []() { return Settings::getInstance().getShootKey(); },
+            [](int key) { Settings::getInstance().setShootKey(key); }
         }},
         {"Move Up", {
-            [&settings]() { return settings->getMoveUpKey(); },
-            [&settings](int key) { settings->setMoveUpKey(key); }
+            []() { return Settings::getInstance().getMoveUpKey(); },
+            [](int key) { Settings::getInstance().setMoveUpKey(key); }
         }},
         {"Move Down", {
-            [&settings]() { return settings->getMoveDownKey(); },
-            [&settings](int key) { settings->setMoveDownKey(key); }
+            []() { return Settings::getInstance().getMoveDownKey(); },
+            [](int key) { Settings::getInstance().setMoveDownKey(key); }
         }},
         {"Move Left", {
-            [&settings]() { return settings->getMoveLeftKey(); },
-            [&settings](int key) { settings->setMoveLeftKey(key); }
+            []() { return Settings::getInstance().getMoveLeftKey(); },
+            [](int key) { Settings::getInstance().setMoveLeftKey(key); }
         }},
         {"Move Right", {
-            [&settings]() { return settings->getMoveRightKey(); },
-            [&settings](int key) { settings->setMoveRightKey(key); }
+            []() { return Settings::getInstance().getMoveRightKey(); },
+            [](int key) { Settings::getInstance().setMoveRightKey(key); }
         }}
     };
 
@@ -150,8 +155,8 @@ void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> s
     pageSettings->AddWidget(std::make_shared<ButtonWidget>(
         "Apply & Back",
         8, 2,
-        [manager, settings, windowWidth, windowHeight]() {
-            settings->Save();
+        [manager, windowWidth, windowHeight]() {
+            Settings::getInstance().Save();
             manager->SetActivePage("MainMenu", windowWidth, windowHeight);
         },
         style));

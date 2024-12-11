@@ -18,7 +18,10 @@ typedef enum {
 
 class Settings {
 public:
-    Settings() = default;
+    static Settings& getInstance() {
+        static Settings instance;
+        return instance;
+    }
 
     float getMasterVolume() const { return masterVolume; }
     void setMasterVolume(float volume) { masterVolume = volume; }
@@ -70,6 +73,8 @@ public:
         if (j.find("shootKey") != j.end()) shootKey = j["shootKey"];
         if (j.find("fontSize") != j.end()) fontSize = j["fontSize"];
         if (j.find("colorBlindMode") != j.end()) currentMode = static_cast<ColorBlindMode>(j["colorBlindMode"]);
+
+        std::cout << "Settings loaded successfully.\n";
     }
 
     void Save() const {
@@ -106,6 +111,12 @@ public:
     }
 
 private:
+    Settings() = default;
+    ~Settings() = default;
+
+    Settings(const Settings&) = delete;
+    Settings& operator=(const Settings&) = delete;
+
     float masterVolume = 1.0f;
     float musicVolume = 0.5f;
     float sfxVolume = 0.5f;
