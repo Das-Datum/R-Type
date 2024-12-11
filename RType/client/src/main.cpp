@@ -26,8 +26,8 @@ int main() {
 
 
     //? User 1 (main player)
-    Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
-    entitiesManager.createShip({0, 0}, 1, "Player");
+    // Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
+    // entitiesManager.createShip({0, 0}, 1, "Player");
 
     //* Test entity
     Vector2 enemyPosition = {0.9f, 0.5f};
@@ -53,7 +53,8 @@ int main() {
         -1);
     //! END OF TEMPORARY CODE
 
-    bool showMenu = true;
+    bool showMenu = false;
+    gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
 
     //! MAIN LOOP
     while (!WindowShouldClose()) {
@@ -112,11 +113,8 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        std::vector<std::string> mes = gCoordinator.getSystem<ClientSystem>()->update();
-        if (mes.size() > 0) {
-            gCoordinator.getSystem<NetworkClientSystem>()->update(mes);
-        }
-        mes.clear();
+        gCoordinator.getSystem<ClientManageNetworkSystem>()->update();
+        gCoordinator.getSystem<NetworkInstructionsSystem>()->update();
 
         //? RENDER
         BeginDrawing();
@@ -125,7 +123,7 @@ int main() {
         EndDrawing();
     }
 
-    gCoordinator.getSystem<ClientSystem>()->disconnect();
+    gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
     TexturesManager.unloadAllTextures();
     CloseWindow();
     return 0;

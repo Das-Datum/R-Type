@@ -18,7 +18,7 @@ void initCoordinator() {
     gCoordinator.registerComponent<EnemyHealthComponent>();
 
     gCoordinator.registerComponent<NetworkComponent>();
-    gCoordinator.registerComponent<PlayerNetworkComponent>();
+    gCoordinator.registerComponent<NetworkInstructionsComponent>();
 
     //? Shared components
     gCoordinator.registerComponent<TransformComponent>();
@@ -40,9 +40,8 @@ void initCoordinator() {
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
     auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
 
-    auto clientNetworkSystem = gCoordinator.registerSystem<NetworkClientSystem>();
-    auto playerNetworkSystem = gCoordinator.registerSystem<PlayerNetworkSystem>();
-    auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
+    auto clientManageNetworkSystem = gCoordinator.registerSystem<ClientManageNetworkSystem>();
+    auto networkInstructionsSystem = gCoordinator.registerSystem<NetworkInstructionsSystem>();
 
 
     Signature signature;
@@ -83,18 +82,15 @@ void initCoordinator() {
     signature.set(gCoordinator.getComponentTypeID<BackgroundScrollComponent>(), true);
     gCoordinator.setSystemSignature<BackgroundScrollSystem>(signature);
 
-    //? NetworkClientSystem
+    //? NetworkClientNetworkSystem
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
-    gCoordinator.setSystemSignature<NetworkClientSystem>(signature);
+    gCoordinator.setSystemSignature<ClientManageNetworkSystem>(signature);
 
-    //? PlayerNetworkSystem
+    //? NetworkInstructionsSystem
     signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<PlayerNetworkComponent>(), true);
-    gCoordinator.setSystemSignature<PlayerNetworkSystem>(signature);
+    signature.set(gCoordinator.getComponentTypeID<NetworkInstructionsComponent>(), true);
+    gCoordinator.setSystemSignature<NetworkInstructionsSystem>(signature);
 
-    //? NetworkSystem
-    // networkSystem->init("Player", "127.0.0.1", 5000);
-    // playerNetworkSystem->init(*networkSystem);
 
 }

@@ -7,9 +7,10 @@ using Milliseconds = std::chrono::duration<double, std::milli>;
 
 Coordinator gCoordinator;
 
-void game_tick() {
-    gCoordinator.getSystem<ServerSystem>()->update();
-    gCoordinator.getSystem<CoreSystem>()->update();
+void game_tick(Milliseconds elapsed_time) {
+    gCoordinator.getSystem<ServerMangeNetworkSystem>()->update(elapsed_time);
+    gCoordinator.getSystem<PhysicsSystem>()->update(1.0f / TPS);
+    gCoordinator.getSystem<CollisionSystem>()->update();
 }
 
 int main() {
@@ -35,14 +36,14 @@ int main() {
     }
 
     //? MAIN LOOP
-    while (gCoordinator.getSystem<ServerSystem>()->isRunning()) {
+    while (gCoordinator.getSystem<ServerMangeNetworkSystem>()->isRunning()) {
         TimePoint current_time = Clock::now();
         Milliseconds elapsed_time = current_time - last_tick_time;
 
         if (elapsed_time.count() >= intervalle) {
             last_tick_time += std::chrono::milliseconds(static_cast<int>(intervalle));
             try {
-                game_tick();
+                game_tick(elapsed_time);
             } catch(std::exception& e) {
                 std::cerr << "Error while executing tick: " << e.what() << std::endl;
             }

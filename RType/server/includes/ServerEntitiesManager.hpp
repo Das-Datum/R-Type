@@ -65,6 +65,26 @@ public:
         return enemy;
     }
 
+    Entity createShip(Vector2 normalizedPos, int id, const std::string &name, const std::string &ip, int port) {
+
+        Entity ship = gCoordinator.createEntity();
+
+        float frameWidth = static_cast<float>(1315) / 5;
+        float frameAspectRatio = frameWidth / static_cast<float>(116);
+        float normalizedHeight = 0.05f;
+        float normalizedWidth = normalizedHeight * frameAspectRatio;
+
+        gCoordinator.addComponent(ship, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
+
+        Rectangle collider = {0, 0, normalizedWidth, normalizedHeight};
+        gCoordinator.addComponent(ship, ShipComponent());
+ 
+        gCoordinator.addComponent(ship, NetworkComponent{name, ip, port, id});
+        gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
+        gCoordinator.addComponent(ship, CollisionComponent(collider));
+        return ship;
+    }
+
 private:
     ServerEntitiesManager() = default;
     ~ServerEntitiesManager() = default;
