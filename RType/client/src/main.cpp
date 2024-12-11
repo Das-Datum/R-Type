@@ -4,8 +4,8 @@ Coordinator gCoordinator;
 
 int main() {
     std::cout << "START\n";
-    const int WINDOW_WIDTH = 1920;
-    const int WINDOW_HEIGHT = 1080;
+    const int WINDOW_WIDTH = 1280;
+    const int WINDOW_HEIGHT = 720;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
