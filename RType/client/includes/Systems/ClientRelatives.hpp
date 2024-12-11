@@ -1,8 +1,8 @@
 #pragma once
-#include "../../../../ECS/includes/ECS.hpp"
-#include "../../../shared/includes/Components/GameComponents.hpp"
+#include "ECS.hpp"
+#include "Components/GameComponents.hpp"
 #include "ClientEntitiesManager.hpp"
-#include "../Components.hpp"
+#include "Components.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include <algorithm>

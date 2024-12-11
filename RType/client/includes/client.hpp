@@ -28,4 +28,4 @@
 #include "NetworkSystems.hpp"
 
 void initCoordinator();
-void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> settings, int windowWidth, int windowHeight);
+void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int windowHeight);

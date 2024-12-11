@@ -35,9 +35,7 @@ private:
     ShadersManager() {
         initializeShaders();
     }
-    ~ShadersManager() {
-        unloadAllShaders();
-    }
+    ~ShadersManager() {}
 
     ShadersManager(const ShadersManager&) = delete;
     ShadersManager& operator=(const ShadersManager&) = delete;

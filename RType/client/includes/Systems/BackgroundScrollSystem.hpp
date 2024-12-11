@@ -1,6 +1,6 @@
 #pragma once
-#include "../../../../ECS/includes/ECS.hpp"
-#include "../Components.hpp"
+#include "ECS.hpp"
+#include "Components.hpp"
 #include <cmath>
 
 class BackgroundScrollSystem : public System {

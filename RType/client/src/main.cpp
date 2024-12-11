@@ -4,21 +4,22 @@ Coordinator gCoordinator;
 
 int main() {
     std::cout << "START\n";
-    const int WINDOW_WIDTH = 1280;
-    const int WINDOW_HEIGHT = 720;
+    const int WINDOW_WIDTH = 1920;
+    const int WINDOW_HEIGHT = 1080;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
     std::shared_ptr<MenuManager> menuManager = std::make_shared<MenuManager>();
-    std::shared_ptr<Settings> settings = std::make_shared<Settings>();
+    // std::shared_ptr<Settings> settings = std::make_shared<Settings>();
 
-    initMenus(menuManager, settings, WINDOW_WIDTH, WINDOW_HEIGHT);
+    initMenus(menuManager, WINDOW_WIDTH, WINDOW_HEIGHT);
 
     const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
-    auto &TexturesManager = TexturesManager::getInstance();
+    auto &texturesManager = TexturesManager::getInstance();
     auto &entitiesManager = EntitiesManager::getInstance();
     auto &shadersManager = ShadersManager::getInstance();
+    auto &settings = Settings::getInstance();
 
     entitiesManager.setWindowHeight(static_cast<float>(WINDOW_HEIGHT));
 
@@ -82,16 +83,16 @@ int main() {
             BeginDrawing();
             ClearBackground(BLACK);
 
-            Shader shader = shadersManager.getShaderForMode(settings->getColorBlindMode());
+            Shader shader = shadersManager.getShaderForMode(settings.getColorBlindMode());
 
-            if (settings->getColorBlindMode() != NORMAL) {
+            if (settings.getColorBlindMode() != NORMAL) {
                 BeginShaderMode(shader);
             }
 
             gCoordinator.getSystem<RenderSystem>()->update();
             menuManager->Draw();
 
-            if (settings->getColorBlindMode() != NORMAL) {
+            if (settings.getColorBlindMode() != NORMAL) {
                 EndShaderMode();
             }
 
@@ -124,7 +125,8 @@ int main() {
     }
 
     gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
-    TexturesManager.unloadAllTextures();
+    texturesManager.unloadAllTextures();
+    shadersManager.unloadAllShaders();
     CloseWindow();
     return 0;
 }
