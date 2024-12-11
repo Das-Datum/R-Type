@@ -1,5 +1,4 @@
-#ifndef ENTITIES_MANAGER_HPP
-#define ENTITIES_MANAGER_HPP
+#pragma once
 
 #include <cmath>
 #include "../../../ECS/includes/ECS.hpp"
@@ -193,5 +192,3 @@ class EntitiesManager {
     const float baseHeight = 1080.0f;
     float WINDOW_HEIGHT = 600.0f;
 };
-
-#endif // ENTITIES_MANAGER_HPP

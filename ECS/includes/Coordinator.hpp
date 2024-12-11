@@ -134,6 +134,17 @@ class Coordinator
         }
 
         /**
+         * @brief Gets a system.
+         * @tparam T System type.
+         * @return A shared pointer to the system.
+         */
+        template <typename T>
+        std::shared_ptr<T> getSystem()
+        {
+            return systemManager->getSystem<T>();
+        }
+
+        /**
          * @brief Sets the signature for a system.
          * @tparam T System type.
          * @param signature The signature.
