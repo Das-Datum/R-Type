@@ -9,6 +9,8 @@ Coordinator gCoordinator;
 
 void game_tick(Milliseconds elapsed_time) {
     gCoordinator.getSystem<ServerMangeNetworkSystem>()->update(elapsed_time);
+    //! DESTROY
+    gCoordinator.processEntityDestruction();
     gCoordinator.getSystem<PhysicsSystem>()->update(1.0f / TPS);
     gCoordinator.getSystem<CollisionSystem>()->update();
 }
