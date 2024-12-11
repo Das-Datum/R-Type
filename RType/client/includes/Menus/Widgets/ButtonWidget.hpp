@@ -1,17 +1,25 @@
 #pragma once
-#include "IWidget.hpp"
-#include "UIStyle.hpp"
+#include "Menus/IWidget.hpp"
+#include "Menus/UIStyle.hpp"
 #include <functional>
 #include <memory>
 #include <string>
 
 class ButtonWidget : public IWidget {
   public:
-    ButtonWidget(const std::string &text, int row, int col, std::function<void()> onClick, const std::shared_ptr<UIStyle> &style)
-        : text(text), gridRow(row), gridCol(col), onClick(onClick), style(style) {}
+    ButtonWidget(const std::string &text, int row, int col, 
+                std::function<void()> onClick, 
+                const std::shared_ptr<UIStyle> &style,
+                std::function<std::string()> textUpdateFn = nullptr)
+        : text(text), gridRow(row), gridCol(col), 
+          onClick(onClick), style(style), 
+          textUpdateFn(textUpdateFn) {}
 
     void Update(float dt) override {
         (void)dt;
+        if (textUpdateFn) {
+            text = textUpdateFn();
+        }
         Vector2 mousePos = GetMousePosition();
         Rectangle bounds = CalculateBounds();
         hovered = CheckCollisionPointRec(mousePos, bounds);
@@ -58,6 +66,8 @@ class ButtonWidget : public IWidget {
     bool IsFocused() const override { return hovered; }
     void SetFocus(bool focus) override { (void)focus; }
 
+    void setText(const std::string &text) { this->text = text; }
+
   private:
     Rectangle CalculateBounds() const {
         int screenWidth = GetScreenWidth();
@@ -98,4 +108,5 @@ class ButtonWidget : public IWidget {
     std::function<void()> onClick;
     std::shared_ptr<UIStyle> style;
     bool hovered = false;
+    std::function<std::string()> textUpdateFn;
 };

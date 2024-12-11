@@ -1,6 +1,6 @@
 #pragma once
-#include "IWidget.hpp"
-#include "UIStyle.hpp"
+#include "Menus/IWidget.hpp"
+#include "Menus/UIStyle.hpp"
 #include <memory>
 #include <string>
 

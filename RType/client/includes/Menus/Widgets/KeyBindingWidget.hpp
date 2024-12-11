@@ -1,40 +1,53 @@
 #pragma once
-#include "IWidget.hpp"
-#include "UIStyle.hpp"
+#include "Menus/IWidget.hpp"
+#include "Menus/UIStyle.hpp"
+#include "raylib.h"
 #include <functional>
 #include <memory>
+#include <string>
 
-class SliderWidget : public IWidget {
+class KeyBindingWidget : public IWidget {
   public:
-    SliderWidget(const std::string &label, int row, int col, float minVal, float maxVal, std::function<void(float)> onValueChanged, const std::shared_ptr<UIStyle> &style, std::function<float()> getDefaultValue)
-        : label(label), gridRow(row), gridCol(col), minVal(minVal), maxVal(maxVal), onValueChanged(onValueChanged), style(style), currentValue(getDefaultValue()) {}
+    KeyBindingWidget(const std::string &actionName, int row, int col, std::function<int()> getKeyFunc, std::function<void(int)> setKeyFunc, const std::shared_ptr<UIStyle> &style)
+        : actionName(actionName), gridRow(row), gridCol(col), getKeyFunc(getKeyFunc), setKeyFunc(setKeyFunc), style(style) {}
 
     void Update(float dt) override {
         (void)dt;
         Vector2 mousePos = GetMousePosition();
         Rectangle bounds = CalculateBounds();
         hovered = CheckCollisionPointRec(mousePos, bounds);
-        if (hovered && IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-            float t = (mousePos.x - bounds.x) / bounds.width;
-            if (t < 0.0f)
-                t = 0.0f;
-            if (t > 1.0f)
-                t = 1.0f;
-            currentValue = minVal + t * (maxVal - minVal);
-            onValueChanged(currentValue);
+
+        if (waitingForKey) {
+            for (int k = KEY_SPACE; k < 350; ++k) {
+                if (IsKeyPressed(k)) {
+                    setKeyFunc(k);
+                    waitingForKey = false;
+                    break;
+                }
+            }
+        } else {
+            if (hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+                waitingForKey = true;
+            }
         }
     }
 
     void Draw() override {
         Rectangle bounds = CalculateBounds();
-        DrawRectangleRec(bounds, style->baseColor);
+        Color bg = hovered ? style->hoverColor : style->baseColor;
+        DrawRectangleRec(bounds, bg);
         DrawRectangleLinesEx(bounds, 2, BLACK);
 
-        float t = (currentValue - minVal) / (maxVal - minVal);
-        float handleX = bounds.x + t * bounds.width;
-        DrawCircleV({handleX, bounds.y + bounds.height / 2.0f}, bounds.height / 2.0f, hovered ? style->secondaryHoverColor : style->secondaryColor);
-
-        DrawLabel();
+        std::string displayText = actionName + ": " + (waitingForKey ? "Press a key..." : GetKeyNameStr());
+        Vector2 textSize = MeasureTextEx(style->font, displayText.c_str(), style->fontSize, 1);
+        DrawTextEx(
+            style->font,
+            displayText.c_str(),
+            {bounds.x + 10.0f,
+                bounds.y + (bounds.height - textSize.y) * 0.5f},
+            style->fontSize,
+            1,
+            style->textButtonColor);
     }
 
     void HandleEvent() override {}
@@ -73,45 +86,35 @@ class SliderWidget : public IWidget {
         int padding = static_cast<int>(baseWidth * style->grid.padding);
         float cellWidth = (baseWidth - (padding * (style->grid.totalCols + 1))) / static_cast<float>(style->grid.totalCols);
         float cellHeight = (baseHeight - (padding * (style->grid.totalRows + 1))) / static_cast<float>(style->grid.totalRows);
-
         float startX = (screenWidth - baseWidth) / 2.0f;
         float startY = (screenHeight - baseHeight) / 2.0f;
-
         float x = startX + padding + (gridCol - 1) * (cellWidth + padding);
         float y = startY + padding + (gridRow - 1) * (cellHeight + padding);
 
-        float sliderWidth = cellWidth * 0.9f;
-        float sliderHeight = cellHeight * 0.25f;
+        float btnWidth = cellWidth * 0.9f;
+        float btnHeight = cellHeight * 0.6f;
 
         return Rectangle{
-            x + (cellWidth - sliderWidth) / 2,
-            y + (cellHeight - sliderHeight) / 2,
-            sliderWidth,
-            sliderHeight};
+            x + (cellWidth - btnWidth) / 2,
+            y + (cellHeight - btnHeight) / 2,
+            btnWidth,
+            btnHeight};
     }
 
-    void DrawLabel() const {
-        Rectangle bounds = CalculateBounds();
-        Vector2 textSize = MeasureTextEx(style->font, label.c_str(), style->fontSize * 0.8f, 1);
-
-        DrawTextEx(
-            style->font,
-            label.c_str(),
-            {bounds.x,
-                bounds.y - textSize.y - 5},
-            style->fontSize * 0.8f,
-            1,
-            style->textColor);
+    std::string GetKeyNameStr() const {
+        if (waitingForKey)
+            return "Press a key...";
+        int key = getKeyFunc();
+        return GetKeyName(key);
     }
 
-    const std::string label = "";
     Vector2 size;
+    std::string actionName;
     int gridRow;
     int gridCol;
-    float minVal;
-    float maxVal;
-    float currentValue;
-    std::function<void(float)> onValueChanged;
+    std::function<int()> getKeyFunc;
+    std::function<void(int)> setKeyFunc;
     std::shared_ptr<UIStyle> style;
     bool hovered = false;
+    bool waitingForKey = false;
 };

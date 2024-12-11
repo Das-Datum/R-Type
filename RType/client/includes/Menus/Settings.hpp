@@ -8,6 +8,14 @@
 #include <iostream>
 #include <exception>
 
+typedef enum {
+    NORMAL,
+    DEUTERANOPIA,
+    PROTANOPIA,
+    TRITANOPIA,
+    ACHROMATOPSIA
+} ColorBlindMode;
+
 class Settings {
 public:
     Settings() = default;
@@ -39,6 +47,12 @@ public:
     float getFontSize() const { return fontSize; }
     void setFontSize(float size) { fontSize = size; }
 
+    ColorBlindMode getColorBlindMode() const { return currentMode; }
+    void setColorBlindMode(ColorBlindMode mode) { currentMode = mode; }
+    void switchColorBlindMode() {
+        currentMode = static_cast<ColorBlindMode>((currentMode + 1) % 5);
+    }
+
     void Load() {
         std::string path = GetConfigPath();
         std::ifstream file(path);
@@ -55,6 +69,7 @@ public:
         if (j.find("moveRightKey") != j.end()) moveRightKey = j["moveRightKey"];
         if (j.find("shootKey") != j.end()) shootKey = j["shootKey"];
         if (j.find("fontSize") != j.end()) fontSize = j["fontSize"];
+        if (j.find("colorBlindMode") != j.end()) currentMode = static_cast<ColorBlindMode>(j["colorBlindMode"]);
     }
 
     void Save() const {
@@ -72,6 +87,7 @@ public:
             j["moveRightKey"] = moveRightKey;
             j["shootKey"] = shootKey;
             j["fontSize"] = fontSize;
+            j["colorBlindMode"] = currentMode;
 
             std::ofstream file(path);
             if (!file.is_open()) {
@@ -99,6 +115,8 @@ private:
     int moveRightKey = KEY_D;
     int shootKey = KEY_SPACE;
     float fontSize = 20.0f;
+
+    ColorBlindMode currentMode = NORMAL;
 
     std::string GetConfigPath() const {
         return "config.json";
