@@ -3,7 +3,7 @@
 #include "../../../../ECS/includes/ECS.hpp"
 #include "../Components.hpp"
 #include "../../../shared/includes/Components/GameComponents.hpp"
-#include "../../includes/EntitiesManager.hpp"
+#include "ClientEntitiesManager.hpp"
 #include "raylib.h"
 #include "raymath.h"
 

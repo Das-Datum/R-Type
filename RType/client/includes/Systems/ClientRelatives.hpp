@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../ECS/includes/ECS.hpp"
 #include "../../../shared/includes/Components/GameComponents.hpp"
-#include "../../includes/EntitiesManager.hpp"
+#include "ClientEntitiesManager.hpp"
 #include "../Components.hpp"
 #include "raylib.h"
 #include "raymath.h"

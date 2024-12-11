@@ -2,15 +2,12 @@
 #define ENTITIES_MANAGER_HPP
 
 #include <cmath>
-#include "../../../ECS/includes/ECS.hpp"
-#include "../../shared/includes/Components/GameComponents.hpp"
+#include "AEntitiesManager.hpp"
 #include "Components.hpp"
 #include "TexturesManager.hpp"
 
-extern Coordinator gCoordinator;
-
-class EntitiesManager {
-  public:
+class EntitiesManager : public AEntitiesManager {
+public:
     static EntitiesManager &getInstance() {
         static EntitiesManager instance;
         return instance;
@@ -84,9 +81,9 @@ class EntitiesManager {
         return bullet;
     }
 
-    Entity createEnemy(Vector2 position) {
-        Vector2 normalizedPos = position;
+    Entity createEnemy(Enemy enemyInfos) override {
         Entity enemy = gCoordinator.createEntity();
+        Vector2 position = Vector2{enemyInfos.x, enemyInfos.y};
 
         auto &texturesManager = TexturesManager::getInstance();
         std::string enemyTexturePath = "./assets/textures/enemies/enemy_1.png";
@@ -97,7 +94,7 @@ class EntitiesManager {
         float frameAspectRatio = static_cast<float>(enemyTexture.width / 12) / enemyTexture.height;
         float normalizedWidth = normalizedHeight * frameAspectRatio;
 
-        gCoordinator.addComponent(enemy, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
+        gCoordinator.addComponent(enemy, TransformComponent(position, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
 
         Rectangle collider = {0, 0, normalizedWidth, normalizedHeight};
         gCoordinator.addComponent(enemy, SpriteComponent(enemyTexture, initialFrame, 1));
@@ -105,7 +102,7 @@ class EntitiesManager {
         gCoordinator.addComponent(enemy, SpriteAnimationComponent(12, 0.15f));
         gCoordinator.addComponent(enemy, EnemyComponent({BehaviorType::ChasePlayer, BehaviorType::ShootAtPlayer}));
         gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 200.0f));
-        gCoordinator.addComponent(enemy, EnemyMovementComponent(1.0f, normalizedPos, Vector2{normalizedPos.x + 0.2f, normalizedPos.y}, 0.1f, 1.0f));
+        gCoordinator.addComponent(enemy, EnemyMovementComponent(1.0f, position, Vector2{position.x + 0.2f, position.y}, 0.1f, 1.0f));
         gCoordinator.addComponent(enemy, DestroyOutOfBoundsComponent());
 
         return enemy;
