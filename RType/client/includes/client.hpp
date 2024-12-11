@@ -18,7 +18,7 @@
 #include "Systems/SpriteRelatives.hpp"
 #include "Systems/Generics.hpp"
 #include "Systems/BackgroundScrollSystem.hpp"
-#include "Systems/NetworkClientSystem.hpp"
+#include "Systems/ClientManageNetworkSystem.hpp"
 
 #include "Components/GameComponents.hpp"
 #include "Systems/Game.hpp"

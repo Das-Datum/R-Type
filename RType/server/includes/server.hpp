@@ -7,7 +7,7 @@
 
 #include "Systems/Game.hpp"
 #include "Systems/CollisionSystem.hpp"
-#include "Systems/CoreSystem.hpp"
+#include "Systems/ServerMangeNetworkSystem.hpp"
 
 #include <string>
 

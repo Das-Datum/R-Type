@@ -12,10 +12,10 @@ struct NetworkComponent {
     NetworkComponent(std::string n, std::string ip, int port, int id) : name(n), ip(ip), port(port), id(id) {}
 };
 
-struct PlayerNetworkComponent {
+struct NetworkInstructionsComponent {
     std::string name;
     int id;
-    std::vector<std::string> lastMessagesReceived;
+    std::vector<std::string> instructionsBuffer;
 
-    PlayerNetworkComponent(std::string n, int id) : name(n), id(id) {}
+    NetworkInstructionsComponent(std::string n, int id) : name(n), id(id) {}
 };

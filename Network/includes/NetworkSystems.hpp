@@ -22,10 +22,10 @@ class NetworkSystem : public System {
 };
 
 /**
- * @class ServerSystem
+ * @class ServerNetworkSystem
  * @brief Manages the server system.
  */
-class ServerSystem : public NetworkSystem {
+class ServerNetworkSystem : public NetworkSystem {
 public:
     /**
      * @brief Initialize the server system.
@@ -57,6 +57,8 @@ public:
     void readClients();
 
     void updateRead();
+
+    virtual void createNewClient(std::string name, int id, std::string ip, int port) = 0;
 
     /**
      * @brief Update the server system.
@@ -118,15 +120,8 @@ public:
      */
     bool isRunning() const { return _running; };
 
-private:
-    /**
-     * @brief Display a prompt.
-     * @return void
-     */
-    void prompt() {
-        if (isRunning())
-            std::cout << "> " << std::flush;
-    }
+    int getServerFd() const { return _server_fd; }
+
     void info(const std::string& message) {
         std::cout << "\033[2K\r[INFO]: " << message << std::endl;
         prompt();
@@ -143,6 +138,16 @@ private:
     void warning(const std::string& message) {
         std::cout << "\033[2K\r[WARNING]: " << message << std::endl;
         prompt();
+    }
+
+private:
+    /**
+     * @brief Display a prompt.
+     * @return void
+     */
+    void prompt() {
+        if (isRunning())
+            std::cout << "> " << std::flush;
     }
     std::string checkNewClient(std::string msg);
     int getNewClientId(std::vector<int> client_ids);
@@ -168,10 +173,10 @@ private:
 
 
 /**
- * @class ClientSystem
+ * @class ClientNetworkSystem
  * @brief Manages the client system.
  */
-class ClientSystem : public NetworkSystem {
+class ClientNetworkSystem : public NetworkSystem {
 public:
     /**
      * @brief Initialize the client system.
@@ -220,11 +225,7 @@ public:
 
     void update_read();
 
-    /**
-     * @brief Update the client system.
-     * @return void
-     */
-    std::vector<std::string> update();
+    std::vector<std::string> getLastMessages();
 
 private:
     bool _connected = false;
