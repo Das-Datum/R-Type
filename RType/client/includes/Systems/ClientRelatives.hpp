@@ -188,7 +188,7 @@ class InputSystem : public System {
             auto &playerNetwork = gCoordinator.getComponent<PlayerNetworkComponent>(entity);
             float speed = (1000.0f / 1920.0f) * GetFrameTime();
 
-            if (IsKeyDown(KEY_RIGHT))
+            if (IsKeyDown(KEY_RIGHT)) {
                 transform.position.x += speed;
                 playerNetwork.lastMessagesReceived.push_back("MRT" + std::to_string(playerNetwork.id));
             }

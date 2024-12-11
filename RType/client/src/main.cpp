@@ -1,114 +1,29 @@
-#include "../includes/client.hpp"
+#include "Client.hpp"
 
 Coordinator gCoordinator;
 
 int main() {
+    std::cout << "START\n";
     const int WINDOW_WIDTH = 1280;
     const int WINDOW_HEIGHT = 720;
-    const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
-    auto& TexturesManager = TexturesManager::getInstance();
-    auto& entitiesManager = EntitiesManager::getInstance();
-    entitiesManager.setWindowHeight(static_cast<float>(WINDOW_HEIGHT));
-
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
-    gCoordinator.init();
-    gCoordinator.registerComponent<InputComponent>();
-    gCoordinator.registerComponent<TimerComponent>();
+    std::shared_ptr<MenuManager> menuManager = std::make_shared<MenuManager>();
+    std::shared_ptr<Settings> settings = std::make_shared<Settings>();
 
-    gCoordinator.registerComponent<SpriteComponent>();
-    gCoordinator.registerComponent<SpriteAnimationComponent>();
-    gCoordinator.registerComponent<SpriteFrameComponent>();
+    initMenus(menuManager, settings, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    gCoordinator.registerComponent<StaticComponent>();
+    const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
+    auto &TexturesManager = TexturesManager::getInstance();
+    auto &entitiesManager = EntitiesManager::getInstance();
+    auto &shadersManager = ShadersManager::getInstance();
 
-    gCoordinator.registerComponent<EnemyComponent>();
-    gCoordinator.registerComponent<EnemyMovementComponent>();
-    gCoordinator.registerComponent<EnemyShootComponent>();
+    entitiesManager.setWindowHeight(static_cast<float>(WINDOW_HEIGHT));
 
-    gCoordinator.registerComponent<SpawnComponent>();
-    gCoordinator.registerComponent<EnemyHealthComponent>();
+    initCoordinator();
 
-    //? Shared components
-    gCoordinator.registerComponent<TransformComponent>();
-    gCoordinator.registerComponent<ShipComponent>();
-    gCoordinator.registerComponent<BulletComponent>();
-    gCoordinator.registerComponent<FixedVelocityComponent>();
-    gCoordinator.registerComponent<DestroyOutOfBoundsComponent>();
-    gCoordinator.registerComponent<BlockOutOfBoundsComponent>();
-    gCoordinator.registerComponent<CollisionComponent>();
-    gCoordinator.registerComponent<BackgroundScrollComponent>();
-    gCoordinator.registerComponent<NetworkComponent>();
-    gCoordinator.registerComponent<PlayerNetworkComponent>();
-
-    //* Systems
-    auto renderSystem = gCoordinator.registerSystem<RenderSystem>();
-    auto inputSystem = gCoordinator.registerSystem<InputSystem>();
-    auto physicsSystem = gCoordinator.registerSystem<PhysicsSystem>();
-    auto timerSystem = gCoordinator.registerSystem<TimerSystem>();
-    auto spriteFrameSystem = gCoordinator.registerSystem<SpriteFrameSystem>();
-    auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
-    auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
-
-    auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
-    auto NetworkSystem = gCoordinator.registerSystem<ClientSystem>();
-    auto clientNetworkSystem = gCoordinator.registerSystem<NetworkClientSystem>();
-    auto playerNetworkSystem = gCoordinator.registerSystem<PlayerNetworkSystem>();
-
-    Signature signature;
-
-
-    //? RenderSystem
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    gCoordinator.setSystemSignature<RenderSystem>(signature);
-
-    //? InputSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<InputComponent>(), true);
-    gCoordinator.setSystemSignature<InputSystem>(signature);
-
-    //? PhysicsSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    gCoordinator.setSystemSignature<PhysicsSystem>(signature);
-
-    //? TimerSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TimerComponent>(), true);
-    gCoordinator.setSystemSignature<TimerSystem>(signature);
-
-    //? SpriteFrameSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<SpriteFrameComponent>(), true);
-    gCoordinator.setSystemSignature<SpriteFrameSystem>(signature);
-
-    //? CollisionSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<CollisionComponent>(), true);
-    gCoordinator.setSystemSignature<CollisionSystem>(signature);
-
-    //? BackgroundScrollSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<BackgroundScrollComponent>(), true);
-    gCoordinator.setSystemSignature<BackgroundScrollSystem>(signature);
-
-    //? NetworkClientSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
-    gCoordinator.setSystemSignature<NetworkClientSystem>(signature);
-
-    //? PlayerNetworkSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<PlayerNetworkComponent>(), true);
-    gCoordinator.setSystemSignature<PlayerNetworkSystem>(signature);
-
-    //? NetworkSystem
-    NetworkSystem->init("Player", "127.0.0.1", 5000);
-    playerNetworkSystem->init(*NetworkSystem);
 
     //? User 1 (main player)
     Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
@@ -127,8 +42,7 @@ int main() {
         static_cast<float>(WINDOW_WIDTH),
         static_cast<float>(WINDOW_HEIGHT),
         25.0f,
-        -1
-    );
+        -1);
 
     entitiesManager.createScrollingBackground(
         "./assets/textures/backgrounds/bg-stars.png",
@@ -136,61 +50,82 @@ int main() {
         static_cast<float>(WINDOW_WIDTH),
         static_cast<float>(WINDOW_HEIGHT),
         50.0f,
-        -1
-    );
+        -1);
+    //! END OF TEMPORARY CODE
+
+    bool showMenu = true;
 
     //! MAIN LOOP
     while (!WindowShouldClose()) {
         float deltaTime = GetFrameTime();
-
         float screenWidth = static_cast<float>(GetScreenWidth());
         float screenHeight = static_cast<float>(GetScreenHeight());
-
         float aspectRatio = 16.0f / 9.0f;
         float viewportWidth = screenWidth;
         float viewportHeight = viewportWidth / aspectRatio;
-
         if (viewportHeight > screenHeight) {
             viewportHeight = screenHeight;
             viewportWidth = viewportHeight * aspectRatio;
         }
-
         float viewportX = (screenWidth - viewportWidth) * 0.5f;
         float viewportY = (screenHeight - viewportHeight) * 0.5f;
 
-        physicsSystem->setViewport(viewportWidth, viewportHeight);
-        renderSystem->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
+        gCoordinator.getSystem<PhysicsSystem>()->setViewport(viewportWidth, viewportHeight);
+        gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
+
+        if (showMenu) {
+            menuManager->HandleEvent();
+            menuManager->Update(deltaTime);
+            gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
+
+            BeginDrawing();
+            ClearBackground(BLACK);
+
+            Shader shader = shadersManager.getShaderForMode(settings->getColorBlindMode());
+
+            if (settings->getColorBlindMode() != NORMAL) {
+                BeginShaderMode(shader);
+            }
+
+            gCoordinator.getSystem<RenderSystem>()->update();
+            menuManager->Draw();
+
+            if (settings->getColorBlindMode() != NORMAL) {
+                EndShaderMode();
+            }
+
+            EndDrawing();
+            continue;
+        }
 
         //? LOGIC
-        inputSystem->update();
-        spriteFrameSystem->update();
-        timerSystem->update();
-        collisionSystem->update();
-        backgroundScrollSystem->update(deltaTime);
-        physicsSystem->update(deltaTime);
+        gCoordinator.getSystem<InputSystem>()->update();
+        gCoordinator.getSystem<SpriteFrameSystem>()->update();
+        gCoordinator.getSystem<TimerSystem>()->update();
+        gCoordinator.getSystem<CollisionSystem>()->update();
 
-        enemiesSystem->update(deltaTime);
+        gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
+        gCoordinator.getSystem<PhysicsSystem>()->update(deltaTime);
+        gCoordinator.getSystem<EnemiesSystem>()->update(deltaTime);
 
         //! DESTROY
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        playerNetworkSystem->update();
-        std::vector<std::string> mes = NetworkSystem->update();
+        std::vector<std::string> mes = gCoordinator.getSystem<ClientSystem>()->update();
         if (mes.size() > 0) {
-            clientNetworkSystem->update(mes);
+            gCoordinator.getSystem<NetworkClientSystem>()->update(mes);
         }
         mes.clear();
 
         //? RENDER
         BeginDrawing();
         ClearBackground(BLACK);
-
-        renderSystem->update();
-
+        gCoordinator.getSystem<RenderSystem>()->update();
         EndDrawing();
     }
-    NetworkSystem->disconnect();
+
+    gCoordinator.getSystem<ClientSystem>()->disconnect();
     TexturesManager.unloadAllTextures();
     CloseWindow();
     return 0;

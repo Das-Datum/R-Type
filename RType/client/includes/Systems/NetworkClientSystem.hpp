@@ -1,10 +1,10 @@
 #pragma once
-#include "../../../../ECS/includes/ECS.hpp"
-#include "../../../../Network/includes/NetworkComponent.hpp"
-#include "../../../../Network/includes/NetworkSystems.hpp"
-#include "../Components.hpp"
-#include "../../shared/includes/Components/GameComponents.hpp"
-#include "../EntitiesManager.hpp"
+#include "ECS.hpp"
+#include "NetworkComponent.hpp"
+#include "NetworkSystems.hpp"
+#include "Components.hpp"
+#include "Components/GameComponents.hpp"
+#include "ClientEntitiesManager.hpp"
 #include <map>
 #include <functional>
 

@@ -1,7 +1,17 @@
-#include "../../../ECS/includes/ECS.hpp"
-#include "../includes/Components.hpp"
+#pragma once
+
+#include "raylib.h"
+#include "rlgl.h"
+#include "raylib.h"
+#include "raymath.h"
+
+#include "ECS.hpp"
+#include "Components.hpp"
 #include "TexturesManager.hpp"
 #include "ClientEntitiesManager.hpp"
+
+#include "Menus.hpp"
+#include "ShadersManager.hpp"
 
 #include "Systems/ClientRelatives.hpp"
 #include "Systems/EnemiesRelatives.hpp"
@@ -10,9 +20,12 @@
 #include "Systems/BackgroundScrollSystem.hpp"
 #include "Systems/NetworkClientSystem.hpp"
 
-#include "../../shared/includes/Components/GameComponents.hpp"
-#include "../../shared/includes/Systems/Game.hpp"
-#include "../../shared/includes/Systems/CollisionSystem.hpp"
+#include "Components/GameComponents.hpp"
+#include "Systems/Game.hpp"
+#include "Systems/CollisionSystem.hpp"
 
-#include "../../../Network/includes/NetworkComponent.hpp"
-#include "../../../Network/includes/NetworkSystems.hpp"
+#include "NetworkComponent.hpp"
+#include "NetworkSystems.hpp"
+
+void initCoordinator();
+void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> settings, int windowWidth, int windowHeight);

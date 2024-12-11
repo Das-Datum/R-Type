@@ -1,10 +1,11 @@
-#ifndef ENTITIES_MANAGER_HPP
-#define ENTITIES_MANAGER_HPP
+#pragma once
 
-#include <cmath>
+#include "NetworkComponent.hpp"
 #include "AEntitiesManager.hpp"
 #include "Components.hpp"
 #include "TexturesManager.hpp"
+
+#include <cmath>
 
 class EntitiesManager : public AEntitiesManager {
 public:
@@ -17,10 +18,11 @@ public:
         WINDOW_HEIGHT = windowHeight;
     }
 
-    Entity createShip(Vector2 position) {
+    Entity createShip(Vector2 position, int id, const std::string &name, bool playableEntity = false) {
         Vector2 normalizedPos = {
             position.x / baseWidth,
-            position.y / baseHeight};
+            position.y / baseHeight
+        };
 
         Entity ship = gCoordinator.createEntity();
 
@@ -39,7 +41,12 @@ public:
 
         Rectangle collider = {0, 0, normalizedWidth, normalizedHeight};
         gCoordinator.addComponent(ship, ShipComponent());
-        gCoordinator.addComponent(ship, InputComponent());
+        if (playableEntity) {
+            gCoordinator.addComponent(ship, InputComponent());
+            gCoordinator.addComponent(ship, PlayerNetworkComponent(name, id));
+        } else {
+            gCoordinator.addComponent(ship, NetworkComponent{name, "", 0, id});
+        }
         gCoordinator.addComponent(ship, TimerComponent());
         gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
         gCoordinator.addComponent(ship, CollisionComponent(collider));
@@ -190,5 +197,3 @@ public:
     const float baseHeight = 1080.0f;
     float WINDOW_HEIGHT = 600.0f;
 };
-
-#endif // ENTITIES_MANAGER_HPP

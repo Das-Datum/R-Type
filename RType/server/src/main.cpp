@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "Server.hpp"
 #include "StageLoader.hpp"
 #include "ServerEntitiesManager.hpp"
 

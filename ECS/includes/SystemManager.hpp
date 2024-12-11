@@ -29,6 +29,18 @@ class SystemManager
         }
 
         /**
+         * @brief Gets an existing system.
+         * @tparam T System type.
+         * @return A shared pointer to the system.
+         */
+        template <typename T>
+        std::shared_ptr<T> getSystem()
+        {
+            std::type_index typeName = typeid(T);
+            return std::static_pointer_cast<T>(systems.at(typeName));
+        }
+
+        /**
          * @brief Sets the signature for a system.
          * @tparam T System type.
          * @param signature The signature to set.
