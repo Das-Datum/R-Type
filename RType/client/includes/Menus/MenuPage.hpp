@@ -14,22 +14,22 @@ public:
         widgets.push_back(widget);
     }
 
-    void Update(float dt) {
+    void update(float dt) {
         for (auto& w : widgets) {
-            w->Update(dt);
+            w->update(dt);
         }
     }
 
-    void Draw() {
+    void draw() {
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), style->panelColor);
         for (auto& w : widgets) {
-            w->Draw();
+            w->draw();
         }
     }
 
-    void HandleEvent() {
+    void handleEvent() {
         for (auto& w : widgets) {
-            w->HandleEvent();
+            w->handleEvent();
         }
     }
 

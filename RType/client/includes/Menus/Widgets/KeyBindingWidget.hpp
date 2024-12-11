@@ -11,7 +11,7 @@ class KeyBindingWidget : public IWidget {
     KeyBindingWidget(const std::string &actionName, int row, int col, std::function<int()> getKeyFunc, std::function<void(int)> setKeyFunc, const std::shared_ptr<UIStyle> &style)
         : actionName(actionName), gridRow(row), gridCol(col), getKeyFunc(getKeyFunc), setKeyFunc(setKeyFunc), style(style) {}
 
-    void Update(float dt) override {
+    void update(float dt) override {
         (void)dt;
         Vector2 mousePos = GetMousePosition();
         Rectangle bounds = CalculateBounds();
@@ -32,7 +32,7 @@ class KeyBindingWidget : public IWidget {
         }
     }
 
-    void Draw() override {
+    void draw() override {
         Rectangle bounds = CalculateBounds();
         Color bg = hovered ? style->hoverColor : style->baseColor;
         DrawRectangleRec(bounds, bg);
@@ -50,7 +50,7 @@ class KeyBindingWidget : public IWidget {
             style->textButtonColor);
     }
 
-    void HandleEvent() override {}
+    void handleEvent() override {}
 
     Rectangle GetBounds() const override { return CalculateBounds(); }
 
