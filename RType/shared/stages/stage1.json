@@ -1,0 +1,11 @@
+{
+    "numero": 1,
+    "background_path": "../../client/assets/backgrounds/stage1.png",
+    "music_path": "../../client/assets/sounds/stage1.mp3",
+    "time": 120,
+    "mobs_types": [
+        "asteroid",
+        "classic",
+        "ship"
+    ]
+}

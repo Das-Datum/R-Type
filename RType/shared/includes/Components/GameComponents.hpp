@@ -12,6 +12,12 @@ struct TransformComponent {
         : position(pos), rotation(rot), scale(scl), size(sz) {}
 };
 
+struct SpawnComponent {
+    float time_left;
+
+    SpawnComponent(float time = 0.0f) : time_left(time) {}
+};
+
 struct FixedVelocityComponent {
     Vector2 velocity;
 

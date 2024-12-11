@@ -1,5 +1,5 @@
 #pragma once
-#include "../../ECS/includes/ECS.hpp"
+#include "ECS.hpp"
 #include "NetworkComponent.hpp"
 #include <iostream>
 #include <cstring>

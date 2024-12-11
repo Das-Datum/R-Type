@@ -9,39 +9,52 @@ class PhysicsSystem : public System {
             if (!gCoordinator.hasComponent<TransformComponent>(entity))
                 continue;
 
-            if (gCoordinator.hasComponent<FixedVelocityComponent>(entity)) {
-                auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
-                auto &mob = gCoordinator.getComponent<FixedVelocityComponent>(entity);
+            auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
 
+            if (gCoordinator.hasComponent<FixedVelocityComponent>(entity)) {
+                auto &mob = gCoordinator.getComponent<FixedVelocityComponent>(entity);
                 transform.position.x += mob.velocity.x * frameTime;
                 transform.position.y += mob.velocity.y * frameTime;
             }
 
             if (gCoordinator.hasComponent<DestroyOutOfBoundsComponent>(entity)) {
-                auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
-
-                if (transform.position.x > gameWidth || transform.position.x < 0 || transform.position.y > gameHeight || transform.position.y < 0) {
+                bool shouldDestroy = transform.position.x > 1.05f || transform.position.x < -0.05f ||
+                                     transform.position.y > 1.05f || transform.position.y < -0.05f;
+                if (shouldDestroy) {
                     gCoordinator.destroyEntity(entity);
                 }
             }
 
             if (gCoordinator.hasComponent<BlockOutOfBoundsComponent>(entity)) {
-                auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+                auto &collider = gCoordinator.getComponent<CollisionComponent>(entity);
+                float normalizedWidth = transform.size.x;
+                float normalizedHeight = transform.size.y;
 
-                if (transform.position.x > gameWidth || transform.position.x < 0 || transform.position.y > gameHeight || transform.position.y < 0) {
-                    transform.position.x = std::clamp(transform.position.x, 0.0f, gameWidth);
-                    transform.position.y = std::clamp(transform.position.y, 0.0f, gameHeight);
-                }
+                transform.position.x = std::clamp(transform.position.x, 0.0f, 1.0f - normalizedWidth);
+                transform.position.y = std::clamp(transform.position.y, 0.0f, 1.0f - normalizedHeight);
             }
         }
     }
 
-    void setGameDimensions(float width = 1920, float height = 1080) {
-        gameWidth = width;
-        gameHeight = height;
+    void setViewport(float width, float height) {
+        viewportWidth = width;
+        viewportHeight = height;
     }
 
-    private:
-        float gameWidth = 1920;
-        float gameHeight = 1080;
+  private:
+    const float baseWidth = 1920.0f;
+    const float baseHeight = 1080.0f;
+    float viewportWidth = 1920.0f;
+    float viewportHeight = 1080.0f;
+};
+
+class SpawnSystem : public System {
+    public:
+        void update(float frameTime = 0.0f) {
+            for (const auto& entity : entities) {
+                auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
+
+                spawn.time_left -= frameTime;
+            }
+        }
 };
