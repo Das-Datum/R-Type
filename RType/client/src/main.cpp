@@ -156,10 +156,11 @@ int main() {
 
         //? NETWORK
         playerNetworkSystem->update();
-        std::string mes = NetworkSystem->update();
-        if (mes != "") {
+        std::vector<std::string> mes = NetworkSystem->update();
+        if (mes.size() > 0) {
             clientNetworkSystem->update(mes);
         }
+        mes.clear();
 
         //? RENDER
         BeginDrawing();

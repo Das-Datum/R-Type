@@ -58,10 +58,12 @@ class NetworkClientSystem : public System {
             playerNetwork.position.x -= speed;
         }
 
-        void update(std::string msg) {
-            std::string command = getCommand(msg);
-            if (_commandMap.find(command) != _commandMap.end()) {
-                _commandMap[command](getEntityById(_id));
+        void update(std::vector<std::string> messages) {
+            for (auto const &msg : messages) {
+                std::string command = getCommand(msg);
+                if (_commandMap.find(command) != _commandMap.end()) {
+                    _commandMap[command](getEntityById(_id));
+                }
             }
         }
 

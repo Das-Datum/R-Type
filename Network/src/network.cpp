@@ -7,7 +7,6 @@
 extern Coordinator gCoordinator;
 
 int NetworkSystem::sendTo(int socket, const std::string& message, std::string ip, int port) {
-    std::string binary = textToBinary(message);
     struct sockaddr_in client_addr;
     client_addr.sin_family = AF_INET;
     client_addr.sin_port = htons(port);
@@ -15,7 +14,7 @@ int NetworkSystem::sendTo(int socket, const std::string& message, std::string ip
         std::cerr << "Invalid client IP address" << std::endl;
         return -1;
     }
-    return sendto(socket, binary.c_str(), binary.size(), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
+    return sendto(socket, message.c_str(), message.size(), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
 }
 
 struct sockaddr_in get_sockaddr_in(const char* ip, int port) {
@@ -125,7 +124,7 @@ void ServerSystem::readClients() {
         client_ids.push_back(player.id);
         if (client_ip == player.ip && client_port == player.port) {
             client_exists = true;
-            player.lastMessagesReceived.push_back(binaryToText(std::string(buffer)));
+            player.lastMessagesReceived.push_back(std::string(buffer));
             break;
         }
     }
@@ -139,8 +138,8 @@ void ServerSystem::readClients() {
         return;
     }
     if (!client_exists) {
-        info(binaryToText(std::string(buffer)));
-        std::string new_client_name = checkNewClient(binaryToText(std::string(buffer)));
+        info(std::string(buffer));
+        std::string new_client_name = checkNewClient(std::string(buffer));
         info("New client name: " + new_client_name);
         if (new_client_name == "") {
             error("Invalid client name");
@@ -167,7 +166,7 @@ void ServerSystem::readClients() {
 
 std::string ServerSystem::checkNewClient(std::string msg) {
     if (msg.rfind("NEW", 0) == 0) {
-        return msg.substr(3);
+        return msg.substr(4);
     }
     return "";
 }
@@ -294,7 +293,7 @@ bool ClientSystem::connectToServer() {
         return false;
     }
 
-    if (sendTo(_socket, "NEW" + _name, _ip, _port) < 0) {
+    if (sendTo(_socket, "NEW0" + _name, _ip, _port) < 0) {
         // error("Connection failed");
         return false;
     }
@@ -369,8 +368,8 @@ void ClientSystem::receiveData() {
         return;
     }
     std::lock_guard<std::mutex> lock(_mutex);
-    _lastMessage.push_back(binaryToText(std::string(buffer)));
-    debug("Received data from server: " + binaryToText(std::string(buffer)));
+    _lastMessage.push_back(std::string(buffer));
+    debug("Received data from server: " + std::string(buffer));
     return;
 }
 
@@ -379,14 +378,15 @@ void ClientSystem::update_read() {
         receiveData();
 }
 
-std::string ClientSystem::update() {
+std::vector<std::string> ClientSystem::update() {
     if (isConnected()) {
         std::lock_guard<std::mutex> lock(_mutex);
         if (_lastMessage.empty())
-            return "";
-        std::string message = _lastMessage.front();
-        _lastMessage.erase(_lastMessage.begin());
-        return message;
+            return {};
+        std::vector<std::string> messages(_lastMessage.begin(), _lastMessage.end());
+        _lastMessage.clear();
+        return messages;
     }
     connectToServer();
+    return {};
 }

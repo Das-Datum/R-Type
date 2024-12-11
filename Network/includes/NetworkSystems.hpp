@@ -18,21 +18,6 @@ extern Coordinator gCoordinator;
 
 class NetworkSystem : public System {
     public:
-        std::string binaryToText(const std::string& binary) {
-            std::string text;
-            for (size_t i = 0; i < binary.size(); i += 8) {
-                text += std::bitset<8>(binary.substr(i, 8)).to_ulong();
-            }
-            return text;
-        }
-
-        std::string textToBinary(const std::string& text) {
-            std::string binary;
-            for (size_t i = 0; i < text.size(); i++) {
-                binary += std::bitset<8>(text.c_str()[i]).to_string();
-            }
-            return binary;
-        }
         int sendTo(int socket, const std::string& message, std::string ip, int port);
 };
 
@@ -241,11 +226,12 @@ public:
     void receiveData();
 
     void update_read();
+
     /**
      * @brief Update the client system.
      * @return void
      */
-    std::string update();
+    std::vector<std::string> update();
 
 private:
     bool _connected = false;
