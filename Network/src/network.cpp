@@ -1,6 +1,6 @@
 
-#include "../includes/NetworkSystems.hpp"
-#include "../includes/ServerSystem.hpp"
+#include "NetworkSystems.hpp"
+#include "ServerSystem.hpp"
 
 #define BUFFER_SIZE 1024
 

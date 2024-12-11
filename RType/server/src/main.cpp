@@ -25,7 +25,7 @@ int main() {
     initCoordinator();
 
     try {
-        const std::string path = "../shared/stages/stage1.json";
+        const std::string path = "stages/stage1.json";
         StageLoader loader(path);
         loader.loadConfig();
         loader.genWaves();

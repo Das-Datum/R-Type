@@ -1,6 +1,6 @@
 #pragma once
-#include "../../../../ECS/includes/ECS.hpp"
-#include "../Components/GameComponents.hpp"
+#include "ECS.hpp"
+#include "Components/GameComponents.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include <cmath>

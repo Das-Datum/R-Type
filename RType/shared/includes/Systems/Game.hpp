@@ -1,6 +1,6 @@
 #pragma once
-#include "../../../../ECS/includes/ECS.hpp"
-#include "../Components/GameComponents.hpp"
+#include "ECS.hpp"
+#include "Components/GameComponents.hpp"
 
 class PhysicsSystem : public System {
   public:
