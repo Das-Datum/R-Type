@@ -1,7 +1,7 @@
 #pragma once
 #include "../../../../ECS/includes/ECS.hpp"
 #include "../../../shared/includes/Components/GameComponents.hpp"
-#include "../../includes/EntitiesManager.hpp"
+#include "ClientEntitiesManager.hpp"
 #include "../Components.hpp"
 #include "raylib.h"
 #include "raymath.h"
@@ -185,16 +185,25 @@ class InputSystem : public System {
     void update() {
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+            auto &playerNetwork = gCoordinator.getComponent<PlayerNetworkComponent>(entity);
             float speed = (1000.0f / 1920.0f) * GetFrameTime();
 
-            if (IsKeyDown(KEY_RIGHT))
+            if (IsKeyDown(KEY_RIGHT)) {
                 transform.position.x += speed;
-            if (IsKeyDown(KEY_LEFT))
+                playerNetwork.lastMessagesReceived.push_back("MRT" + std::to_string(playerNetwork.id));
+            }
+            if (IsKeyDown(KEY_LEFT)) {
                 transform.position.x -= speed;
-            if (IsKeyDown(KEY_UP))
+                playerNetwork.lastMessagesReceived.push_back("MLF" + std::to_string(playerNetwork.id));
+            }
+            if (IsKeyDown(KEY_UP)) {
                 transform.position.y -= speed * (16.0 / 9.0);
-            if (IsKeyDown(KEY_DOWN))
+                playerNetwork.lastMessagesReceived.push_back("MUP" + std::to_string(playerNetwork.id));
+            }
+            if (IsKeyDown(KEY_DOWN)) {
                 transform.position.y += speed * (16.0 / 9.0);
+                playerNetwork.lastMessagesReceived.push_back("MDW" + std::to_string(playerNetwork.id));
+            }
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
 
@@ -220,7 +229,9 @@ class InputSystem : public System {
 
                 if (timer.elapsedTime >= timer.duration) {
                     entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
+                    playerNetwork.lastMessagesReceived.push_back("DEM" + std::to_string(playerNetwork.id));
                 } else {
+                    playerNetwork.lastMessagesReceived.push_back("SHT" + std::to_string(playerNetwork.id));
                     entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
                 }
                 timer.active = false;

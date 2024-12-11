@@ -1,11 +1,10 @@
-#include "../../../ECS/includes/ECS.hpp"
+#include "ECS.hpp"
 
-#include "../../../Network/includes/NetworkComponents.hpp"
-#include "../../../Network/includes/NetworkSystems.hpp"
+#include "NetworkComponent.hpp"
+#include "NetworkSystems.hpp"
 
-#include "../../shared/includes/Systems/Game.hpp"
-#include "../../shared/includes/Systems/CollisionSystem.hpp"
-
-#include "Components.hpp"
+#include "Systems/Game.hpp"
+#include "Systems/CollisionSystem.hpp"
+#include "Systems/CoreSystem.hpp"
 
 #include <string>

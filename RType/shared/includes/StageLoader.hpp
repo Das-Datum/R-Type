@@ -2,7 +2,7 @@
 #include <iostream>
 #include <map>
 #include <nlohmann/json.hpp>
-#include "EntitiesManager.hpp"
+#include "AEntitiesManager.hpp"
 
 struct StageConfig {
     int numero;
@@ -83,7 +83,7 @@ class StageLoader {
          *
          * @return void
          */
-        void genMobsEntities(EntitiesManager& manager) {
+        void genMobsEntities(AEntitiesManager& manager) {
             for (std::size_t i = 0; i < _waveCount; i++) {
                 std::size_t waveMobsCount = _wavesMobsCount[i];
 

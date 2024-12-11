@@ -24,14 +24,15 @@ int main() {
 
     initCoordinator();
 
-    //! TEMPORARY CODE (for testing purposes) -> will be handled by the stage loader
+
     //? User 1 (main player)
     Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
-    entitiesManager.createShip(shipPosition);
+    entitiesManager.createShip({0, 0}, 1, "Player");
 
     //* Test entity
     Vector2 enemyPosition = {0.9f, 0.5f};
-    entitiesManager.createEnemy(enemyPosition);
+    Enemy enemyInfos = Enemy(enemyPosition.x, enemyPosition.y, 0.0, EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
+    entitiesManager.createEnemy(enemyInfos);
     // entitiesManager.removeEntity(enemy);
 
     //* Backgrounds
@@ -111,10 +112,11 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        std::string mes = gCoordinator.getSystem<ClientSystem>()->update_read();
-        if (mes != "") {
-            std::cout << mes << std::endl;
+        std::vector<std::string> mes = gCoordinator.getSystem<ClientSystem>()->update();
+        if (mes.size() > 0) {
+            gCoordinator.getSystem<NetworkClientSystem>()->update(mes);
         }
+        mes.clear();
 
         //? RENDER
         BeginDrawing();
@@ -123,7 +125,7 @@ int main() {
         EndDrawing();
     }
 
-    // networkSystem->disconnect();
+    gCoordinator.getSystem<ClientSystem>()->disconnect();
     TexturesManager.unloadAllTextures();
     CloseWindow();
     return 0;

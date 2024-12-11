@@ -17,6 +17,9 @@ void initCoordinator() {
     gCoordinator.registerComponent<SpawnComponent>();
     gCoordinator.registerComponent<EnemyHealthComponent>();
 
+    gCoordinator.registerComponent<NetworkComponent>();
+    gCoordinator.registerComponent<PlayerNetworkComponent>();
+
     //? Shared components
     gCoordinator.registerComponent<TransformComponent>();
     gCoordinator.registerComponent<ShipComponent>();
@@ -37,12 +40,12 @@ void initCoordinator() {
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
     auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
 
-    auto clientNetworkSystem = gCoordinator.registerSystem<ClientSystem>();
+    auto clientNetworkSystem = gCoordinator.registerSystem<NetworkClientSystem>();
+    auto playerNetworkSystem = gCoordinator.registerSystem<PlayerNetworkSystem>();
+    auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
+
 
     Signature signature;
-
-    //? NetworkSystem
-    clientNetworkSystem->init("127.0.0.1", 5000);
 
     //? RenderSystem
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
@@ -79,4 +82,19 @@ void initCoordinator() {
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<BackgroundScrollComponent>(), true);
     gCoordinator.setSystemSignature<BackgroundScrollSystem>(signature);
+
+    //? NetworkClientSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
+    gCoordinator.setSystemSignature<NetworkClientSystem>(signature);
+
+    //? PlayerNetworkSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<PlayerNetworkComponent>(), true);
+    gCoordinator.setSystemSignature<PlayerNetworkSystem>(signature);
+
+    //? NetworkSystem
+    networkSystem->init("Player", "127.0.0.1", 5000);
+    playerNetworkSystem->init(*networkSystem);
+
 }
