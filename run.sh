@@ -6,21 +6,49 @@ fi
 
 cd ./build
 
-cmake ..
-if [ $? -ne 0 ]; then
-    echo "CMake configuration failed"
-    exit 1
-fi
+if [ "$1" != "--run" ]; then
+    cmake ..
+    if [ $? -ne 0 ]; then
+        echo "CMake configuration failed"
+        exit 1
+    fi
 
-cmake --build .
-if [ $? -ne 0 ]; then
-    echo "Build failed"
-    exit 1
+    cmake --build .
+    if [ $? -ne 0 ]; then
+        echo "Build failed"
+        exit 1
+    fi
 fi
 
 if [ "$1" == "--server" ]; then
-    cd Rtype/server/ && ./server.exe
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        cd RType/server/ && ./server
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        cd RType/server/ && ./server
+    elif [[ "$OSTYPE" == "cygwin" ]]; then
+        cd RType/server/ && ./server.exe
+    elif [[ "$OSTYPE" == "msys" ]]; then
+        cd RType/server/ && ./server.exe
+    elif [[ "$OSTYPE" == "win32" ]]; then
+        cd RType/server/ && ./server.exe
+    else
+        echo "Unsupported OS"
+        exit 1
+    fi
 else
     echo "Starting client..."
-    cd Rtype/client/ && ./client.exe
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        cd RType/client/ && ./client
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        cd RType/client/ && ./client
+    elif [[ "$OSTYPE" == "cygwin" ]]; then
+        cd RType/client/ && ./client.exe
+    elif [[ "$OSTYPE" == "msys" ]]; then
+        cd RType/client/ && ./client.exe
+    elif [[ "$OSTYPE" == "win32" ]]; then
+        cd RType/client/ && ./client.exe
+    else
+        echo "Unsupported OS"
+        exit 1
+    fi
 fi
