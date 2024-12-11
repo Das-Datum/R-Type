@@ -21,8 +21,6 @@ int main() {
     auto &shadersManager = ShadersManager::getInstance();
     auto &settings = Settings::getInstance();
 
-    entitiesManager.setWindowHeight(static_cast<float>(WINDOW_HEIGHT));
-
     initCoordinator();
 
 
@@ -54,10 +52,8 @@ int main() {
         -1);
     //! END OF TEMPORARY CODE
 
-    bool showMenu = true;
-
     //! MAIN LOOP
-    while (!WindowShouldClose()) {
+    while (!(WindowShouldClose() && !IsKeyPressed(KEY_ESCAPE))) {
         float deltaTime = GetFrameTime();
         float screenWidth = static_cast<float>(GetScreenWidth());
         float screenHeight = static_cast<float>(GetScreenHeight());
@@ -71,12 +67,16 @@ int main() {
         float viewportX = (screenWidth - viewportWidth) * 0.5f;
         float viewportY = (screenHeight - viewportHeight) * 0.5f;
 
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            menuManager->setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
+        }
+
         gCoordinator.getSystem<PhysicsSystem>()->setViewport(viewportWidth, viewportHeight);
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
 
-        if (showMenu) {
-            menuManager->HandleEvent();
-            menuManager->Update(deltaTime);
+        if (menuManager->isPageActive()) {
+            menuManager->handleEvent();
+            menuManager->update(deltaTime);
             gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
 
             BeginDrawing();
@@ -89,7 +89,7 @@ int main() {
             }
 
             gCoordinator.getSystem<RenderSystem>()->update();
-            menuManager->Draw();
+            menuManager->draw();
 
             if (settings.getColorBlindMode() != NORMAL) {
                 EndShaderMode();

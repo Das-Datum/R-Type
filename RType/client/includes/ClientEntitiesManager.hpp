@@ -14,11 +14,7 @@ public:
         return instance;
     }
 
-    void setWindowHeight(float windowHeight) {
-        WINDOW_HEIGHT = windowHeight;
-    }
-
-    Entity createShip(Vector2 position, int id, const std::string &name, bool playableEntity = false) {
+    Entity createShip(Vector2 position, int id, const std::string &name, bool playableEntity = true) {
         Vector2 normalizedPos = {
             position.x / baseWidth,
             position.y / baseHeight
@@ -126,7 +122,7 @@ public:
         Rectangle initialFrame = texturesManager.getFrame(bulletTexturePath, 0, 2);
 
         float normalizedHeight = 0.02f;
-        float frameAspectRatio = static_cast<float>(bulletTexture.width / 2) / bulletTexture.height;
+        float frameAspectRatio = (bulletTexture.width / 2.0f) / bulletTexture.height;
         float normalizedWidth = normalizedHeight * frameAspectRatio;
         float rotation = atan2f(velocity.y, velocity.x) * RAD2DEG;
 
@@ -137,7 +133,6 @@ public:
             normalizedHeight};
 
         gCoordinator.addComponent(bullet, TransformComponent(normalizedPos, rotation, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
-
         gCoordinator.addComponent(bullet, SpriteComponent(bulletTexture, initialFrame, 2));
         gCoordinator.addComponent(bullet, BulletComponent());
         gCoordinator.addComponent(bullet, FixedVelocityComponent{normalizedVelocity});
@@ -195,5 +190,4 @@ public:
 
     const float baseWidth = 1920.0f;
     const float baseHeight = 1080.0f;
-    float WINDOW_HEIGHT = 600.0f;
 };
