@@ -14,7 +14,7 @@ int NetworkSystem::sendTo(int socket, const std::string& message, std::string ip
         std::cerr << "Invalid client IP address" << std::endl;
         return -1;
     }
-    return sendto(socket, message.c_str(), message.size(), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
+    return sendto(socket, message.c_str(), static_cast<int>(message.size()), 0, (struct sockaddr*)&client_addr, sizeof(client_addr));
 }
 
 struct sockaddr_in get_sockaddr_in(const char* ip, int port) {
@@ -112,7 +112,7 @@ void ServerSystem::readClients() {
     std::string client_ip = inet_ntoa(new_client_addr.sin_addr);
     int client_port = ntohs(new_client_addr.sin_port);
 
-    info("Received message from " + client_ip + ":" + std::to_string(client_port) + " - " + buffer);
+    // info("Received message from " + client_ip + ":" + std::to_string(client_port) + " - " + buffer);
 
 
     std::unique_lock<std::mutex> lock(_clientsMutex);
@@ -128,19 +128,14 @@ void ServerSystem::readClients() {
             break;
         }
     }
-    info("Client exists: " + std::to_string(client_exists));
-    info("Client IDs: " + std::to_string(client_ids.size()));
     int new_client_id = getNewClientId(client_ids);
-    info("New client ID: " + std::to_string(new_client_id));
     if (new_client_id > 4) {
         sendTo(_server_fd, "ERRServer is full", client_ip, client_port);
         error("No available client ID");
         return;
     }
     if (!client_exists) {
-        info(std::string(buffer));
         std::string new_client_name = checkNewClient(std::string(buffer));
-        info("New client name: " + new_client_name);
         if (new_client_name == "") {
             error("Invalid client name");
             sendTo(_server_fd, "ERRInvalid client name", client_ip, client_port);
@@ -148,15 +143,13 @@ void ServerSystem::readClients() {
         }
         for (size_t i = 0; i < entityList.size(); ++i) {
             auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
-            debug("Sent new client info to " + player.id);
             if (sendTo(_server_fd, std::string("NEW") + std::to_string(new_client_id) + new_client_name, player.ip, player.port) <= 0) {
-                perror("Connection failed");
+                error("Connection failed");
                 return;
             }
         }
         Entity new_client = gCoordinator.createEntity();
         gCoordinator.addComponent(new_client, NetworkComponent(new_client_name, client_ip, client_port, new_client_id));
-        info("New client added: " + new_client_name);
         if (sendTo(_server_fd, "BGN" + std::to_string(new_client_id), client_ip, client_port) <= 0) {
             error("Connection failed");
             return;
@@ -250,22 +243,12 @@ void ServerSystem::sendDataAllPlayer() {
     }
 }
 
-void ServerSystem::sendToPlayer() {
-    if (_commandOption.size() < 3) {
-        error("Invalid command option");
-        return;
-    }
-    warning("Not implemented");
-    // sendDataToPlayer(_commandOption[2], std::stoi(_commandOption[1]));
-}
-
 void ServerSystem::sendDataToPlayer(const std::string& message, std::string ip, int port) {
     if (sendTo(_server_fd, message, ip, port) < 0) {
         error("Send failed");
     }
     info("Sent data to " + ip + ":" + std::to_string(port) + " - " + message);
 };
-
 
 
 void ClientSystem::init(const std::string& name, const std::string& ip, int port) {
@@ -342,7 +325,6 @@ bool ClientSystem::sendData(const std::string &data) {
         error("Send failed");
         return false;
     }
-    debug("Sent data to server: " + data);
     return true;
 }
 
@@ -369,7 +351,7 @@ void ClientSystem::receiveData() {
     }
     std::lock_guard<std::mutex> lock(_mutex);
     _lastMessage.push_back(std::string(buffer));
-    debug("Received data from server: " + std::string(buffer));
+    // debug("Received data from server: " + std::string(buffer));S
     return;
 }
 

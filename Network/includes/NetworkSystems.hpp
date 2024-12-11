@@ -106,12 +106,6 @@ public:
 
     /**
      * @brief Send data to a player.
-     * @return void
-     */
-    void sendToPlayer();
-
-    /**
-     * @brief Send data to a player.
      * @param message The message to send.
      * @param playerID The player ID.
      * @return void
@@ -168,7 +162,6 @@ private:
         {"stop", [this]() { stop(); }},
         {"restart", [this]() { restart(); }},
         {"send", [this]() { sendDataAllPlayer(); }},
-        {"sendto", [this]() { sendToPlayer(); }},
         {"help", [this]() { help(); }},
     };
 };

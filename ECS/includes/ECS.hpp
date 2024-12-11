@@ -7,6 +7,5 @@
 #include "ComponentManager.hpp"
 #include "SystemManager.hpp"
 #include "Coordinator.hpp"
-#include "Logger.hpp"
 
 extern Coordinator gCoordinator;
