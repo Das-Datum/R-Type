@@ -13,7 +13,7 @@ int main() {
 
     gCoordinator.init();
 
-    // gCoordinator.registerComponent<PlayerNetworkComponents>();
+    gCoordinator.registerComponent<NetworkComponent>();
     gCoordinator.registerComponent<ShipComponent>();
     gCoordinator.registerComponent<BulletComponent>();
     gCoordinator.registerComponent<TransformComponent>();
@@ -28,6 +28,7 @@ int main() {
 
     //* Systems
     auto networkSystem = gCoordinator.registerSystem<ServerSystem>();
+    auto coreSystem = gCoordinator.registerSystem<CoreSystem>();
     auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
     auto physicsSystem = gCoordinator.registerSystem<PhysicsSystem>();
 
@@ -47,11 +48,16 @@ int main() {
 
     //? NetworkSystem
     signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<PlayerNetworkComponents>(), true);
+    signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
     gCoordinator.setSystemSignature<ServerSystem>(signature);
 
-    networkSystem->init("127.0.0.0", 5000);
+    //? CoreSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
+    gCoordinator.setSystemSignature<CoreSystem>(signature);
 
+    networkSystem->init("127.0.0.0", 5000);
+    coreSystem->init(*networkSystem);
     auto& manager = ServerEntitiesManager::getInstance();
 
     try {
@@ -69,7 +75,8 @@ int main() {
          //? LOGIC
 
          //? NETWORK
-         networkSystem->update();
+        networkSystem->update();
+        coreSystem->update();
     }
     return 0;
 }

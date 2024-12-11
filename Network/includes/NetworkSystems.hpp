@@ -1,6 +1,6 @@
 #pragma once
-#include "../../ECS/includes/ECS.hpp"
-#include "NetworkComponents.hpp"
+#include "ECS.hpp"
+#include "NetworkComponent.hpp"
 #include <iostream>
 #include <cstring>
 #include <vector>
@@ -15,11 +15,17 @@
 
 extern Coordinator gCoordinator;
 
+
+class NetworkSystem : public System {
+    public:
+        int sendTo(int socket, const std::string& message, std::string ip, int port);
+};
+
 /**
  * @class ServerSystem
  * @brief Manages the server system.
  */
-class ServerSystem : public System {
+class ServerSystem : public NetworkSystem {
 public:
     /**
      * @brief Initialize the server system.
@@ -49,6 +55,8 @@ public:
      * @return void
      */
     void readClients();
+
+    void updateRead();
 
     /**
      * @brief Update the server system.
@@ -98,12 +106,6 @@ public:
 
     /**
      * @brief Send data to a player.
-     * @return void
-     */
-    void sendToPlayer();
-
-    /**
-     * @brief Send data to a player.
      * @param message The message to send.
      * @param playerID The player ID.
      * @return void
@@ -142,6 +144,8 @@ private:
         std::cout << "\033[2K\r[WARNING]: " << message << std::endl;
         prompt();
     }
+    std::string checkNewClient(std::string msg);
+    int getNewClientId(std::vector<int> client_ids);
 
     int _port;
     std::string _ip;
@@ -151,13 +155,13 @@ private:
     bool _restart = false;
     std::vector<std::string> _commandOption;
     std::vector<std::string> _help;
-    std::mutex _clients_mutex;
-    std::thread _terminal_thread;
+    std::mutex _clientsMutex;
+    std::thread _terminalThread;
+    std::thread _receivedMsgThread;
     std::map<std::string, std::function<void()>> _commandMap = {
         {"stop", [this]() { stop(); }},
         {"restart", [this]() { restart(); }},
         {"send", [this]() { sendDataAllPlayer(); }},
-        {"sendto", [this]() { sendToPlayer(); }},
         {"help", [this]() { help(); }},
     };
 };
@@ -167,7 +171,7 @@ private:
  * @class ClientSystem
  * @brief Manages the client system.
  */
-class ClientSystem : public System {
+class ClientSystem : public NetworkSystem {
 public:
     /**
      * @brief Initialize the client system.
@@ -175,7 +179,7 @@ public:
      * @param port The server port.
      * @return void
      */
-    void init(const std::string& ip, int port);
+    void init(const std::string& name, const std::string& ip, int port);
 
     /**
      * @brief Connect to the server.
@@ -212,19 +216,25 @@ public:
      * @brief Receive data from the server.
      * @return std::string
      */
-    std::string receiveData();
+    void receiveData();
+
+    void update_read();
 
     /**
      * @brief Update the client system.
-     * @return std::string
+     * @return void
      */
-    std::string update_read();
+    std::vector<std::string> update();
 
 private:
     bool _connected = false;
     int _socket;
     int _port;
+    std::string _name;
     std::string _ip;
+    std::thread _receivedMsgThread;
+    std::mutex _mutex;
+    std::vector<std::string> _lastMessage;
 
     void info(const std::string& message) {
         std::cout << "[INFO]: " << message << std::endl;
