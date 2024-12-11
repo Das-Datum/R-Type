@@ -1,4 +1,4 @@
-#include "Server.hpp"
+#include "server.hpp"
 #define TPS 30.0
 
 using Clock = std::chrono::high_resolution_clock;

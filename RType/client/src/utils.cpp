@@ -1,4 +1,4 @@
-#include "Client.hpp"
+#include "client.hpp"
 
 std::string GetKeyName(int key) {
     switch (key) {

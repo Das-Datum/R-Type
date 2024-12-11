@@ -1,4 +1,4 @@
-#include "Client.hpp"
+#include "client.hpp"
 
 void initCoordinator() {
     gCoordinator.init();
@@ -94,7 +94,7 @@ void initCoordinator() {
     gCoordinator.setSystemSignature<PlayerNetworkSystem>(signature);
 
     //? NetworkSystem
-    networkSystem->init("Player", "127.0.0.1", 5000);
-    playerNetworkSystem->init(*networkSystem);
+    // networkSystem->init("Player", "127.0.0.1", 5000);
+    // playerNetworkSystem->init(*networkSystem);
 
 }

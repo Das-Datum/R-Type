@@ -1,4 +1,4 @@
-#include "Server.hpp"
+#include "server.hpp"
 
 void initCoordinator() {
     gCoordinator.init();

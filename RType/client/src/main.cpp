@@ -1,4 +1,4 @@
-#include "Client.hpp"
+#include "client.hpp"
 
 Coordinator gCoordinator;
 

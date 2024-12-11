@@ -1,4 +1,4 @@
-#include "Client.hpp"
+#include "client.hpp"
 
 void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> settings, int windowWidth, int windowHeight) {
     std::cout << "Initializing menus\n";
@@ -26,7 +26,10 @@ void initMenus(std::shared_ptr<MenuManager> manager, std::shared_ptr<Settings> s
         "Play Game",
         5, 2,
         []() {
-            std::cout << "Starting game...\n";
+            //! Temporary until we have lobbies and single player mode.
+            std::cout << "Connecting to server...\n";
+            gCoordinator.getSystem<ClientSystem>()->init("Player", "127.0.0.1", 5000);
+            gCoordinator.getSystem<PlayerNetworkSystem>()->init(*gCoordinator.getSystem<ClientSystem>());
         },
         style));
 
