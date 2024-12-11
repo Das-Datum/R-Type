@@ -61,6 +61,14 @@ public:
     virtual void createNewClient(std::string name, int id, std::string ip, int port) = 0;
 
     /**
+     * @brief Send a message to all players except the one with the specified id.
+     *
+     * @param id The id of the player to exclude from the message.
+     * @param message The message to send to all other players.
+     */
+    void sendAllPlayer(int id, const std::string &message);
+
+    /**
      * @brief Update the server system.
      * @return void
      */
@@ -221,7 +229,7 @@ public:
      * @brief Receive data from the server.
      * @return std::string
      */
-    void receiveData();
+    bool receiveData();
 
     void update_read();
 
