@@ -232,7 +232,8 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         7, 2,
         [manager, windowWidth, windowHeight]() {
             manager->setActivePage("MainMenu", windowWidth, windowHeight);
-            //! TODO: Implement game cleanup
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
+            //! TODO: Implement game cleanup (graphical)
         },
         style));
 
