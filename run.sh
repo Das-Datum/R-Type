@@ -6,7 +6,18 @@ fi
 
 cd ./build
 
-if [ "$1" != "--run" ]; then
+RUN_FLAG=false
+SERVER_FLAG=false
+
+for arg in "$@"; do
+    if [ "$arg" == "--run" ]; then
+        RUN_FLAG=true
+    elif [ "$arg" == "--server" ]; then
+        SERVER_FLAG=true
+    fi
+done
+
+if [ "$RUN_FLAG" == false ]; then
     cmake ..
     if [ $? -ne 0 ]; then
         echo "CMake configuration failed"
@@ -20,7 +31,7 @@ if [ "$1" != "--run" ]; then
     fi
 fi
 
-if [ "$1" == "--server" ]; then
+if [ "$SERVER_FLAG" == true ]; then
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         cd RType/server/ && ./server
     elif [[ "$OSTYPE" == "darwin"* ]]; then
