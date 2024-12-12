@@ -9,7 +9,7 @@ class LabelWidget : public IWidget {
     LabelWidget(const std::string &text, int row, int col, const std::shared_ptr<UIStyle> &style, float scale = 1.0f)
         : text(text), gridRow(row), gridCol(col), style(style), scale(scale) {}
 
-    void Draw() override {
+    void draw() override {
         Rectangle bounds = CalculateBounds();
         Vector2 textSize = MeasureTextEx(style->font, text.c_str(), style->fontSize * scale, 1);
 
@@ -23,8 +23,8 @@ class LabelWidget : public IWidget {
             style->textColor);
     }
 
-    void Update(float dt) override { (void)dt; }
-    void HandleEvent() override {}
+    void update(float dt) override { (void)dt; }
+    void handleEvent() override {}
     Rectangle GetBounds() const override { return CalculateBounds(); }
     void SetSize(Vector2 size) override { this->size = size; }
     void SetGridPosition(int row, int col) override {

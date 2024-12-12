@@ -14,6 +14,7 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
     style->hoverColor = GRAY;
     style->textColor = WHITE;
 
+    //? MAIN MENU
     auto pageMain = std::make_shared<MenuPage>("MainMenu", style);
 
     pageMain->AddWidget(std::make_shared<LabelWidget>(
@@ -26,10 +27,12 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
     pageMain->AddWidget(std::make_shared<ButtonWidget>(
         "Play Game",
         5, 2,
-        []() {
+        [manager, windowWidth, windowHeight]() {
             //! Temporary until we have lobbies and single player mode.
             std::cout << "Connecting to server...\n";
+            manager->setActivePage("Lobby", windowWidth, windowHeight);
             gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
+
         },
         style));
 
@@ -37,7 +40,7 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         "Settings",
         6, 2,
         [manager, windowWidth, windowHeight]() {
-            manager->SetActivePage("Settings", windowWidth, windowHeight);
+            manager->setActivePage("Settings", windowWidth, windowHeight);
         },
         style));
 
@@ -56,9 +59,10 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         },
         style));
 
+
+    //? SETTINGS
     auto pageSettings = std::make_shared<MenuPage>("Settings", style);
 
-    //? SLIDER
     pageSettings->AddWidget(std::make_shared<SliderWidget>(
         "Master Volume",
         2, 1,
@@ -156,11 +160,87 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         8, 2,
         [manager, windowWidth, windowHeight]() {
             Settings::getInstance().Save();
-            manager->SetActivePage("MainMenu", windowWidth, windowHeight);
+            std::string pageToGo = manager->getLastPageName() != "" ? manager->getLastPageName() : "MainMenu";
+            manager->setActivePage(pageToGo, windowWidth, windowHeight);
         },
         style));
 
-    manager->AddPage(pageMain);
-    manager->AddPage(pageSettings);
-    manager->SetActivePage("MainMenu", windowWidth, windowHeight);
+
+    //? PAGE LOBBY
+    auto pageLobby = std::make_shared<MenuPage>("Lobby", style);
+
+    pageLobby->AddWidget(std::make_shared<LabelWidget>(
+        "Lobby",
+        2, 2,
+        style,
+        3.0f
+    ));
+
+    //! TODO: implement lobby list
+
+    pageLobby->AddWidget(std::make_shared<ButtonWidget>(
+        "Start Game",
+        5, 2,
+        [manager]() {
+            std::cout << "Starting game...\n";
+            //! TODO: implement starting game
+
+            manager->closeCurrentPage();
+        },
+        style));
+
+    pageLobby->AddWidget(std::make_shared<ButtonWidget>(
+        "Leave Lobby",
+        6, 2,
+        [manager, windowWidth, windowHeight]() {
+            std::cout << "Leaving lobby...\n";
+            //! TODO: implement leaving lobby
+
+            manager->setActivePage("MainMenu", windowWidth, windowHeight);
+        },
+        style));
+
+
+    //? PAUSE MENU
+    auto pagePause = std::make_shared<MenuPage>("PauseMenu", style);
+
+    pagePause->AddWidget(std::make_shared<LabelWidget>(
+        "Paused",
+        2, 2,
+        style,
+        3.0f
+    ));
+
+    pagePause->AddWidget(std::make_shared<ButtonWidget>(
+        "Resume",
+        5, 2,
+        [manager, windowWidth, windowHeight]() {
+            manager->closeCurrentPage();
+        },
+        style));
+
+    pagePause->AddWidget(std::make_shared<ButtonWidget>(
+        "Settings",
+        6, 2,
+        [manager, windowWidth, windowHeight]() {
+            manager->setActivePage("Settings", windowWidth, windowHeight);
+        },
+        style));
+
+    pagePause->AddWidget(std::make_shared<ButtonWidget>(
+        "Quit",
+        7, 2,
+        [manager, windowWidth, windowHeight]() {
+            manager->setActivePage("MainMenu", windowWidth, windowHeight);
+            //! TODO: Implement game cleanup
+        },
+        style));
+
+
+    manager->addPage(pageMain);
+    manager->addPage(pageSettings);
+    manager->addPage(pageLobby);
+    manager->addPage(pagePause);
+
+    manager->setActivePage("MainMenu", windowWidth, windowHeight);
 }

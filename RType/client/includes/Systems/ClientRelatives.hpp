@@ -183,44 +183,46 @@ class InputSystem : public System {
     float baseWidth = 1920.0f;
 
     void update() {
+        auto &settings = Settings::getInstance();
+
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
             auto &playerNetwork = gCoordinator.getComponent<NetworkInstructionsComponent>(entity);
             float speed = (1000.0f / 1920.0f) * GetFrameTime();
 
-            if (IsKeyDown(KEY_RIGHT)) {
+            if (IsKeyDown(settings.getMoveRightKey())) {
                 transform.position.x += speed;
                 playerNetwork.instructionsBuffer.push_back("MRT" + std::to_string(playerNetwork.id));
             }
-            if (IsKeyDown(KEY_LEFT)) {
+            if (IsKeyDown(settings.getMoveLeftKey())) {
                 transform.position.x -= speed;
                 playerNetwork.instructionsBuffer.push_back("MLF" + std::to_string(playerNetwork.id));
             }
-            if (IsKeyDown(KEY_UP)) {
+            if (IsKeyDown(settings.getMoveUpKey())) {
                 transform.position.y -= speed * (16.0 / 9.0);
                 playerNetwork.instructionsBuffer.push_back("MUP" + std::to_string(playerNetwork.id));
             }
-            if (IsKeyDown(KEY_DOWN)) {
+            if (IsKeyDown(settings.getMoveDownKey())) {
                 transform.position.y += speed * (16.0 / 9.0);
                 playerNetwork.instructionsBuffer.push_back("MDW" + std::to_string(playerNetwork.id));
             }
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
 
-            if (IsKeyPressed(KEY_SPACE)) {
+            if (IsKeyPressed(settings.getShootKey())) {
                 timer.active = true;
                 timer.elapsedTime = 0.0f;
                 timer.duration = 3.0f;
             }
 
-            if (IsKeyDown(KEY_SPACE) && timer.active) {
+            if (IsKeyDown(settings.getShootKey()) && timer.active) {
                 timer.elapsedTime += GetFrameTime();
                 if (timer.elapsedTime >= timer.duration) {
                     timer.elapsedTime = timer.duration;
                 }
             }
 
-            if (IsKeyReleased(KEY_SPACE) && timer.active) {
+            if (IsKeyReleased(settings.getShootKey()) && timer.active) {
                 auto &entitiesManager = EntitiesManager::getInstance();
 
                 Vector2 bulletPosition = transform.position;

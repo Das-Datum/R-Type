@@ -15,7 +15,7 @@ class ButtonWidget : public IWidget {
           onClick(onClick), style(style), 
           textUpdateFn(textUpdateFn) {}
 
-    void Update(float dt) override {
+    void update(float dt) override {
         (void)dt;
         if (textUpdateFn) {
             text = textUpdateFn();
@@ -29,7 +29,7 @@ class ButtonWidget : public IWidget {
         }
     }
 
-    void Draw() override {
+    void draw() override {
         Rectangle bounds = CalculateBounds();
         Color bg = hovered ? style->hoverColor : style->baseColor;
         DrawRectangleRec(bounds, bg);
@@ -46,7 +46,7 @@ class ButtonWidget : public IWidget {
             style->textButtonColor);
     }
 
-    void HandleEvent() override {}
+    void handleEvent() override {}
 
     Rectangle GetBounds() const override { return CalculateBounds(); }
 

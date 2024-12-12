@@ -9,7 +9,7 @@ class SliderWidget : public IWidget {
     SliderWidget(const std::string &label, int row, int col, float minVal, float maxVal, std::function<void(float)> onValueChanged, const std::shared_ptr<UIStyle> &style, std::function<float()> getDefaultValue)
         : label(label), gridRow(row), gridCol(col), minVal(minVal), maxVal(maxVal), onValueChanged(onValueChanged), style(style), currentValue(getDefaultValue()) {}
 
-    void Update(float dt) override {
+    void update(float dt) override {
         (void)dt;
         Vector2 mousePos = GetMousePosition();
         Rectangle bounds = CalculateBounds();
@@ -25,7 +25,7 @@ class SliderWidget : public IWidget {
         }
     }
 
-    void Draw() override {
+    void draw() override {
         Rectangle bounds = CalculateBounds();
         DrawRectangleRec(bounds, style->baseColor);
         DrawRectangleLinesEx(bounds, 2, BLACK);
@@ -37,7 +37,7 @@ class SliderWidget : public IWidget {
         DrawLabel();
     }
 
-    void HandleEvent() override {}
+    void handleEvent() override {}
 
     Rectangle GetBounds() const override { return CalculateBounds(); }
 
