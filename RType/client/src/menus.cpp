@@ -30,10 +30,9 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         [manager, windowWidth, windowHeight]() {
             //! Temporary until we have lobbies and single player mode.
             std::cout << "Connecting to server...\n";
-            gCoordinator.getSystem<ClientSystem>()->init("Player", "127.0.0.1", 5000);
-            gCoordinator.getSystem<PlayerNetworkSystem>()->init(*gCoordinator.getSystem<ClientSystem>());
-
             manager->setActivePage("Lobby", windowWidth, windowHeight);
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
+
         },
         style));
 

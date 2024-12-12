@@ -4,8 +4,8 @@ Coordinator gCoordinator;
 
 int main() {
     std::cout << "START\n";
-    const int WINDOW_WIDTH = 1920;
-    const int WINDOW_HEIGHT = 1080;
+    const int WINDOW_WIDTH = 1280;
+    const int WINDOW_HEIGHT = 720;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
@@ -25,8 +25,8 @@ int main() {
 
 
     //? User 1 (main player)
-    Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
-    entitiesManager.createShip({0, 0}, 1, "Player");
+    // Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
+    // entitiesManager.createShip({0, 0}, 1, "Player");
 
     //* Test entity
     Vector2 enemyPosition = {0.9f, 0.5f};
@@ -113,11 +113,8 @@ int main() {
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        std::vector<std::string> mes = gCoordinator.getSystem<ClientSystem>()->update();
-        if (mes.size() > 0) {
-            gCoordinator.getSystem<NetworkClientSystem>()->update(mes);
-        }
-        mes.clear();
+        gCoordinator.getSystem<ClientManageNetworkSystem>()->update();
+        gCoordinator.getSystem<NetworkInstructionsSystem>()->update();
 
         //? RENDER
         BeginDrawing();
@@ -126,7 +123,7 @@ int main() {
         EndDrawing();
     }
 
-    gCoordinator.getSystem<ClientSystem>()->disconnect();
+    gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
     texturesManager.unloadAllTextures();
     shadersManager.unloadAllShaders();
     CloseWindow();

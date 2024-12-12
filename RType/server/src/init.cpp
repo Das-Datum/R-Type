@@ -13,12 +13,12 @@ void initCoordinator() {
     gCoordinator.registerComponent<EnemyHealthComponent>();
     gCoordinator.registerComponent<EnemyShootComponent>();
     gCoordinator.registerComponent<EnemyMovementComponent>();
+    gCoordinator.registerComponent<BlockOutOfBoundsComponent>();
     //? Shared components
     gCoordinator.registerComponent<CollisionComponent>();
 
     //* Systems
-    auto networkSystem = gCoordinator.registerSystem<ServerSystem>();
-    auto coreSystem = gCoordinator.registerSystem<CoreSystem>();
+    auto serverMangeNetworkSystem = gCoordinator.registerSystem<ServerMangeNetworkSystem>();
     auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
     auto physicsSystem = gCoordinator.registerSystem<PhysicsSystem>();
 
@@ -39,14 +39,13 @@ void initCoordinator() {
     //? NetworkSystem
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
-    gCoordinator.setSystemSignature<ServerSystem>(signature);
+    gCoordinator.setSystemSignature<ServerNetworkSystem>(signature);
 
-    //? CoreSystem
+    //? ServerMangeNetworkSystem
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
-    gCoordinator.setSystemSignature<CoreSystem>(signature);
+    gCoordinator.setSystemSignature<ServerMangeNetworkSystem>(signature);
 
-    networkSystem->init("127.0.0.0", 5000);
-    coreSystem->init(*networkSystem);
+    serverMangeNetworkSystem->init("127.0.0.0", 5000);
     auto& manager = ServerEntitiesManager::getInstance();
 }

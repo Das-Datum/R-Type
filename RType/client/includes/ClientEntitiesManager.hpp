@@ -22,7 +22,7 @@ public:
 
         Entity ship = gCoordinator.createEntity();
 
-        std::string shipTexturePath = "./assets/textures/ships/ship_1.png";
+        std::string shipTexturePath = "./assets/textures/ships/ship_" + std::to_string(id) + ".png";
         auto &texturesManager = TexturesManager::getInstance();
         Texture2D shipTexture = texturesManager.loadTexture(shipTexturePath);
         Rectangle initialFrame = texturesManager.getFrame(shipTexturePath, 2, 5);
@@ -39,7 +39,7 @@ public:
         gCoordinator.addComponent(ship, ShipComponent());
         if (playableEntity) {
             gCoordinator.addComponent(ship, InputComponent());
-            gCoordinator.addComponent(ship, PlayerNetworkComponent(name, id));
+            gCoordinator.addComponent(ship, NetworkInstructionsComponent(name, id));
         } else {
             gCoordinator.addComponent(ship, NetworkComponent{name, "", 0, id});
         }

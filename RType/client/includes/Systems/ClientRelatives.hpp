@@ -187,24 +187,24 @@ class InputSystem : public System {
 
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
-            auto &playerNetwork = gCoordinator.getComponent<PlayerNetworkComponent>(entity);
+            auto &playerNetwork = gCoordinator.getComponent<NetworkInstructionsComponent>(entity);
             float speed = (1000.0f / 1920.0f) * GetFrameTime();
 
             if (IsKeyDown(settings.getMoveRightKey())) {
                 transform.position.x += speed;
-                playerNetwork.lastMessagesReceived.push_back("MRT" + std::to_string(playerNetwork.id));
+                playerNetwork.instructionsBuffer.push_back("MRT" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveLeftKey())) {
                 transform.position.x -= speed;
-                playerNetwork.lastMessagesReceived.push_back("MLF" + std::to_string(playerNetwork.id));
+                playerNetwork.instructionsBuffer.push_back("MLF" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveUpKey())) {
                 transform.position.y -= speed * (16.0 / 9.0);
-                playerNetwork.lastMessagesReceived.push_back("MUP" + std::to_string(playerNetwork.id));
+                playerNetwork.instructionsBuffer.push_back("MUP" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveDownKey())) {
                 transform.position.y += speed * (16.0 / 9.0);
-                playerNetwork.lastMessagesReceived.push_back("MDW" + std::to_string(playerNetwork.id));
+                playerNetwork.instructionsBuffer.push_back("MDW" + std::to_string(playerNetwork.id));
             }
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
@@ -231,9 +231,9 @@ class InputSystem : public System {
 
                 if (timer.elapsedTime >= timer.duration) {
                     entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
-                    playerNetwork.lastMessagesReceived.push_back("DEM" + std::to_string(playerNetwork.id));
+                    playerNetwork.instructionsBuffer.push_back("DEM" + std::to_string(playerNetwork.id));
                 } else {
-                    playerNetwork.lastMessagesReceived.push_back("SHT" + std::to_string(playerNetwork.id));
+                    playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id));
                     entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
                 }
                 timer.active = false;
