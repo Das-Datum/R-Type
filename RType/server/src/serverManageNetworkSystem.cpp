@@ -11,7 +11,7 @@ void ServerManageNetworkSystem::beam(Entity player) {
 }
 
 void ServerManageNetworkSystem::up(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
+    float speed = (1000.0f / 1920.0f) * _elapsed_time;
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
     pos.position.y -= speed * (16.0 / 9.0);
@@ -19,7 +19,7 @@ void ServerManageNetworkSystem::up(Entity player) {
 }
 
 void ServerManageNetworkSystem::down(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
+    float speed = (1000.0f / 1920.0f) * _elapsed_time;
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
     pos.position.y += speed * (16.0 / 9.0);
@@ -27,7 +27,7 @@ void ServerManageNetworkSystem::down(Entity player) {
 }
 
 void ServerManageNetworkSystem::right(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
+    float speed = (1000.0f / 1920.0f) * _elapsed_time;
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
     pos.position.x += speed;
@@ -35,9 +35,10 @@ void ServerManageNetworkSystem::right(Entity player) {
 }
 
 void ServerManageNetworkSystem::left(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
+    float speed = (1000.0f / 1920.0f) * _elapsed_time;
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
+    pos.position.x -= speed;
     sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
 }
 
@@ -48,7 +49,7 @@ void ServerManageNetworkSystem::disconnectClient(Entity entity) {
     gCoordinator.destroyEntity(entity);
 }
 
-void ServerManageNetworkSystem::update(Milliseconds elapsed_time) {
+void ServerManageNetworkSystem::update(double elapsed_time) {
     _elapsed_time = elapsed_time;
     for (auto const &entity : entities) {
         auto &player = gCoordinator.getComponent<NetworkComponent>(entity);

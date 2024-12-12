@@ -8,8 +8,6 @@
 #include <map>
 #include <functional>
 
-using Milliseconds = std::chrono::duration<double, std::milli>;
-
 /**
  * @class ServerManageNetworkSystem
  * @brief Manage the network for the server
@@ -65,7 +63,7 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
          *
          * @param elapsed_time The time elapsed since the last update.
          */
-        void update(Milliseconds elapsed_time);
+        void update(double elapsed_time);
 
         /**
          * @brief Get the command string based on the input command.
@@ -104,5 +102,5 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
         };
         ServerNetworkSystem *_ServerNetworkSystem;
         std::string _options;
-        Milliseconds _elapsed_time;
+        double _elapsed_time;
 };
