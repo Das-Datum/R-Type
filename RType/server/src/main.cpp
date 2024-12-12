@@ -26,15 +26,15 @@ int main() {
 
     initCoordinator();
 
-    try {
-        const std::string path = "stages/stage1.json";
-        StageLoader loader(path);
-        loader.loadConfig();
-        loader.genWaves();
-        loader.genMobsEntities(manager);
-    } catch(std::exception& e) {
-        std::cerr << "Error while loading the stage: " << e.what() << std::endl;
-    }
+    // try {
+    //     const std::string path = "stages/stage1.json";
+    //     StageLoader loader = StageLoader::getInstance();
+    //     loader.loadConfig(path);
+    //     loader.genWaves();
+    //     loader.genMobsEntities(manager);
+    // } catch(std::exception& e) {
+    //     std::cerr << "Error while loading the stage: " << e.what() << std::endl;
+    // }
 
     //? MAIN LOOP
     while (gCoordinator.getSystem<ServerManageNetworkSystem>()->isRunning()) {
