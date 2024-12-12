@@ -38,6 +38,7 @@ void ServerManageNetworkSystem::left(Entity player) {
     float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
+    pos.position.x -= speed;
     sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
 }
 
