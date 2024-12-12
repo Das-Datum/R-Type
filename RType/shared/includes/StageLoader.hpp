@@ -18,10 +18,10 @@ class StageLoader {
     #define WAVE_MAX_DURATION 20.0f
 
     public:
-        StageLoader(const std::string& config_filepath) : _config_filepath(config_filepath) {
-            initMobsTypes();
+        static StageLoader& getInstance() {
+            static StageLoader instance;
+            return instance;
         }
-        ~StageLoader() = default;
 
         /**
          * @brief Load the config file and store it in the _config attribute
@@ -33,8 +33,8 @@ class StageLoader {
          *
          * @return void
          */
-        void loadConfig() {
-            std::cout << "Loading config file: " << _config_filepath << std::endl;
+        void loadConfig(const std::string& config_filepath) {
+            this->_config_filepath = config_filepath;
             std::ifstream file(_config_filepath);
 
             if (!file.is_open()) {
@@ -106,6 +106,14 @@ class StageLoader {
             }
         };
 
+        void resetConfig() {
+            this->_config_filepath = "";
+            this->_config = StageConfig();
+            this->_waveCount = 0;
+            this->_wavesDurations.clear();
+            this->_wavesMobsCount.clear();
+            this->_wavesMobsTypes.clear();
+        }
 
         // Getters
         StageConfig getStageConfig() const { return _config; };
@@ -151,6 +159,11 @@ class StageLoader {
         };
 
     private:
+        StageLoader() {
+            initMobsTypes();
+        }
+        ~StageLoader() = default;
+
         std::string _config_filepath;
         StageConfig _config;
 
