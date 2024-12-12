@@ -70,6 +70,13 @@ class ClientManageNetworkSystem : public ClientNetworkSystem {
         void left(Entity player);
 
         /**
+         * @brief Disconnect a player
+         * @param entity The player entity
+         * @return void
+         */
+        void disconnectPlayer(Entity entity);
+
+        /**
          * @brief Update the system
          * @return void
          */
@@ -99,6 +106,7 @@ class ClientManageNetworkSystem : public ClientNetworkSystem {
             {"MRT", [this](Entity entity) { right(entity); }},
             {"MLF", [this](Entity entity) { left(entity); }},
             {"BGN", [this](Entity entity) { createPlayerShip(entity); }},
+            {"DEL", [this](Entity entity) { disconnectPlayer(entity); }},
 
         };
         int _id;

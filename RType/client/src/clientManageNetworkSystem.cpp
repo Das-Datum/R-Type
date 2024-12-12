@@ -53,6 +53,10 @@ void ClientManageNetworkSystem::left(Entity player) {
     playerNetwork.position.x -= speed;
 }
 
+void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
+    gCoordinator.destroyEntity(entity);
+}
+
 void ClientManageNetworkSystem::update() {
     std::vector<std::string> messages = getLastMessages();
     for (auto const &msg : messages) {
@@ -74,19 +78,24 @@ Entity ClientManageNetworkSystem::getEntityById(int id) {
 
 std::string ClientManageNetworkSystem::getCommand(std::string command) {
     std::cout << command << std::endl;
-    std::cout << command.size() << std::endl;
     if (command.size() < 3)
         return "";
+    if (command.size() == 3)
+        return command;
     _id = std::stoi(command.substr(3, 1));
-    int pos = getPos(command.substr(3));
-    _options = command.substr(pos + 1);
+    if (command.size() == 4)
+        return command.substr(0, 3);
+    int pos = getPos(command.substr(4));
+    if (command.size() == pos + 5)
+        return command.substr(0, 3);
+    _options = command.substr(pos + 5);
     return command.substr(0, 3);
 }
 
 int ClientManageNetworkSystem::getPos(std::string text) {
     size_t commaPos = text.find(',');
     size_t commaPosEnd = text.find(';');
-    if (commaPos == std::string::npos)
+    if (commaPos == std::string::npos || commaPosEnd == std::string::npos)
         return 0;
     try {
         _x = std::stof(text.substr(0, commaPos));

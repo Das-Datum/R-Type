@@ -76,6 +76,7 @@ void ServerNetworkSystem::getHelp() {
 
 
 void ServerNetworkSystem::stop() {
+    _running = false;
     if (!_restart && _terminalThread.joinable()) {
         _terminalThread.detach();
     }
@@ -94,7 +95,6 @@ void ServerNetworkSystem::stop() {
     #else
         close(_server_fd);
     #endif
-    _running = false;
     info("Server stopped");
 }
 
@@ -105,7 +105,18 @@ void ServerNetworkSystem::readClients() {
     std::memset(buffer, 0, BUFFER_SIZE);
     int bytes_received = recvfrom(_server_fd, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&new_client_addr, &client_len);
     if (bytes_received < 0) {
-        error("Receive failed");
+        if (inet_ntoa(new_client_addr.sin_addr) == "204.204.204.204")
+            return;
+        std::unique_lock<std::mutex> lock(_clientsMutex);
+        std::vector<Entity> entityList(entities.begin(), entities.end());
+        for (size_t i = 0; i < entityList.size(); ++i) {
+            auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
+            if (player.ip == std::string(inet_ntoa(new_client_addr.sin_addr)) && player.port == ntohs(new_client_addr.sin_port)) {
+                sendAllPlayer(player.id, "DEL" + std::to_string(player.id));
+                gCoordinator.destroyEntity(entityList[i]);
+                break;
+            }
+        }
         return;
     }
 
@@ -122,22 +133,19 @@ void ServerNetworkSystem::readClients() {
     for (size_t i = 0; i < entityList.size(); ++i) {
         auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
         client_ids.push_back(player.id);
-        info("Player ID: " + std::to_string(player.id));
-        info("Player IP: " + player.ip);
-        info("Player Port: " + std::to_string(player.port));
         if (client_ip == player.ip && client_port == player.port) {
             client_exists = true;
             player.lastMessagesReceived.push_back(std::string(buffer));
             break;
         }
     }
-    int new_client_id = getNewClientId(client_ids);
-    if (new_client_id > 4) {
-        sendTo(_server_fd, "ERRServer is full", client_ip, client_port);
-        error("No available client ID");
-        return;
-    }
     if (!client_exists) {
+        int new_client_id = getNewClientId(client_ids);
+        if (new_client_id > 4) {
+            sendTo(_server_fd, "ERR0Server is full", client_ip, client_port);
+            error("No available client ID");
+            return;
+        }
         std::string new_client_name = checkNewClient(std::string(buffer));
         createNewClient(new_client_name, new_client_id, client_ip, client_port);
     }
@@ -152,12 +160,22 @@ std::string ServerNetworkSystem::checkNewClient(std::string msg) {
 
 int ServerNetworkSystem::getNewClientId(std::vector<int> client_ids) {
     int id = 1;
-    for (size_t i = 0; i < client_ids.size(); ++i)
+    for (size_t i = 0; i < client_ids.size(); ++i){
         if (client_ids[i] == id)
             id++;
         else
             break;
+    }
     return id;
+}
+
+void ServerNetworkSystem::sendAllPlayer(int id, const std::string &message) {
+    for (auto const &entity : entities) {
+        auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
+        if (player.id == id)
+            continue;
+        sendDataToPlayer(message, player.ip, player.port);
+    }
 }
 
 void ServerNetworkSystem::updateRead() {
@@ -230,10 +248,10 @@ void ServerNetworkSystem::sendDataAllPlayer() {
 }
 
 void ServerNetworkSystem::sendDataToPlayer(const std::string& message, std::string ip, int port) {
+    info("Sent data to " + ip + ":" + std::to_string(port) + " - " + message);
     if (sendTo(_server_fd, message, ip, port) < 0) {
         error("Send failed");
     }
-    info("Sent data to " + ip + ":" + std::to_string(port) + " - " + message);
 };
 
 
@@ -263,7 +281,10 @@ bool ClientNetworkSystem::connectToServer() {
     }
 
     if (sendTo(_socket, "NEW0" + _name, _ip, _port) < 0) {
-        // error("Connection failed");
+        error("Connection failed");
+        return false;
+    }
+    if (!receiveData()) {
         return false;
     }
     info("Connected to server at " + _ip + ":" + std::to_string(_port));
@@ -274,11 +295,9 @@ bool ClientNetworkSystem::connectToServer() {
 
 void ClientNetworkSystem::disconnect() {
     if (isConnected()) {
-        info("Disconnected from server 1");
-        if (_receivedMsgThread.joinable()) {
+        if (_receivedMsgThread.joinable())
             _receivedMsgThread.detach();
-        }
-        info("Disconnected from server 2");
+        sendTo(_socket, "QIT", _ip, _port);
         #ifdef _WIN32
             closesocket(_socket);
             WSACleanup();
@@ -288,6 +307,12 @@ void ClientNetworkSystem::disconnect() {
         _connected = false;
         info("Disconnected from server");
     } else {
+        #ifdef _WIN32
+            closesocket(_socket);
+            WSACleanup();
+        #else
+            close(_socket);
+        #endif
         warning("Not connected to server");
     }
 }
@@ -314,7 +339,7 @@ bool ClientNetworkSystem::sendData(const std::string &data) {
     return true;
 }
 
-void ClientNetworkSystem::receiveData() {
+bool ClientNetworkSystem::receiveData() {
     char buffer[BUFFER_SIZE];
     std::memset(buffer, 0, BUFFER_SIZE);
     struct sockaddr_in address;
@@ -323,22 +348,19 @@ void ClientNetworkSystem::receiveData() {
     address.sin_port = htons(_port);
     if (inet_pton(AF_INET, _ip.c_str(), &address.sin_addr) <= 0) {
         error("Invalid server address");
-        return;
+        return false;
     }
     socklen_t addr_len = sizeof(address);
     int bytes_received = recvfrom(_socket, buffer, BUFFER_SIZE - 1, 0, (struct sockaddr*)&address, &addr_len);
     if (bytes_received < 0) {
-        return;
-    }
-    if (bytes_received == 0) {
-        warning("Server disconnected");
+        if (isConnected())
+            warning("Server disconnected");
         disconnect();
-        return;
+        return false;
     }
     std::lock_guard<std::mutex> lock(_mutex);
     _lastMessage.push_back(std::string(buffer));
-    // debug("Received data from server: " + std::string(buffer));S
-    return;
+    return true;
 }
 
 void ClientNetworkSystem::update_read() {
