@@ -29,10 +29,10 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         5, 2,
         [manager, windowWidth, windowHeight]() {
             //! Temporary until we have lobbies and single player mode.
-            std::cout << "Connecting to server...\n";
-            manager->setActivePage("Lobby", windowWidth, windowHeight);
-            gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
+            // std::cout << "Connecting to server...\n";
+            // gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
 
+            manager->setActivePage("Play", windowWidth, windowHeight);
         },
         style));
 
@@ -166,6 +166,46 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         style));
 
 
+    //? PAGE PLAY
+    auto pagePlay = std::make_shared<MenuPage>("Play", style);
+
+    pagePlay->AddWidget(std::make_shared<LabelWidget>(
+        "Play",
+        2, 2,
+        style,
+        3.0f
+    ));
+
+    pagePlay->AddWidget(std::make_shared<ButtonWidget>(
+        "Single Player",
+        5, 2,
+        [manager, windowWidth, windowHeight]() {
+            std::cout << "Starting single player game...\n";
+            auto &entitiesManager = EntitiesManager::getInstance();
+            entitiesManager.createShip({0.2f, 0.5f}, 1, "Player");
+            manager->closeCurrentPage();
+        },
+        style));
+
+    pagePlay->AddWidget(std::make_shared<ButtonWidget>(
+        "Multiplayer",
+        6, 2,
+        [manager, windowWidth, windowHeight]() {
+            std::cout << "Connecting to server...\n";
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
+            manager->setActivePage("Lobby", windowWidth, windowHeight);
+        },
+        style));
+
+    pagePlay->AddWidget(std::make_shared<ButtonWidget>(
+        "Back",
+        7, 2,
+        [manager, windowWidth, windowHeight]() {
+            manager->setActivePage("MainMenu", windowWidth, windowHeight);
+        },
+        style));
+
+
     //? PAGE LOBBY
     auto pageLobby = std::make_shared<MenuPage>("Lobby", style);
 
@@ -177,13 +217,13 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
     ));
 
     //! TODO: implement lobby list
-
     pageLobby->AddWidget(std::make_shared<ButtonWidget>(
         "Start Game",
         5, 2,
         [manager]() {
             std::cout << "Starting game...\n";
             //! TODO: implement starting game
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("BEG");
 
             manager->closeCurrentPage();
         },
@@ -194,7 +234,7 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
         6, 2,
         [manager, windowWidth, windowHeight]() {
             std::cout << "Leaving lobby...\n";
-            //! TODO: implement leaving lobby
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
 
             manager->setActivePage("MainMenu", windowWidth, windowHeight);
         },

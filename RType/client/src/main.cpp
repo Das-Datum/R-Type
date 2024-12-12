@@ -67,7 +67,7 @@ int main() {
         float viewportX = (screenWidth - viewportWidth) * 0.5f;
         float viewportY = (screenHeight - viewportHeight) * 0.5f;
 
-        if (IsKeyPressed(KEY_ESCAPE)) {
+        if (IsKeyPressed(KEY_ESCAPE) && !menuManager->isPageActive()) {
             menuManager->setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
         }
 
