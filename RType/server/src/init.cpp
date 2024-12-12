@@ -18,7 +18,7 @@ void initCoordinator() {
     gCoordinator.registerComponent<CollisionComponent>();
 
     //* Systems
-    auto serverMangeNetworkSystem = gCoordinator.registerSystem<ServerMangeNetworkSystem>();
+    auto serverManageNetworkSystem = gCoordinator.registerSystem<ServerManageNetworkSystem>();
     auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
     auto physicsSystem = gCoordinator.registerSystem<PhysicsSystem>();
 
@@ -41,11 +41,11 @@ void initCoordinator() {
     signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
     gCoordinator.setSystemSignature<ServerNetworkSystem>(signature);
 
-    //? ServerMangeNetworkSystem
+    //? ServerManageNetworkSystem
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<NetworkComponent>(), true);
-    gCoordinator.setSystemSignature<ServerMangeNetworkSystem>(signature);
+    gCoordinator.setSystemSignature<ServerManageNetworkSystem>(signature);
 
-    serverMangeNetworkSystem->init("127.0.0.0", 5000);
+    serverManageNetworkSystem->init("127.0.0.0", 5000);
     auto& manager = ServerEntitiesManager::getInstance();
 }

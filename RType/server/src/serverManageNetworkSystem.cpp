@@ -1,16 +1,16 @@
-#include "Systems/ServerMangeNetworkSystem.hpp"
+#include "Systems/ServerManageNetworkSystem.hpp"
 
-void ServerMangeNetworkSystem::shoot(Entity player) {
+void ServerManageNetworkSystem::shoot(Entity player) {
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     sendAllPlayer(playerNetwork.id, "SHT" + std::to_string(playerNetwork.id));
 }
 
-void ServerMangeNetworkSystem::beam(Entity player) {
+void ServerManageNetworkSystem::beam(Entity player) {
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     sendAllPlayer(playerNetwork.id, "DEM" + std::to_string(playerNetwork.id));
 }
 
-void ServerMangeNetworkSystem::up(Entity player) {
+void ServerManageNetworkSystem::up(Entity player) {
     float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
@@ -18,7 +18,7 @@ void ServerMangeNetworkSystem::up(Entity player) {
     sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
 }
 
-void ServerMangeNetworkSystem::down(Entity player) {
+void ServerManageNetworkSystem::down(Entity player) {
     float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
@@ -26,7 +26,7 @@ void ServerMangeNetworkSystem::down(Entity player) {
     sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
 }
 
-void ServerMangeNetworkSystem::right(Entity player) {
+void ServerManageNetworkSystem::right(Entity player) {
     float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
@@ -34,21 +34,21 @@ void ServerMangeNetworkSystem::right(Entity player) {
     sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
 }
 
-void ServerMangeNetworkSystem::left(Entity player) {
+void ServerManageNetworkSystem::left(Entity player) {
     float speed = (1000.0f / 1920.0f) * _elapsed_time.count();
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     auto &pos = gCoordinator.getComponent<TransformComponent>(player);
     sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
 }
 
-void ServerMangeNetworkSystem::disconnectClient(Entity entity) {
+void ServerManageNetworkSystem::disconnectClient(Entity entity) {
     auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
     sendAllPlayer(player.id, "DEL" + std::to_string(player.id));
     info("Client disconnected: " + player.id);
     gCoordinator.destroyEntity(entity);
 }
 
-void ServerMangeNetworkSystem::update(Milliseconds elapsed_time) {
+void ServerManageNetworkSystem::update(Milliseconds elapsed_time) {
     _elapsed_time = elapsed_time;
     for (auto const &entity : entities) {
         auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
@@ -62,7 +62,7 @@ void ServerMangeNetworkSystem::update(Milliseconds elapsed_time) {
     }
 }
 
-std::string ServerMangeNetworkSystem::getCommand(std::string command) {
+std::string ServerManageNetworkSystem::getCommand(std::string command) {
     if (command.size() < 3)
         return "";
     if (command.size() == 3)
@@ -71,7 +71,7 @@ std::string ServerMangeNetworkSystem::getCommand(std::string command) {
     return command.substr(0, 3);
 }
 
-void ServerMangeNetworkSystem::createNewClient(std::string name, int id, std::string ip, int port) {
+void ServerManageNetworkSystem::createNewClient(std::string name, int id, std::string ip, int port) {
     if (name == "") {
         error("Invalid client name");
         sendTo(getServerFd(), "ERRInvalid client name", ip, port);

@@ -8,7 +8,7 @@ using Milliseconds = std::chrono::duration<double, std::milli>;
 Coordinator gCoordinator;
 
 void game_tick(Milliseconds elapsed_time) {
-    gCoordinator.getSystem<ServerMangeNetworkSystem>()->update(elapsed_time);
+    gCoordinator.getSystem<ServerManageNetworkSystem>()->update(elapsed_time);
     //! DESTROY
     gCoordinator.processEntityDestruction();
     gCoordinator.getSystem<PhysicsSystem>()->update(1.0f / TPS);
@@ -38,7 +38,7 @@ int main() {
     }
 
     //? MAIN LOOP
-    while (gCoordinator.getSystem<ServerMangeNetworkSystem>()->isRunning()) {
+    while (gCoordinator.getSystem<ServerManageNetworkSystem>()->isRunning()) {
         TimePoint current_time = Clock::now();
         Milliseconds elapsed_time = current_time - last_tick_time;
 

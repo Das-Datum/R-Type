@@ -11,11 +11,11 @@
 using Milliseconds = std::chrono::duration<double, std::milli>;
 
 /**
- * @class ServerMangeNetworkSystem
+ * @class ServerManageNetworkSystem
  * @brief Manage the network for the server
  */
 
-class ServerMangeNetworkSystem : public ServerNetworkSystem {
+class ServerManageNetworkSystem : public ServerNetworkSystem {
     public:
 
         /**
