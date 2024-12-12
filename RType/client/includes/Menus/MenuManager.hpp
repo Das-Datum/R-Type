@@ -6,6 +6,11 @@
 
 class MenuManager {
 public:
+    static MenuManager& getInstance() {
+        static MenuManager instance;
+        return instance;
+    }
+
     void addPage(const std::shared_ptr<MenuPage>& page) {
         pages[page->GetName()] = page;
     }
@@ -48,6 +53,11 @@ public:
     }
 
 private:
+    MenuManager() = default;
+    ~MenuManager() = default;
+    MenuManager(const MenuManager&) = delete;
+    MenuManager& operator=(const MenuManager&) = delete;
+
     std::map<std::string, std::shared_ptr<MenuPage>> pages;
     std::shared_ptr<MenuPage> activePage = nullptr;
     std::string lastPageName;

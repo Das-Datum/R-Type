@@ -57,6 +57,23 @@ void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
     gCoordinator.destroyEntity(entity);
 }
 
+void ClientManageNetworkSystem::loadStage(Entity entity) {
+    auto &stageLoader = StageLoader::getInstance();
+    try {
+        stageLoader.loadConfig(_options);
+        stageLoader.genWaves();
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
+void ClientManageNetworkSystem::startGame(Entity entity) {
+    (void)entity;
+    auto &menuManager = MenuManager::getInstance();
+    menuManager.closeCurrentPage();
+    std::cout << "Game started by the player " << _id << std::endl;
+}
+
 void ClientManageNetworkSystem::update() {
     std::vector<std::string> messages = getLastMessages();
     for (auto const &msg : messages) {

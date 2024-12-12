@@ -10,10 +10,11 @@ int main() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
-    std::shared_ptr<MenuManager> menuManager = std::make_shared<MenuManager>();
+    // std::shared_ptr<MenuManager> menuManager = std::make_shared<MenuManager>();
     // std::shared_ptr<Settings> settings = std::make_shared<Settings>();
+    auto &menuManager = MenuManager::getInstance();
 
-    initMenus(menuManager, WINDOW_WIDTH, WINDOW_HEIGHT);
+    initMenus(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
     auto &texturesManager = TexturesManager::getInstance();
@@ -67,16 +68,16 @@ int main() {
         float viewportX = (screenWidth - viewportWidth) * 0.5f;
         float viewportY = (screenHeight - viewportHeight) * 0.5f;
 
-        if (IsKeyPressed(KEY_ESCAPE) && !menuManager->isPageActive()) {
-            menuManager->setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
+        if (IsKeyPressed(KEY_ESCAPE) && !menuManager.isPageActive()) {
+            menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
         }
 
         gCoordinator.getSystem<PhysicsSystem>()->setViewport(viewportWidth, viewportHeight);
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
 
-        if (menuManager->isPageActive()) {
-            menuManager->handleEvent();
-            menuManager->update(deltaTime);
+        if (menuManager.isPageActive()) {
+            menuManager.handleEvent();
+            menuManager.update(deltaTime);
             gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
 
             BeginDrawing();
@@ -89,7 +90,7 @@ int main() {
             }
 
             gCoordinator.getSystem<RenderSystem>()->update();
-            menuManager->draw();
+            menuManager.draw();
 
             if (settings.getColorBlindMode() != NORMAL) {
                 EndShaderMode();

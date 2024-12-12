@@ -77,6 +77,20 @@ class ClientManageNetworkSystem : public ClientNetworkSystem {
         void disconnectPlayer(Entity entity);
 
         /**
+         * @brief Load the stage
+         * @param entity The entity
+         * @return void
+         */
+        void loadStage(Entity entity);
+
+        /**
+         * @brief Start the game
+         *
+         * @param entity The entity
+         */
+        void startGame(Entity entity);
+
+        /**
          * @brief Update the system
          * @return void
          */
@@ -106,8 +120,9 @@ class ClientManageNetworkSystem : public ClientNetworkSystem {
             {"MRT", [this](Entity entity) { right(entity); }},
             {"MLF", [this](Entity entity) { left(entity); }},
             {"BGN", [this](Entity entity) { createPlayerShip(entity); }},
+            {"LOD", [this](Entity entity) { loadStage(entity); }},
+            {"STA", [this](Entity entity) { startGame(entity); }},
             {"DEL", [this](Entity entity) { disconnectPlayer(entity); }},
-
         };
         int _id;
         std::string _options;
