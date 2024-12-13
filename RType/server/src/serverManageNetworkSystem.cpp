@@ -57,14 +57,14 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     info("Game started by the player " + playerNetwork.id);
     //! TODO: call singleton stage loader -> load stage1.json
 
-    // auto &stageLoader = StageLoader::getInstance();
-    // try {
-    //     stageLoader.loadConfig("stages/stage1.json");
-    //     stageLoader.genWaves();
-    //     stageLoader.genMobsEntities(ServerEntitiesManager::getInstance());
-    // } catch (const std::exception &e) {
-    //     error(e.what());
-    // }
+    auto &stageLoader = StageLoader::getInstance();
+    try {
+        stageLoader.loadConfig("stages/stage1.json");
+        stageLoader.genWaves();
+        stageLoader.genMobsEntities(ServerEntitiesManager::getInstance());
+    } catch (const std::exception &e) {
+        error(e.what());
+    }
 
     info("Game started");
 
