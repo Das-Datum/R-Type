@@ -1,9 +1,8 @@
 #include "client.hpp"
 
-void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int windowHeight) {
+void initMenus(int windowWidth, int windowHeight) {
     std::cout << "Initializing menus\n";
     Settings::getInstance().Load();
-
     auto &shadersManager = ShadersManager::getInstance();
     shadersManager.initializeShaders();
 
@@ -27,20 +26,17 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
     pageMain->AddWidget(std::make_shared<ButtonWidget>(
         "Play Game",
         5, 2,
-        [manager, windowWidth, windowHeight]() {
+        [windowWidth, windowHeight]() {
             //! Temporary until we have lobbies and single player mode.
-            std::cout << "Connecting to server...\n";
-            manager->setActivePage("Lobby", windowWidth, windowHeight);
-            gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
-
+            MenuManager::getInstance().setActivePage("Play", windowWidth, windowHeight);
         },
         style));
 
     pageMain->AddWidget(std::make_shared<ButtonWidget>(
         "Settings",
         6, 2,
-        [manager, windowWidth, windowHeight]() {
-            manager->setActivePage("Settings", windowWidth, windowHeight);
+        [windowWidth, windowHeight]() {
+            MenuManager::getInstance().setActivePage("Settings", windowWidth, windowHeight);
         },
         style));
 
@@ -158,10 +154,56 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
     pageSettings->AddWidget(std::make_shared<ButtonWidget>(
         "Apply & Back",
         8, 2,
-        [manager, windowWidth, windowHeight]() {
+        [windowWidth, windowHeight]() {
             Settings::getInstance().Save();
-            std::string pageToGo = manager->getLastPageName() != "" ? manager->getLastPageName() : "MainMenu";
-            manager->setActivePage(pageToGo, windowWidth, windowHeight);
+            std::string pageToGo = MenuManager::getInstance().getLastPageName() != "" ? MenuManager::getInstance().getLastPageName() : "MainMenu";
+            MenuManager::getInstance().setActivePage(pageToGo, windowWidth, windowHeight);
+        },
+        style));
+
+
+    //? PAGE PLAY
+    auto pagePlay = std::make_shared<MenuPage>("Play", style);
+
+    pagePlay->AddWidget(std::make_shared<LabelWidget>(
+        "Play",
+        2, 2,
+        style,
+        3.0f
+    ));
+
+    pagePlay->AddWidget(std::make_shared<ButtonWidget>(
+        "Single Player",
+        5, 2,
+        [windowWidth, windowHeight]() {
+            std::cout << "Starting single player game...\n";
+            auto &entitiesManager = EntitiesManager::getInstance();
+            entitiesManager.createShip({0.2f, 0.5f}, 1, "Player");
+
+            auto &stageLoader = StageLoader::getInstance();
+            stageLoader.loadConfig("stages/stage1.json");
+            stageLoader.genWaves();
+            stageLoader.genMobsEntities(entitiesManager);
+
+            MenuManager::getInstance().closeCurrentPage();
+        },
+        style));
+
+    pagePlay->AddWidget(std::make_shared<ButtonWidget>(
+        "Multiplayer",
+        6, 2,
+        [windowWidth, windowHeight]() {
+            std::cout << "Connecting to server...\n";
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
+            MenuManager::getInstance().setActivePage("Lobby", windowWidth, windowHeight);
+        },
+        style));
+
+    pagePlay->AddWidget(std::make_shared<ButtonWidget>(
+        "Back",
+        7, 2,
+        [windowWidth, windowHeight]() {
+            MenuManager::getInstance().setActivePage("MainMenu", windowWidth, windowHeight);
         },
         style));
 
@@ -177,26 +219,26 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
     ));
 
     //! TODO: implement lobby list
-
     pageLobby->AddWidget(std::make_shared<ButtonWidget>(
         "Start Game",
         5, 2,
-        [manager]() {
+        []() {
             std::cout << "Starting game...\n";
             //! TODO: implement starting game
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("STA");
 
-            manager->closeCurrentPage();
+            MenuManager::getInstance().closeCurrentPage();
         },
         style));
 
     pageLobby->AddWidget(std::make_shared<ButtonWidget>(
         "Leave Lobby",
         6, 2,
-        [manager, windowWidth, windowHeight]() {
+        [windowWidth, windowHeight]() {
             std::cout << "Leaving lobby...\n";
-            //! TODO: implement leaving lobby
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
 
-            manager->setActivePage("MainMenu", windowWidth, windowHeight);
+            MenuManager::getInstance().setActivePage("MainMenu", windowWidth, windowHeight);
         },
         style));
 
@@ -214,34 +256,35 @@ void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int window
     pagePause->AddWidget(std::make_shared<ButtonWidget>(
         "Resume",
         5, 2,
-        [manager, windowWidth, windowHeight]() {
-            manager->closeCurrentPage();
+        [windowWidth, windowHeight]() {
+            MenuManager::getInstance().closeCurrentPage();
         },
         style));
 
     pagePause->AddWidget(std::make_shared<ButtonWidget>(
         "Settings",
         6, 2,
-        [manager, windowWidth, windowHeight]() {
-            manager->setActivePage("Settings", windowWidth, windowHeight);
+        [windowWidth, windowHeight]() {
+            MenuManager::getInstance().setActivePage("Settings", windowWidth, windowHeight);
         },
         style));
 
     pagePause->AddWidget(std::make_shared<ButtonWidget>(
         "Quit",
         7, 2,
-        [manager, windowWidth, windowHeight]() {
-            manager->setActivePage("MainMenu", windowWidth, windowHeight);
+        [windowWidth, windowHeight]() {
+            MenuManager::getInstance().setActivePage("MainMenu", windowWidth, windowHeight);
             gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
             //! TODO: Implement game cleanup (graphical)
         },
         style));
 
 
-    manager->addPage(pageMain);
-    manager->addPage(pageSettings);
-    manager->addPage(pageLobby);
-    manager->addPage(pagePause);
+    MenuManager::getInstance().addPage(pageMain);
+    MenuManager::getInstance().addPage(pageSettings);
+    MenuManager::getInstance().addPage(pageLobby);
+    MenuManager::getInstance().addPage(pagePause);
+    MenuManager::getInstance().addPage(pagePlay);
 
-    manager->setActivePage("MainMenu", windowWidth, windowHeight);
+    MenuManager::getInstance().setActivePage("MainMenu", windowWidth, windowHeight);
 }

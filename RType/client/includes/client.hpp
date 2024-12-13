@@ -26,6 +26,7 @@
 
 #include "NetworkComponent.hpp"
 #include "NetworkSystems.hpp"
+#include "StageLoader.hpp"
 
 void initCoordinator();
-void initMenus(std::shared_ptr<MenuManager> manager, int windowWidth, int windowHeight);
+void initMenus(int windowWidth, int windowHeight);

@@ -49,6 +49,9 @@ class RenderSystem : public System {
         for (auto const &pair : sortedEntities) {
             Entity entity = pair.second;
 
+            if (gCoordinator.hasComponent<SpawnComponent>(entity))
+                continue;
+
             if (gCoordinator.hasComponent<BackgroundScrollComponent>(entity)) {
                 //! Background rendering
                 auto &transform = gCoordinator.getComponent<TransformComponent>(entity);

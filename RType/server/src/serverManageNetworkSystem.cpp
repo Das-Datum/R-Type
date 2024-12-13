@@ -1,4 +1,5 @@
 #include "Systems/ServerManageNetworkSystem.hpp"
+#include "StageLoader.hpp"
 
 void ServerManageNetworkSystem::shoot(Entity player) {
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
@@ -47,6 +48,28 @@ void ServerManageNetworkSystem::disconnectClient(Entity entity) {
     sendAllPlayer(player.id, "DEL" + std::to_string(player.id));
     info("Client disconnected: " + player.id);
     gCoordinator.destroyEntity(entity);
+}
+
+void ServerManageNetworkSystem::startGame(Entity player) {
+    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    std::string nowTimestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+
+    info("Game started by the player " + playerNetwork.id);
+    //! TODO: call singleton stage loader -> load stage1.json
+
+    // auto &stageLoader = StageLoader::getInstance();
+    // try {
+    //     stageLoader.loadConfig("stages/stage1.json");
+    //     stageLoader.genWaves();
+    //     stageLoader.genMobsEntities(ServerEntitiesManager::getInstance());
+    // } catch (const std::exception &e) {
+    //     error(e.what());
+    // }
+
+    info("Game started");
+
+    sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
+    sendAllPlayer(0, "LOD0sstages/stage1.json");
 }
 
 void ServerManageNetworkSystem::update(double elapsed_time) {

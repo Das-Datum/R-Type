@@ -8,24 +8,34 @@
 
 class CollisionSystem : public System {
   public:
-    void update() {
+    void update(std::function<void(Entity, Entity)> onCollision = nullptr) {
         std::vector<Entity> entityList(entities.begin(), entities.end());
 
-        for (size_t i = 0; i < entityList.size(); ++i) {
-            for (size_t j = i + 1; j < entityList.size(); ++j) {
-                Entity entityA = entityList[i];
+        std::vector<Entity> filteredEntities;
+        for (auto const &entity : entityList) {
+            if (!gCoordinator.hasComponent<SpawnComponent>(entity)) {
+                filteredEntities.push_back(entity);
+            }
+        }
+
+        for (size_t i = 0; i < filteredEntities.size(); ++i) {
+            for (size_t j = i + 1; j < filteredEntities.size(); ++j) {
+
+                Entity entityA = filteredEntities[i];
                 auto &transformA = gCoordinator.getComponent<TransformComponent>(entityA);
                 auto &colliderA = gCoordinator.getComponent<CollisionComponent>(entityA);
                 std::vector<Vector2> polyA = getPolygon(transformA, colliderA);
 
-                Entity entityB = entityList[j];
+                Entity entityB = filteredEntities[j];
                 auto &transformB = gCoordinator.getComponent<TransformComponent>(entityB);
                 auto &colliderB = gCoordinator.getComponent<CollisionComponent>(entityB);
                 std::vector<Vector2> polyB = getPolygon(transformB, colliderB);
 
                 if (checkPolygonCollision(polyA, polyB)) {
-                    return;
+                    if (onCollision)
+                        onCollision(entityA, entityB);
                     // printf("Collision detected between entities %d and %d\n", entityA, entityB);
+                    return;
                 }
             }
         }

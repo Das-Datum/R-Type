@@ -14,6 +14,9 @@ public:
             if (!gCoordinator.hasComponent<EnemyComponent>(entity))
                 continue;
 
+            if (gCoordinator.hasComponent<SpawnComponent>(entity))
+                continue;
+
             auto &enemy = gCoordinator.getComponent<EnemyComponent>(entity);
 
             bool playerFound = false;

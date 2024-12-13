@@ -9,6 +9,10 @@ class PhysicsSystem : public System {
             if (!gCoordinator.hasComponent<TransformComponent>(entity))
                 continue;
 
+            if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
+                continue;
+            }
+
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
 
             if (gCoordinator.hasComponent<FixedVelocityComponent>(entity)) {

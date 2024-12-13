@@ -59,6 +59,13 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
         void left(Entity player);
 
         /**
+         * @brief Start the game with the specified player entity.
+         *
+         * @param player The player entity that is starting the game.
+         */
+        void startGame(Entity player);
+
+        /**
          * @brief Update the network system with the elapsed time.
          *
          * @param elapsed_time The time elapsed since the last update.
@@ -97,6 +104,7 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
             {"MRT", [this](Entity entity) { right(entity); }},
             {"MLF", [this](Entity entity) { left(entity); }},
             {"DEM", [this](Entity entity) { beam(entity); }},
+            {"STA", [this](Entity entity) { startGame(entity); }},
             {"QIT", [this](Entity entity) { disconnectClient(entity); }},
 
         };

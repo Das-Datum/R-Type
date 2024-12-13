@@ -93,7 +93,7 @@ class StageLoader {
                 float wave_ending = wave_beginning + static_cast<float>(_wavesDurations[i]);
 
                 for (std::size_t m = 0; m < waveMobsCount; m++) {
-                    float enemyPosX = 1.0f;
+                    float enemyPosX = 0.9f;
                     float enemyPosY = this->genRandomFloat(0.1, 0.9);
                     float enemySpawnTime = this->genRandomFloat(wave_beginning, wave_ending);
                     int typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
