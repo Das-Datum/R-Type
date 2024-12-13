@@ -16,6 +16,7 @@ void initCoordinator() {
     gCoordinator.registerComponent<BlockOutOfBoundsComponent>();
     //? Shared components
     gCoordinator.registerComponent<CollisionComponent>();
+    gCoordinator.registerComponent<FixedVelocityComponent>();
 
     //* Systems
     auto serverManageNetworkSystem = gCoordinator.registerSystem<ServerManageNetworkSystem>();
