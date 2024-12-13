@@ -107,28 +107,13 @@ public:
 
         if (enemyInfos.type.isShooting) {
             gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 100.0f));
+            // add this if enemyInfos.shootAtPlayer is true
             behaviors.push_back(BehaviorType::ShootAtPlayer);
         }
 
-        int hasParticularMove = rand() % 2;
-        if (hasParticularMove == 1) {
+        if (enemyInfos.hasSpecificMove) {
             gCoordinator.addComponent(enemy, EnemyMovementComponent(50.0f, {position.x, position.y}, {position.x + 100.0f, position.y}, 100.0f, 1.0f));
-            int choice = rand() % 4;
-            switch (choice)
-            {
-            case 0:
-                behaviors.push_back(BehaviorType::ChasePlayer);
-                break;
-            case 1:
-                behaviors.push_back(BehaviorType::FleeFromPlayer);
-                break;
-            case 2:
-                behaviors.push_back(BehaviorType::Patrol);
-                break;
-            default:
-                behaviors.push_back(BehaviorType::RandomMovement);
-                break;
-            }
+            behaviors.push_back(enemyInfos.specificMove);
         }
         if (enemyInfos.type.isDestructible)
             gCoordinator.addComponent(enemy, EnemyHealthComponent(enemyInfos.type.maxHealth));

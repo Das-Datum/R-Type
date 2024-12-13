@@ -99,7 +99,18 @@ class StageLoader {
                     int typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
                     EnemyType enemyType = this->getEnemyTypeByName(_config.mobs_types[typeIndex]);
 
-                    Enemy newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType);
+                    bool shootAtPlayer = false;
+                    if (enemyType.isShooting) {
+                        shootAtPlayer = rand() % 2;
+                    }
+
+                    BehaviorType enemyMovementBehavior = BehaviorType::None;
+                    int hasEnemySpecificMove = rand() % 2;
+                    if (hasEnemySpecificMove == 1) {
+                        enemyMovementBehavior = this->genRandomMovementBehavior();
+                    }
+
+                    Enemy newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType, shootAtPlayer, hasEnemySpecificMove, enemyMovementBehavior);
                     manager.createEnemy(newEnemy);
                 }
                 std::cout << std::endl;
@@ -297,9 +308,9 @@ class StageLoader {
          * @return void
          */
         void initMobsTypes() {
-            _enemyTypes.push_back(EnemyType("asteroid", Vector2{35.0, 37.0}, 1, 300, false, true));
-            _enemyTypes.push_back(EnemyType("classic", Vector2{266.0, 36.0}, 8, 100, true, true));
-            _enemyTypes.push_back(EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
+            _enemyTypes.push_back(EnemyType("asteroid", Vector2{35.0, 37.0}, 1, 300, false, true, 48.0f, 0.0f));
+            _enemyTypes.push_back(EnemyType("classic", Vector2{266.0, 36.0}, 8, 100, true, true, 50.0f, 0.0f));
+            _enemyTypes.push_back(EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true, 55.0f, 0.0f));
         }
 
         /**
@@ -313,5 +324,26 @@ class StageLoader {
             float r = static_cast<float>(rand()) / RAND_MAX;
             float value = min + r * (max - min);
             return value;
+        }
+
+        /**
+         * @brief Generate a random movement behavior
+         *
+         * @param void
+         * @return BehaviorType
+         */
+        BehaviorType genRandomMovementBehavior() {
+            int choice = rand() % 4;
+            switch (choice)
+            {
+            case 0:
+                return BehaviorType::ChasePlayer;
+            case 1:
+                return BehaviorType::FleeFromPlayer;
+            case 2:
+                return BehaviorType::Patrol;
+            default:
+                return BehaviorType::RandomMovement;
+            }
         }
 };
