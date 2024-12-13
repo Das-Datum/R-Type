@@ -33,10 +33,9 @@ public:
 
         if (enemyInfos.type.isShooting) {
             gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 200.0f));
-            int choice = rand() % 2;
-            if (choice == 1)
-                behaviors.push_back(BehaviorType::ShootAtPlayer);
+            behaviors.push_back(BehaviorType::ShootAtPlayer);
         }
+
         int hasParticularMove = rand() % 2;
         if (hasParticularMove == 1) {
             gCoordinator.addComponent(enemy, EnemyMovementComponent(50.0f, {position.x, position.y}, {position.x + 100.0f, position.y}, 100.0f, 1.0f));
@@ -60,6 +59,7 @@ public:
         if (enemyInfos.type.isDestructible)
             gCoordinator.addComponent(enemy, EnemyHealthComponent(enemyInfos.type.maxHealth));
 
+        gCoordinator.addComponent(enemy, FixedVelocityComponent{Vector2{-50.0f, 0.0f}});
         gCoordinator.addComponent(enemy, EnemyComponent((behaviors.size() > 0 ? behaviors : std::vector<BehaviorType>{BehaviorType::None}), enemyInfos.type.name));
 
         return enemy;

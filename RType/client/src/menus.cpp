@@ -225,7 +225,7 @@ void initMenus(int windowWidth, int windowHeight) {
         []() {
             std::cout << "Starting game...\n";
             //! TODO: implement starting game
-            gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("BEG");
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("STA");
 
             MenuManager::getInstance().closeCurrentPage();
         },

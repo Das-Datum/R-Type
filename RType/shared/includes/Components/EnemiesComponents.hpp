@@ -36,6 +36,8 @@ struct EnemyComponent {
     }
 };
 
+struct EnemyBulletComponent {};
+
 struct EnemyMovementComponent {
     float speed;
     Vector2 patrolStart;

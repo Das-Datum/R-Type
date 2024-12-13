@@ -16,6 +16,7 @@ void initCoordinator() {
     gCoordinator.registerComponent<EnemyShootComponent>();
     gCoordinator.registerComponent<SpawnComponent>();
     gCoordinator.registerComponent<EnemyHealthComponent>();
+    gCoordinator.registerComponent<EnemyBulletComponent>();
 
     gCoordinator.registerComponent<NetworkComponent>();
     gCoordinator.registerComponent<NetworkInstructionsComponent>();
@@ -43,6 +44,7 @@ void initCoordinator() {
     auto clientManageNetworkSystem = gCoordinator.registerSystem<ClientManageNetworkSystem>();
     auto networkInstructionsSystem = gCoordinator.registerSystem<NetworkInstructionsSystem>();
 
+    auto spawnSystem = gCoordinator.registerSystem<SpawnSystem>();
 
     Signature signature;
 
@@ -92,5 +94,9 @@ void initCoordinator() {
     signature.set(gCoordinator.getComponentTypeID<NetworkInstructionsComponent>(), true);
     gCoordinator.setSystemSignature<NetworkInstructionsSystem>(signature);
 
+    //? SpawnSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<SpawnComponent>(), true);
+    gCoordinator.setSystemSignature<SpawnSystem>(signature);
 
 }

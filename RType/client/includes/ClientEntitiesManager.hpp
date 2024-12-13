@@ -86,12 +86,12 @@ public:
         Vector2 position = Vector2{enemyInfos.x, enemyInfos.y};
 
         auto &texturesManager = TexturesManager::getInstance();
-        std::string enemyTexturePath = "./assets/textures/enemies/enemy_1.png";
+        std::string enemyTexturePath = "./assets/textures/enemies/" + enemyInfos.type.name + ".png";
         Texture2D enemyTexture = texturesManager.loadTexture(enemyTexturePath);
-        Rectangle initialFrame = texturesManager.getFrame(enemyTexturePath, 0, 12);
+        Rectangle initialFrame = texturesManager.getFrame(enemyTexturePath, 0, enemyInfos.type.nbFrame);
 
         float normalizedHeight = 0.05f;
-        float frameAspectRatio = static_cast<float>(enemyTexture.width / 12) / enemyTexture.height;
+        float frameAspectRatio = static_cast<float>(enemyTexture.width / enemyInfos.type.nbFrame) / enemyTexture.height;
         float normalizedWidth = normalizedHeight * frameAspectRatio;
 
         gCoordinator.addComponent(enemy, TransformComponent(position, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
@@ -99,11 +99,42 @@ public:
         Rectangle collider = {0, 0, normalizedWidth, normalizedHeight};
         gCoordinator.addComponent(enemy, SpriteComponent(enemyTexture, initialFrame, 1));
         gCoordinator.addComponent(enemy, CollisionComponent(collider));
-        gCoordinator.addComponent(enemy, SpriteAnimationComponent(12, 0.15f));
-        gCoordinator.addComponent(enemy, EnemyComponent({BehaviorType::ChasePlayer, BehaviorType::ShootAtPlayer}));
-        gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 200.0f));
-        gCoordinator.addComponent(enemy, EnemyMovementComponent(1.0f, position, Vector2{position.x + 0.2f, position.y}, 0.1f, 1.0f));
+        gCoordinator.addComponent(enemy, SpriteAnimationComponent(enemyInfos.type.nbFrame, 0.15f));
         gCoordinator.addComponent(enemy, DestroyOutOfBoundsComponent());
+
+        std::vector<BehaviorType> behaviors;
+        gCoordinator.addComponent(enemy, SpawnComponent(enemyInfos.spawnTime));
+
+        if (enemyInfos.type.isShooting) {
+            gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 100.0f));
+            behaviors.push_back(BehaviorType::ShootAtPlayer);
+        }
+
+        int hasParticularMove = rand() % 2;
+        if (hasParticularMove == 1) {
+            gCoordinator.addComponent(enemy, EnemyMovementComponent(50.0f, {position.x, position.y}, {position.x + 100.0f, position.y}, 100.0f, 1.0f));
+            int choice = rand() % 4;
+            switch (choice)
+            {
+            case 0:
+                behaviors.push_back(BehaviorType::ChasePlayer);
+                break;
+            case 1:
+                behaviors.push_back(BehaviorType::FleeFromPlayer);
+                break;
+            case 2:
+                behaviors.push_back(BehaviorType::Patrol);
+                break;
+            default:
+                behaviors.push_back(BehaviorType::RandomMovement);
+                break;
+            }
+        }
+        if (enemyInfos.type.isDestructible)
+            gCoordinator.addComponent(enemy, EnemyHealthComponent(enemyInfos.type.maxHealth));
+
+        gCoordinator.addComponent(enemy, FixedVelocityComponent{Vector2{-0.1f, 0.0f}});
+        gCoordinator.addComponent(enemy, EnemyComponent((behaviors.size() > 0 ? behaviors : std::vector<BehaviorType>{BehaviorType::None}), enemyInfos.type.name));
 
         return enemy;
     }
@@ -114,9 +145,9 @@ public:
         Entity bullet = gCoordinator.createEntity();
 
         auto &texturesManager = TexturesManager::getInstance();
-        std::string bulletTexturePath = "./assets/textures/bullets/bullet_1.png";
+        std::string bulletTexturePath = "./assets/textures/enemies/projectile.png";
         Texture2D bulletTexture = texturesManager.loadTexture(bulletTexturePath);
-        Rectangle initialFrame = texturesManager.getFrame(bulletTexturePath, 0, 2);
+        Rectangle initialFrame = texturesManager.getFrame(bulletTexturePath, 0, 1);
 
         float normalizedHeight = 0.02f;
         float frameAspectRatio = (bulletTexture.width / 2.0f) / bulletTexture.height;
@@ -131,11 +162,11 @@ public:
 
         gCoordinator.addComponent(bullet, TransformComponent(normalizedPos, rotation, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
         gCoordinator.addComponent(bullet, SpriteComponent(bulletTexture, initialFrame, 2));
-        gCoordinator.addComponent(bullet, BulletComponent());
+        gCoordinator.addComponent(bullet, EnemyBulletComponent());
         gCoordinator.addComponent(bullet, FixedVelocityComponent{normalizedVelocity});
         gCoordinator.addComponent(bullet, DestroyOutOfBoundsComponent());
         gCoordinator.addComponent(bullet, CollisionComponent(collider, rotation));
-        gCoordinator.addComponent(bullet, SpriteFrameComponent(1, 2));
+        // gCoordinator.addComponent(bullet, SpriteFrameComponent(1, 2));
 
         return bullet;
     }

@@ -62,6 +62,7 @@ void ClientManageNetworkSystem::loadStage(Entity entity) {
     try {
         stageLoader.loadConfig(_options);
         stageLoader.genWaves();
+        stageLoader.genMobsEntities(EntitiesManager::getInstance());
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }

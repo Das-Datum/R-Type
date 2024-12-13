@@ -4,6 +4,8 @@ Coordinator gCoordinator;
 
 int main() {
     std::cout << "START\n";
+
+    std::srand(42);
     const int WINDOW_WIDTH = 1280;
     const int WINDOW_HEIGHT = 720;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -30,9 +32,9 @@ int main() {
     // entitiesManager.createShip({0, 0}, 1, "Player");
 
     //* Test entity
-    Vector2 enemyPosition = {0.9f, 0.5f};
-    Enemy enemyInfos = Enemy(enemyPosition.x, enemyPosition.y, 0.0, EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
-    entitiesManager.createEnemy(enemyInfos);
+    // Vector2 enemyPosition = {0.9f, 0.5f};
+    // Enemy enemyInfos = Enemy(enemyPosition.x, enemyPosition.y, 0.0, EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
+    // entitiesManager.createEnemy(enemyInfos);
     // entitiesManager.removeEntity(enemy);
 
     //* Backgrounds
@@ -104,7 +106,15 @@ int main() {
         gCoordinator.getSystem<InputSystem>()->update();
         gCoordinator.getSystem<SpriteFrameSystem>()->update();
         gCoordinator.getSystem<TimerSystem>()->update();
-        gCoordinator.getSystem<CollisionSystem>()->update();
+        gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
+            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
+                std::cout << "Ship collided with enemy\n";
+            }
+
+            if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
+                gCoordinator.destroyEntity(entityA);
+            }
+        });
 
         gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
         gCoordinator.getSystem<PhysicsSystem>()->update(deltaTime);
@@ -122,6 +132,9 @@ int main() {
         ClearBackground(BLACK);
         gCoordinator.getSystem<RenderSystem>()->update();
         EndDrawing();
+
+        //? SPAWN
+        gCoordinator.getSystem<SpawnSystem>()->update(deltaTime);
     }
 
     gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
