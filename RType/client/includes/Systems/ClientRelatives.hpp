@@ -2,6 +2,7 @@
 #include "ECS.hpp"
 #include "Components/GameComponents.hpp"
 #include "ClientEntitiesManager.hpp"
+#include "MovementsManager.hpp"
 #include "Components.hpp"
 #include "raylib.h"
 #include "raymath.h"
@@ -186,33 +187,39 @@ class InputSystem : public System {
     float baseWidth = 1920.0f;
 
     void update() {
+        auto &movementsManager = MovementsManager::getInstance();
         auto &settings = Settings::getInstance();
+        float deltaTime = GetFrameTime();
 
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+            auto &velocity = gCoordinator.getComponent<VelocityComponent>(entity);
             auto &playerNetwork = gCoordinator.getComponent<NetworkInstructionsComponent>(entity);
-            float speed = (1000.0f / 1920.0f) * GetFrameTime();
+
+            Vector2 input = {0.0f, 0.0f};
 
             if (IsKeyDown(settings.getMoveRightKey())) {
-                transform.position.x += speed;
+                input.x += 1.0f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MRT" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveLeftKey())) {
-                transform.position.x -= speed;
+                input.x -= 1.0f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MLF" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveUpKey())) {
-                transform.position.y -= speed * (16.0 / 9.0);
+                input.y -= 0.8f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MUP" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveDownKey())) {
-                transform.position.y += speed * (16.0 / 9.0);
+                input.y += 0.8f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MDW" + std::to_string(playerNetwork.id));
             }
+
+            movementsManager.calculateMovement(entity, input, deltaTime);
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
 
@@ -249,5 +256,10 @@ class InputSystem : public System {
                 timer.elapsedTime = 0.0f;
             }
         }
+    }
+
+private:
+    float lerp(float start, float end, float amount) {
+        return start + amount * (end - start);
     }
 };

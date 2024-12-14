@@ -23,6 +23,7 @@ void initCoordinator() {
 
     //? Shared components
     gCoordinator.registerComponent<TransformComponent>();
+    gCoordinator.registerComponent<VelocityComponent>();
     gCoordinator.registerComponent<ShipComponent>();
     gCoordinator.registerComponent<BulletComponent>();
     gCoordinator.registerComponent<FixedVelocityComponent>();

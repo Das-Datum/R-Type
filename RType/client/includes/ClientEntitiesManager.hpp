@@ -44,6 +44,7 @@ public:
         gCoordinator.addComponent(ship, TimerComponent());
         gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
         gCoordinator.addComponent(ship, CollisionComponent(collider));
+        gCoordinator.addComponent(ship, VelocityComponent(Vector2{0.0f, 0.0f}, 0.5f));
 
         return ship;
     }

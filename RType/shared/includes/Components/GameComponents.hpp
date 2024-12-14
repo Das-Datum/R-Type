@@ -12,6 +12,14 @@ struct TransformComponent {
         : position(pos), rotation(rot), scale(scl), size(sz) {}
 };
 
+struct VelocityComponent {
+    Vector2 velocity;
+    float maxSpeed;
+
+    VelocityComponent(Vector2 vel = {0.0f, 0.0f}, float max = 1.0f) 
+        : velocity(vel), maxSpeed(max) {}
+};
+
 struct SpawnComponent {
     float time_left;
 

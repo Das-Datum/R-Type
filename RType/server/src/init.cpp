@@ -14,9 +14,11 @@ void initCoordinator() {
     gCoordinator.registerComponent<EnemyShootComponent>();
     gCoordinator.registerComponent<EnemyMovementComponent>();
     gCoordinator.registerComponent<BlockOutOfBoundsComponent>();
+
     //? Shared components
     gCoordinator.registerComponent<CollisionComponent>();
     gCoordinator.registerComponent<FixedVelocityComponent>();
+    gCoordinator.registerComponent<VelocityComponent>();
 
     //* Systems
     auto serverManageNetworkSystem = gCoordinator.registerSystem<ServerManageNetworkSystem>();

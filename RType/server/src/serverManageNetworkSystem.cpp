@@ -1,5 +1,6 @@
 #include "Systems/ServerManageNetworkSystem.hpp"
 #include "StageLoader.hpp"
+#include "MovementsManager.hpp"
 
 void ServerManageNetworkSystem::shoot(Entity player) {
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
@@ -12,34 +13,34 @@ void ServerManageNetworkSystem::beam(Entity player) {
 }
 
 void ServerManageNetworkSystem::up(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
+    auto &movementsManager = MovementsManager::getInstance();
+    movementsManager.calculateMovement(player, {0.0f, -1.0f}, _elapsed_time);
+
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.y -= speed * (16.0 / 9.0);
     sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::down(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
+    auto &movementsManager = MovementsManager::getInstance();
+    movementsManager.calculateMovement(player, {0.0f, 1.0f}, _elapsed_time);
+
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.y += speed * (16.0 / 9.0);
     sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::right(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
+    auto &movementsManager = MovementsManager::getInstance();
+    movementsManager.calculateMovement(player, {1.0f, 0.0f}, _elapsed_time);
+
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.x += speed;
     sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::left(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
+    auto &movementsManager = MovementsManager::getInstance();
+    movementsManager.calculateMovement(player, {-1.0f, 0.0f}, _elapsed_time);
+
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.x -= speed;
     sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
 }
 
