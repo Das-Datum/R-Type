@@ -1,9 +1,9 @@
 #pragma once
 #include <string>
 #include <fstream>
+#include <filesystem>
 #include <nlohmann/json.hpp>
 #include <cstdlib>
-#include <filesystem>
 #include "raylib.h"
 #include <iostream>
 #include <exception>
@@ -55,6 +55,9 @@ public:
     void switchColorBlindMode() {
         currentMode = static_cast<ColorBlindMode>((currentMode + 1) % 5);
     }
+
+    bool isMultiplayer() const { return playMultiplayer; }
+    void setMultiplayer(bool multiplayer) { playMultiplayer = multiplayer; }
 
     void Load() {
         std::string path = GetConfigPath();
@@ -126,6 +129,8 @@ private:
     int moveRightKey = KEY_D;
     int shootKey = KEY_SPACE;
     float fontSize = 20.0f;
+
+    bool playMultiplayer = false;
 
     ColorBlindMode currentMode = NORMAL;
 

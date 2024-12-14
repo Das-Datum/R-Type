@@ -74,7 +74,6 @@ int main() {
             menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
         }
 
-        gCoordinator.getSystem<PhysicsSystem>()->setViewport(viewportWidth, viewportHeight);
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
 
         if (menuManager.isPageActive()) {
@@ -130,7 +129,19 @@ int main() {
         //? RENDER
         BeginDrawing();
         ClearBackground(BLACK);
+        Shader shader = shadersManager.getShaderForMode(settings.getColorBlindMode());
+        if (settings.getColorBlindMode() != NORMAL) {
+            BeginShaderMode(shader);
+        }
+
         gCoordinator.getSystem<RenderSystem>()->update();
+
+        if (IsKeyDown(KEY_G))
+            gCoordinator.getSystem<CollisionSystem>()->drawGrid(viewportX, viewportY, viewportWidth, viewportHeight);
+
+        if (settings.getColorBlindMode() != NORMAL) {
+            EndShaderMode();
+        }
         EndDrawing();
 
         //? SPAWN

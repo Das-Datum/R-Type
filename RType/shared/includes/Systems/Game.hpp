@@ -1,5 +1,6 @@
 #pragma once
 #include "ECS.hpp"
+#include <algorithm>
 #include "Components/GameComponents.hpp"
 
 class PhysicsSystem : public System {
@@ -40,16 +41,6 @@ class PhysicsSystem : public System {
         }
     }
 
-    void setViewport(float width, float height) {
-        viewportWidth = width;
-        viewportHeight = height;
-    }
-
-  private:
-    const float baseWidth = 1920.0f;
-    const float baseHeight = 1080.0f;
-    float viewportWidth = 1920.0f;
-    float viewportHeight = 1080.0f;
 };
 
 class SpawnSystem : public System {

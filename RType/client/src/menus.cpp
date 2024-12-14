@@ -180,6 +180,9 @@ void initMenus(int windowWidth, int windowHeight) {
             auto &entitiesManager = EntitiesManager::getInstance();
             entitiesManager.createShip({0.2f, 0.5f}, 1, "Player");
 
+            auto &settings = Settings::getInstance();
+            settings.setMultiplayer(false);
+
             auto &stageLoader = StageLoader::getInstance();
             stageLoader.loadConfig("stages/stage1.json");
             stageLoader.genWaves();
@@ -194,6 +197,10 @@ void initMenus(int windowWidth, int windowHeight) {
         6, 2,
         [windowWidth, windowHeight]() {
             std::cout << "Connecting to server...\n";
+
+            auto &settings = Settings::getInstance();
+            settings.setMultiplayer(true);
+
             gCoordinator.getSystem<ClientManageNetworkSystem>()->init("Player", "127.0.0.1", 5000);
             MenuManager::getInstance().setActivePage("Lobby", windowWidth, windowHeight);
         },
