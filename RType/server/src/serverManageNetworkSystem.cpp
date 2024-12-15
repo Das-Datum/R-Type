@@ -58,6 +58,9 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     info("Game started by the player " + playerNetwork.id);
     //! TODO: call singleton stage loader -> load stage1.json
 
+    sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
+    sendAllPlayer(0, "LOD0sstages/stage1.json");
+
     auto &stageLoader = StageLoader::getInstance();
     try {
         stageLoader.loadConfig("stages/stage1.json");
@@ -68,9 +71,6 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     }
 
     info("Game started");
-
-    sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
-    sendAllPlayer(0, "LOD0sstages/stage1.json");
 }
 
 void ServerManageNetworkSystem::update(double elapsed_time) {

@@ -9,12 +9,14 @@ void game_tick(double elapsedTimeSeconds) {
     gCoordinator.getSystem<ServerManageNetworkSystem>()->update(elapsedTimeSeconds);
 
     //! DESTROY
-    gCoordinator.processEntityDestruction();
     gCoordinator.getSystem<PhysicsSystem>()->update(elapsedTimeSeconds);
     gCoordinator.getSystem<CollisionSystem>()->update();
 
     //! SPAWN
     gCoordinator.getSystem<SpawnSystem>()->update(elapsedTimeSeconds);
+
+    //! DESTROY
+    gCoordinator.processEntityDestruction();
 }
 
 int main() {

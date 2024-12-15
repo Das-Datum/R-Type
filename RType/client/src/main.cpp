@@ -76,6 +76,10 @@ int main() {
 
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
 
+        //? NETWORK
+        gCoordinator.getSystem<ClientManageNetworkSystem>()->update();
+        gCoordinator.getSystem<NetworkInstructionsSystem>()->update();
+
         if (menuManager.isPageActive()) {
             menuManager.handleEvent();
             menuManager.update(deltaTime);
@@ -121,10 +125,6 @@ int main() {
 
         //! DESTROY
         gCoordinator.processEntityDestruction();
-
-        //? NETWORK
-        gCoordinator.getSystem<ClientManageNetworkSystem>()->update();
-        gCoordinator.getSystem<NetworkInstructionsSystem>()->update();
 
         //? RENDER
         BeginDrawing();
