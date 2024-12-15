@@ -30,23 +30,23 @@ void ClientManageNetworkSystem::beam(Entity player) {
 }
 
 void ClientManageNetworkSystem::up(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {0.0f, -1.0f}, GetFrameTime());
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y -= 0.8f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::down(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {0.0f, 1.0f}, GetFrameTime());
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y += 0.8f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::right(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {1.0f, 0.0f}, GetFrameTime());
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x += 1.0f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::left(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {-1.0f, 0.0f}, GetFrameTime());
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x -= 1.0f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
@@ -74,9 +74,17 @@ void ClientManageNetworkSystem::startGame(Entity entity) {
 
 void ClientManageNetworkSystem::update() {
     std::vector<std::string> messages = getLastMessages();
-    for (auto const &msg : messages) {
+    for (const auto &msg : messages) {
         std::string command = getCommand(msg);
-        if (_protocolMap.find(command) != _protocolMap.end()) {
+        if (command == "POS") {
+            Entity entity = getEntityById(_id);
+            if (entity != 0 && gCoordinator.hasComponent<NetworkPositionComponent>(entity)) {
+                auto &networkPos = gCoordinator.getComponent<NetworkPositionComponent>(entity);
+                networkPos.lastPosition = networkPos.targetPosition;
+                networkPos.targetPosition = {_x, _y};
+                networkPos.lerpFactor = 0.0f;
+            }
+        } else if (_protocolMap.find(command) != _protocolMap.end()) {
             _protocolMap[command](getEntityById(_id));
         }
     }
@@ -103,7 +111,7 @@ std::string ClientManageNetworkSystem::getCommand(std::string command) {
     int pos = getPos(command.substr(4));
     if (command.size() == pos + 5)
         return command.substr(0, 3);
-    _options = command.substr(pos + 5);
+    _options = command.substr(pos + 4);
     return command.substr(0, 3);
 }
 

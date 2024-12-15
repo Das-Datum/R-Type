@@ -1,4 +1,5 @@
 #include "client.hpp"
+#include "Systems/InterpolationSystem.hpp"
 
 Coordinator gCoordinator;
 
@@ -12,8 +13,6 @@ int main() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
-    // std::shared_ptr<MenuManager> menuManager = std::make_shared<MenuManager>();
-    // std::shared_ptr<Settings> settings = std::make_shared<Settings>();
     auto &menuManager = MenuManager::getInstance();
 
     initMenus(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -25,7 +24,6 @@ int main() {
     auto &settings = Settings::getInstance();
 
     initCoordinator();
-
 
     //? User 1 (main player)
     // Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
@@ -105,6 +103,9 @@ int main() {
             continue;
         }
 
+        //? VelocitySystem
+        gCoordinator.getSystem<VelocitySystem>()->update(deltaTime);
+
         //? LOGIC
         gCoordinator.getSystem<InputSystem>()->update();
         gCoordinator.getSystem<SpriteFrameSystem>()->update();
@@ -122,6 +123,7 @@ int main() {
         gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
         gCoordinator.getSystem<PhysicsSystem>()->update(deltaTime);
         gCoordinator.getSystem<EnemiesSystem>()->update(deltaTime);
+        gCoordinator.getSystem<InterpolationSystem>()->update(deltaTime);
 
         //! DESTROY
         gCoordinator.processEntityDestruction();

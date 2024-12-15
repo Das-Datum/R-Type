@@ -132,7 +132,6 @@ class ClientManageNetworkSystem : public ClientNetworkSystem {
 
 class NetworkInstructionsSystem : public System {
     public:
-
         /**
          * @brief Update the system
          * @return void

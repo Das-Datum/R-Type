@@ -15,9 +15,12 @@ struct TransformComponent {
 struct VelocityComponent {
     Vector2 velocity;
     float maxSpeed;
+    float acceleration;
+    float deceleration;
 
-    VelocityComponent(Vector2 vel = {0.0f, 0.0f}, float max = 1.0f) 
-        : velocity(vel), maxSpeed(max) {}
+    VelocityComponent(Vector2 vel = {0.0f, 0.0f}, float max = 1.0f)
+        : velocity(vel), maxSpeed(max),
+          acceleration(6.0f), deceleration(4.0f) {}
 };
 
 struct SpawnComponent {
@@ -51,4 +54,13 @@ struct BulletComponent {
 
     BulletComponent(float sz = 2.0f, Color clr = RED)
         : size(sz), color(clr) {}
+};
+
+struct NetworkPositionComponent {
+    Vector2 lastPosition;
+    Vector2 targetPosition;
+    float lerpFactor;
+
+    NetworkPositionComponent(Vector2 pos = {0.0f, 0.0f})
+        : lastPosition(pos), targetPosition(pos), lerpFactor(0.0f) {}
 };

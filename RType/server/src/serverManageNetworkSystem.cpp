@@ -1,6 +1,5 @@
 #include "Systems/ServerManageNetworkSystem.hpp"
 #include "StageLoader.hpp"
-#include "MovementsManager.hpp"
 
 void ServerManageNetworkSystem::shoot(Entity player) {
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
@@ -13,32 +12,32 @@ void ServerManageNetworkSystem::beam(Entity player) {
 }
 
 void ServerManageNetworkSystem::up(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {0.0f, -1.0f}, _elapsed_time);
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y -= 0.8f;
 
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::down(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {0.0f, 1.0f}, _elapsed_time);
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y += 0.8f;
 
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::right(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {1.0f, 0.0f}, _elapsed_time);
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x += 1.0f;
 
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::left(Entity player) {
-    auto &movementsManager = MovementsManager::getInstance();
-    movementsManager.calculateMovement(player, {-1.0f, 0.0f}, _elapsed_time);
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x -= 1.0f;
 
     auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
@@ -59,7 +58,7 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     //! TODO: call singleton stage loader -> load stage1.json
 
     sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
-    sendAllPlayer(0, "LOD0sstages/stage1.json");
+    sendAllPlayer(0, "LOD0stages/stage1.json");
 
     auto &stageLoader = StageLoader::getInstance();
     try {
@@ -70,6 +69,7 @@ void ServerManageNetworkSystem::startGame(Entity player) {
         error(e.what());
     }
 
+    _gameStarted = true;
     info("Game started");
 }
 
@@ -115,5 +115,20 @@ void ServerManageNetworkSystem::createNewClient(std::string name, int id, std::s
         auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
         auto& pos = gCoordinator.getComponent<TransformComponent>(entityList[i]);
         sendDataToPlayer("NEW" + std::to_string(player.id) + std::to_string(pos.position.x) + std::string(",") + std::to_string(pos.position.y) + ";" + player.name, ip, port);
+    }
+
+    //! if the game is already started, send STA and LOD
+    if (_gameStarted) {
+        std::string nowTimestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+        sendDataToPlayer("STA" + std::to_string(id) + nowTimestamp, ip, port);
+        sendDataToPlayer("LOD0stages/stage1.json", ip, port);
+    }
+}
+
+void ServerManageNetworkSystem::sendAllPlayersPosition() {
+    for (auto const &entity : entities) {
+        auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
+        auto &pos = gCoordinator.getComponent<TransformComponent>(entity);
+        sendAllPlayer(player.id, "POS" + std::to_string(player.id) + std::to_string(pos.position.x) + std::string(",") + std::to_string(pos.position.y) + ";");
     }
 }

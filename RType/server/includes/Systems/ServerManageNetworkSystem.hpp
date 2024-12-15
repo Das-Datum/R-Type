@@ -96,6 +96,11 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
          * @param entity The entity of the client to disconnect.
          */
         void disconnectClient(Entity entity);
+
+        /**
+         * @brief Send the position of all players to all clients.
+         */
+        void sendAllPlayersPosition();
     private:
         std::map<std::string, std::function<void(Entity)>> _protocolMap = {
             {"SHT", [this](Entity entity) { shoot(entity); }},
@@ -111,4 +116,6 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
         ServerNetworkSystem *_ServerNetworkSystem;
         std::string _options;
         double _elapsed_time;
+
+        bool _gameStarted = false;
 };

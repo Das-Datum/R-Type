@@ -10,6 +10,9 @@ class PhysicsSystem : public System {
             if (!gCoordinator.hasComponent<TransformComponent>(entity))
                 continue;
 
+            // if (!gCoordinator.hasComponent<InputComponent>(entity))
+            //     continue;
+
             if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
                 continue;
             }

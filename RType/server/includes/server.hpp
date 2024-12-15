@@ -6,8 +6,9 @@
 #include "ServerEntitiesManager.hpp"
 
 #include "Systems/Game.hpp"
-#include "Systems/CollisionSystem.hpp"
 #include "Systems/ServerManageNetworkSystem.hpp"
+#include "Systems/CollisionSystem.hpp"
+#include "Systems/VelocitySystem.hpp"
 
 #include <string>
 

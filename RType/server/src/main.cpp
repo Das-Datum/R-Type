@@ -8,12 +8,16 @@ Coordinator gCoordinator;
 void game_tick(double elapsedTimeSeconds) {
     gCoordinator.getSystem<ServerManageNetworkSystem>()->update(elapsedTimeSeconds);
 
-    //! DESTROY
+    //! VELOCITY, PHYSICS, COLLISION
+    gCoordinator.getSystem<VelocitySystem>()->update(elapsedTimeSeconds);
     gCoordinator.getSystem<PhysicsSystem>()->update(elapsedTimeSeconds);
     gCoordinator.getSystem<CollisionSystem>()->update();
 
     //! SPAWN
     gCoordinator.getSystem<SpawnSystem>()->update(elapsedTimeSeconds);
+
+    //? Update position of all players
+    gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayersPosition();
 
     //! DESTROY
     gCoordinator.processEntityDestruction();
@@ -30,16 +34,6 @@ int main() {
     auto last_tick_time = Clock::now();
 
     initCoordinator();
-
-    // try {
-    //     const std::string path = "stages/stage1.json";
-    //     StageLoader loader = StageLoader::getInstance();
-    //     loader.loadConfig(path);
-    //     loader.genWaves();
-    //     loader.genMobsEntities(manager);
-    // } catch(std::exception& e) {
-    //     std::cerr << "Error while loading the stage: " << e.what() << std::endl;
-    // }
 
     //? MAIN LOOP
     while (gCoordinator.getSystem<ServerManageNetworkSystem>()->isRunning()) {
