@@ -27,7 +27,7 @@ jobs:
       run: touch ./html/.nojekyll
 
     - name: Move HTML content to root
-      run: mv ./html/* ./
+      run: mv ./html/* ./ && cd doxygen-awesome-css && git checkout v2.3.4 && cd ..
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
