@@ -38,10 +38,10 @@ public:
             gCoordinator.addComponent(ship, InputComponent());
             gCoordinator.addComponent(ship, NetworkInstructionsComponent(name, id));
             gCoordinator.addComponent(ship, SpriteFrameComponent(1, 5));
-        } else {
-            gCoordinator.addComponent(ship, NetworkComponent{name, "", 0, id});
-            gCoordinator.addComponent(ship, NetworkPositionComponent(position));
         }
+
+        gCoordinator.addComponent(ship, NetworkComponent{name, "", 0, id});
+        gCoordinator.addComponent(ship, NetworkPositionComponent(position));
         gCoordinator.addComponent(ship, TimerComponent());
         gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
         gCoordinator.addComponent(ship, CollisionComponent(collider));

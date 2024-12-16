@@ -71,6 +71,33 @@ public:
         return ship;
     }
 
+    Entity createBullet(Vector2 position, Vector2 velocity) {
+        Vector2 normalizedPos = position;
+        Vector2 normalizedVelocity = velocity;
+
+        Entity bullet = gCoordinator.createEntity();
+
+        float frameWidth = static_cast<float>(38) / 2;
+        float frameAspectRatio = frameWidth / static_cast<float>(6);
+        float normalizedHeight = 0.05f;
+        float normalizedWidth = normalizedHeight * frameAspectRatio;
+
+        Rectangle collider = {
+            -normalizedWidth * 0.5f,
+            -normalizedHeight * 0.5f,
+            normalizedWidth,
+            normalizedHeight};
+
+        gCoordinator.addComponent(bullet, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
+
+        gCoordinator.addComponent(bullet, BulletComponent());
+        gCoordinator.addComponent(bullet, FixedVelocityComponent{normalizedVelocity});
+        gCoordinator.addComponent(bullet, DestroyOutOfBoundsComponent());
+        gCoordinator.addComponent(bullet, CollisionComponent(collider, 0.0f));
+
+        return bullet;
+    }
+
 private:
     ServerEntitiesManager() = default;
     ~ServerEntitiesManager() = default;

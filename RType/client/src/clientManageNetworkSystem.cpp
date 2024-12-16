@@ -12,21 +12,18 @@ void ClientManageNetworkSystem::createPlayerShip(Entity entity) {
 }
 
 void ClientManageNetworkSystem::shoot(Entity player) {
-    auto &transform = gCoordinator.getComponent<TransformComponent>(player);
     auto &entitiesManager = EntitiesManager::getInstance();
 
-    Vector2 bulletPosition = {transform.position.x + transform.size.x / 2,
-        transform.position.y};
-        entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
+    Vector2 bulletPosition = {_x, _y};
+    entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
 }
 
 void ClientManageNetworkSystem::beam(Entity player) {
     auto &transform = gCoordinator.getComponent<TransformComponent>(player);
     auto &entitiesManager = EntitiesManager::getInstance();
 
-    Vector2 bulletPosition = {transform.position.x + transform.size.x / 2,
-        transform.position.y};
-        entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
+    Vector2 bulletPosition = {_x, _y};
+    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
 }
 
 void ClientManageNetworkSystem::up(Entity player) {
@@ -72,19 +69,20 @@ void ClientManageNetworkSystem::startGame(Entity entity) {
     menuManager.closeCurrentPage();
 }
 
+void ClientManageNetworkSystem::setPos(Entity entity) {
+    if (gCoordinator.hasComponent<NetworkPositionComponent>(entity)) {
+        auto &networkPos = gCoordinator.getComponent<NetworkPositionComponent>(entity);
+        networkPos.lastPosition = networkPos.targetPosition;
+        networkPos.targetPosition = {_x, _y};
+        networkPos.lerpFactor = 0.0f;
+    }
+}
+
 void ClientManageNetworkSystem::update() {
     std::vector<std::string> messages = getLastMessages();
     for (const auto &msg : messages) {
         std::string command = getCommand(msg);
-        if (command == "POS") {
-            Entity entity = getEntityById(_id);
-            if (entity != 0 && gCoordinator.hasComponent<NetworkPositionComponent>(entity)) {
-                auto &networkPos = gCoordinator.getComponent<NetworkPositionComponent>(entity);
-                networkPos.lastPosition = networkPos.targetPosition;
-                networkPos.targetPosition = {_x, _y};
-                networkPos.lerpFactor = 0.0f;
-            }
-        } else if (_protocolMap.find(command) != _protocolMap.end()) {
+        if (_protocolMap.find(command) != _protocolMap.end()) {
             _protocolMap[command](getEntityById(_id));
         }
     }

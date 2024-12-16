@@ -5,6 +5,7 @@
 #include <bitset>
 #include <stdexcept>
 #include "Types.hpp"
+#include <iostream>
 
 /**
  * @class EntityManager
@@ -27,9 +28,8 @@ class EntityManager
          */
         Entity createEntity()
         {
-            if (livingEntityCount >= MAX_ENTITIES)
-            {
-                throw std::runtime_error("Too many entities in existence.");
+            if (livingEntityCount >= MAX_ENTITIES) {
+                throw std::runtime_error("Too many entities in existence. ( " + std::to_string(livingEntityCount) + " / " + std::to_string(MAX_ENTITIES) + " )");
             }
             Entity id = availableEntities.front();
             availableEntities.pop();
@@ -43,6 +43,12 @@ class EntityManager
          */
         void destroyEntity(Entity entity)
         {
+            if (signatures[entity].none()) {
+                return;
+            }
+            if (livingEntityCount <= 0) {
+                throw std::runtime_error("No entities to destroy.");
+            }
             signatures[entity].reset();
             availableEntities.push(entity);
             --livingEntityCount;

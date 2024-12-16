@@ -243,7 +243,7 @@ class InputSystem : public System {
                         playerNetwork.instructionsBuffer.push_back("DEM" + std::to_string(playerNetwork.id));
                 } else {
                     if (settings.isMultiplayer())
-                        playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id));
+                        playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id) + std::to_string(bulletPosition.x) + "," + std::to_string(bulletPosition.y) + ";");
                     entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
                 }
                 timer.active = false;
