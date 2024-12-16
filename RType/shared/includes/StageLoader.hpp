@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <nlohmann/json.hpp>
+#include <math.h>
 #include "AEntitiesManager.hpp"
 
 struct StageConfig {
@@ -50,6 +51,7 @@ class StageLoader {
             _config.music_path = j["music_path"];
             _config.time = j["time"];
             _remainingTime = static_cast<double>(_config.time);
+            _seed = j["seed"];
             for (auto type : j["mobs_types"]) {
                 if (this->isMobTypeValid(type)) {
                     _config.mobs_types.push_back(type);
@@ -70,7 +72,7 @@ class StageLoader {
          * @return void
          */
         void genWaves() {
-            _waveCount = _config.time / 15 + (rand() % 5 - 2);
+            _waveCount = _config.time / 15 + this->lcg<int>(-2, 3);
 
             this->defineWavesDurations();
             this->defineWavesMobsCount();
@@ -95,18 +97,18 @@ class StageLoader {
 
                 for (std::size_t m = 0; m < waveMobsCount; m++) {
                     float enemyPosX = 0.9f;
-                    float enemyPosY = this->genRandomFloat(0.1, 0.9);
-                    float enemySpawnTime = this->genRandomFloat(wave_beginning, wave_ending);
-                    int typeIndex = _wavesMobsTypes[i][(rand() % _wavesMobsTypes[i].size())];
+                    float enemyPosY = this->lcg<double>(0.1, 0.9);
+                    float enemySpawnTime = this->lcg<double>(wave_beginning, wave_ending);
+                    int typeIndex = _wavesMobsTypes[i][(this->lcg<int>(0, _wavesMobsTypes[i].size()))];
                     EnemyType enemyType = this->getEnemyTypeByName(_config.mobs_types[typeIndex]);
 
                     bool shootAtPlayer = false;
                     if (enemyType.isShooting) {
-                        shootAtPlayer = rand() % 2;
+                        shootAtPlayer = this->lcg<int>(0, 2);
                     }
 
                     BehaviorType enemyMovementBehavior = BehaviorType::None;
-                    int hasEnemySpecificMove = rand() % 2;
+                    int hasEnemySpecificMove = this->lcg<int>(0, 2);
                     if (hasEnemySpecificMove == 1) {
                         enemyMovementBehavior = this->genRandomMovementBehavior();
                     }
@@ -142,6 +144,7 @@ class StageLoader {
             std::cout << " --- Stage Config --- " << std::endl;
 
             std::cout << "Numero: " << _config.numero << std::endl;
+            std::cout << "Seed: " << _seed << std::endl;
             std::cout << "Background Path: " << _config.background_path << std::endl;
             std::cout << "Music Path: " << _config.music_path << std::endl;
             std::cout << "Time: " << _config.time << std::endl;
@@ -186,12 +189,39 @@ class StageLoader {
 
         double _remainingTime;
 
+        std::size_t _seed;
+
         // waves attributs
         std::size_t _waveCount;
         std::vector<float> _wavesDurations;
         std::vector<std::size_t> _wavesMobsCount;
         std::map<std::size_t, std::vector<std::size_t>> _wavesMobsTypes;
 
+        /**
+         * @brief Linear Congruential Generator
+         *
+         * @tparam T
+         * @param min
+         * @param max
+         * @param a
+         * @param c
+         * @param m
+         *
+         * @return T
+         */
+        template <typename T>
+        T lcg(double min = 0, double max = 1, int a = 1664525, int c = 1013904223, int m = pow(2, 8)) {
+            _seed = (a * _seed + c) % m;
+            T scaled_value = min + (_seed * (max - min) / (m - 1.0));
+            return scaled_value;
+        }
+
+        /**
+         * @brief Get the Enemy Type By Name object
+         *
+         * @param name
+         * @return EnemyType
+         */
         EnemyType getEnemyTypeByName(const std::string& name) {
             for (const EnemyType& type : _enemyTypes) {
                 if (type.name == name)
@@ -253,7 +283,7 @@ class StageLoader {
             }
             // regulate duration with random values
             for (std::size_t i = 0; i < _waveCount; i++) {
-                float random_duration = (rand() % 4) + 1;
+                float random_duration = (this->lcg<int>(0, 4)) + 1;
                 _wavesDurations[_waveCount - i - 1] += random_duration;
                 _wavesDurations[i] -= random_duration;
             }
@@ -272,7 +302,7 @@ class StageLoader {
         void defineWavesMobsCount() {
             for (std::size_t i = 0; i < _waveCount; i++) {
                 const std::size_t waveDuration = _wavesDurations[i];
-                const std::size_t countMobs = (rand() % (waveDuration * 3 - waveDuration)) + waveDuration;
+                const std::size_t countMobs = this->lcg<int>(waveDuration, waveDuration * 2);
                 _wavesMobsCount.push_back(countMobs);
             }
         }
@@ -287,11 +317,11 @@ class StageLoader {
         void defineWavesMobsTypes() {
             for (std::size_t i = 0; i < _waveCount; i++) {
                 std::vector<std::size_t> mobsTypes;
-                std::size_t nbMobsTypesForWave = (rand() % _config.mobs_types.size()) + 1;
+                std::size_t nbMobsTypesForWave = (this->lcg<int>(0, _config.mobs_types.size())) + 1;
                 std::vector<std::string> remainingTypeToChoose = _config.mobs_types;
 
                 for (std::size_t j = 0; j < nbMobsTypesForWave; j++) {
-                    std::size_t randomIndex = rand() % remainingTypeToChoose.size();
+                    std::size_t randomIndex = this->lcg<int>(0, remainingTypeToChoose.size());
                     std::string type = remainingTypeToChoose[randomIndex];
 
                     remainingTypeToChoose.erase(remainingTypeToChoose.begin() + randomIndex);
@@ -326,11 +356,11 @@ class StageLoader {
          * @param max
          * @return float
          */
-        float genRandomFloat(float min, float max) {
-            float r = static_cast<float>(rand()) / RAND_MAX;
-            float value = min + r * (max - min);
-            return value;
-        }
+        // float genRandomFloat(float min, float max) {
+        //     float r = static_cast<float>(rand()) / RAND_MAX;
+        //     float value = min + r * (max - min);
+        //     return value;
+        // }
 
         /**
          * @brief Generate a random movement behavior
@@ -339,7 +369,7 @@ class StageLoader {
          * @return BehaviorType
          */
         BehaviorType genRandomMovementBehavior() {
-            int choice = rand() % 4;
+            int choice = this->lcg<int>(0, 4);
             switch (choice)
             {
             case 0:
