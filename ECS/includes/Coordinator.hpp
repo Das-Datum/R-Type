@@ -49,7 +49,7 @@ class Coordinator
                 entityManager->destroyEntity(entity);
                 componentManager->entityDestroyed(entity);
                 systemManager->entityDestroyed(entity);
-                std::cout << "Entity destroyed: " << entity << std::endl;
+                // std::cout << "Entity destroyed: " << entity << std::endl;
             }
             entitiesToDestroy.clear();
         }

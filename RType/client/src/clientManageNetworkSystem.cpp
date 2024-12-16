@@ -30,27 +30,23 @@ void ClientManageNetworkSystem::beam(Entity player) {
 }
 
 void ClientManageNetworkSystem::up(Entity player) {
-    float speed = (1000.0f / 1920.0f) * GetFrameTime();
-    auto &playerNetwork = gCoordinator.getComponent<TransformComponent>(player);
-    playerNetwork.position.y -= speed * (16.0 / 9.0);
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y -= 1.0f;
 }
 
 void ClientManageNetworkSystem::down(Entity player) {
-    float speed = (1000.0f / 1920.0f) * GetFrameTime();
-    auto &playerNetwork = gCoordinator.getComponent<TransformComponent>(player);
-    playerNetwork.position.y += speed * (16.0 / 9.0);
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y += 1.0f;
 }
 
 void ClientManageNetworkSystem::right(Entity player) {
-    float speed = (1000.0f / 1920.0f) * GetFrameTime();
-    auto &playerNetwork = gCoordinator.getComponent<TransformComponent>(player);
-    playerNetwork.position.x += speed;
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x += 0.7f;
 }
 
 void ClientManageNetworkSystem::left(Entity player) {
-    float speed = (1000.0f / 1920.0f) * GetFrameTime();
-    auto &playerNetwork = gCoordinator.getComponent<TransformComponent>(player);
-    playerNetwork.position.x -= speed;
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x -= 0.7f;
 }
 
 void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
@@ -58,6 +54,7 @@ void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
 }
 
 void ClientManageNetworkSystem::loadStage(Entity entity) {
+    std::cout << "Loading stage remotly!" << std::endl;
     auto &stageLoader = StageLoader::getInstance();
     try {
         stageLoader.loadConfig(_options);
@@ -70,16 +67,24 @@ void ClientManageNetworkSystem::loadStage(Entity entity) {
 
 void ClientManageNetworkSystem::startGame(Entity entity) {
     (void)entity;
+    std::cout << "Game started remotly!" << std::endl;
     auto &menuManager = MenuManager::getInstance();
     menuManager.closeCurrentPage();
-    std::cout << "Game started by the player " << _id << std::endl;
 }
 
 void ClientManageNetworkSystem::update() {
     std::vector<std::string> messages = getLastMessages();
-    for (auto const &msg : messages) {
+    for (const auto &msg : messages) {
         std::string command = getCommand(msg);
-        if (_protocolMap.find(command) != _protocolMap.end()) {
+        if (command == "POS") {
+            Entity entity = getEntityById(_id);
+            if (entity != 0 && gCoordinator.hasComponent<NetworkPositionComponent>(entity)) {
+                auto &networkPos = gCoordinator.getComponent<NetworkPositionComponent>(entity);
+                networkPos.lastPosition = networkPos.targetPosition;
+                networkPos.targetPosition = {_x, _y};
+                networkPos.lerpFactor = 0.0f;
+            }
+        } else if (_protocolMap.find(command) != _protocolMap.end()) {
             _protocolMap[command](getEntityById(_id));
         }
     }
@@ -106,7 +111,7 @@ std::string ClientManageNetworkSystem::getCommand(std::string command) {
     int pos = getPos(command.substr(4));
     if (command.size() == pos + 5)
         return command.substr(0, 3);
-    _options = command.substr(pos + 5);
+    _options = command.substr(pos + 4);
     return command.substr(0, 3);
 }
 

@@ -12,6 +12,17 @@ struct TransformComponent {
         : position(pos), rotation(rot), scale(scl), size(sz) {}
 };
 
+struct VelocityComponent {
+    Vector2 velocity;
+    float maxSpeed;
+    float acceleration;
+    float deceleration;
+
+    VelocityComponent(Vector2 vel = {0.0f, 0.0f}, float max = 0.75f)
+        : velocity(vel), maxSpeed(max),
+          acceleration(0.1f), deceleration(4.5f) {}
+};
+
 struct SpawnComponent {
     float time_left;
 
@@ -43,4 +54,13 @@ struct BulletComponent {
 
     BulletComponent(float sz = 2.0f, Color clr = RED)
         : size(sz), color(clr) {}
+};
+
+struct NetworkPositionComponent {
+    Vector2 lastPosition;
+    Vector2 targetPosition;
+    float lerpFactor;
+
+    NetworkPositionComponent(Vector2 pos = {0.0f, 0.0f})
+        : lastPosition(pos), targetPosition(pos), lerpFactor(0.0f) {}
 };
