@@ -25,45 +25,46 @@
 var NAVTREE =
 [
   [ "R-Type", "index.html", [
-    [ "The Project", "index.html#autotoc_md1", [
-      [ "R-TYPE", "index.html#autotoc_md2", null ],
-      [ "Objective", "index.html#autotoc_md3", null ],
-      [ "Game Overview", "index.html#autotoc_md4", null ],
-      [ "Project Details", "index.html#autotoc_md5", null ]
+    [ "Web Documentation", "index.html#autotoc_md1", null ],
+    [ "The Project", "index.html#autotoc_md2", [
+      [ "R-TYPE", "index.html#autotoc_md3", null ],
+      [ "Objective", "index.html#autotoc_md4", null ],
+      [ "Game Overview", "index.html#autotoc_md5", null ],
+      [ "Project Details", "index.html#autotoc_md6", null ]
     ] ],
-    [ "How to Start", "index.html#autotoc_md6", [
-      [ "Server", "index.html#autotoc_md7", null ],
-      [ "Client", "index.html#autotoc_md8", null ],
-      [ "Running Without Compilation", "index.html#autotoc_md9", [
-        [ "To launch the client without recompiling:", "index.html#autotoc_md10", null ],
-        [ "To launch the server without recompiling:", "index.html#autotoc_md11", null ]
+    [ "How to Start", "index.html#autotoc_md7", [
+      [ "Server", "index.html#autotoc_md8", null ],
+      [ "Client", "index.html#autotoc_md9", null ],
+      [ "Running Without Compilation", "index.html#autotoc_md10", [
+        [ "To launch the client without recompiling:", "index.html#autotoc_md11", null ],
+        [ "To launch the server without recompiling:", "index.html#autotoc_md12", null ]
       ] ]
     ] ],
-    [ "Protocol", "index.html#autotoc_md12", null ],
-    [ "Developer Documentation", "index.html#autotoc_md13", null ],
-    [ "Comparative Study", "index.html#autotoc_md14", null ],
-    [ "License", "index.html#autotoc_md15", null ],
-    [ "Authors", "index.html#autotoc_md16", null ],
+    [ "Protocol", "index.html#autotoc_md13", null ],
+    [ "Developer Documentation", "index.html#autotoc_md14", null ],
+    [ "Comparative Study", "index.html#autotoc_md15", null ],
+    [ "License", "index.html#autotoc_md16", null ],
+    [ "Authors", "index.html#autotoc_md17", null ],
     [ "Comparative Study", "md_docs_comparative_study.html", [
-      [ "Graphical: Raylib", "md_docs_comparative_study.html#autotoc_md18", [
-        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md19", null ],
-        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md20", null ]
+      [ "Graphical: Raylib", "md_docs_comparative_study.html#autotoc_md19", [
+        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md20", null ],
+        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md21", null ]
       ] ],
-      [ "Architecture: ECS (Entity-Component-System)", "md_docs_comparative_study.html#autotoc_md21", [
-        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md22", null ],
-        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md23", null ]
+      [ "Architecture: ECS (Entity-Component-System)", "md_docs_comparative_study.html#autotoc_md22", [
+        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md23", null ],
+        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md24", null ]
       ] ],
-      [ "Protocol: Binary UDP", "md_docs_comparative_study.html#autotoc_md24", [
-        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md25", null ],
-        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md26", null ]
+      [ "Protocol: Binary UDP", "md_docs_comparative_study.html#autotoc_md25", [
+        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md26", null ],
+        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md27", null ]
       ] ],
-      [ "License: GNU General Public License v3.0", "md_docs_comparative_study.html#autotoc_md27", [
-        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md28", null ],
-        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md29", null ]
+      [ "License: GNU General Public License v3.0", "md_docs_comparative_study.html#autotoc_md28", [
+        [ "Key Advantages:", "md_docs_comparative_study.html#autotoc_md29", null ],
+        [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md30", null ]
       ] ]
     ] ],
     [ "Documentation Dev", "md_docs_dev_docs.html", [
-      [ "Architecture Diagram", "md_docs_dev_docs.html#autotoc_md31", null ]
+      [ "Architecture Diagram", "md_docs_dev_docs.html#autotoc_md32", null ]
     ] ],
     [ "Protocol", "md_docs_protocol_client_server.html", null ],
     [ "Modules", "modules.html", "modules" ],

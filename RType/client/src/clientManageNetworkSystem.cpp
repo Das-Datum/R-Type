@@ -31,22 +31,22 @@ void ClientManageNetworkSystem::beam(Entity player) {
 
 void ClientManageNetworkSystem::up(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.y -= 1.0f;
+    velocity.velocity.y -= 1.0f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::down(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.y += 1.0f;
+    velocity.velocity.y += 1.0f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::right(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.x += 0.7f;
+    velocity.velocity.x += 0.7f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::left(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.x -= 0.7f;
+    velocity.velocity.x -= 0.7f * velocity.acceleration;
 }
 
 void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
