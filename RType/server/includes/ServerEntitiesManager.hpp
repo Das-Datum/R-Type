@@ -82,7 +82,7 @@ public:
         gCoordinator.addComponent(ship, NetworkComponent{name, ip, port, id});
         gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
         gCoordinator.addComponent(ship, CollisionComponent(collider));
-        gCoordinator.addComponent(ship, VelocityComponent(Vector2{0.0f, 0.0f}, 0.5f));
+        gCoordinator.addComponent(ship, VelocityComponent(Vector2{0.0f, 0.0f}));
         return ship;
     }
 

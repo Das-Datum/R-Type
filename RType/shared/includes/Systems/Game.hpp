@@ -2,6 +2,7 @@
 #include "ECS.hpp"
 #include <algorithm>
 #include "Components/GameComponents.hpp"
+#include <algorithm>
 
 class PhysicsSystem : public System {
   public:

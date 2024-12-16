@@ -18,9 +18,9 @@ struct VelocityComponent {
     float acceleration;
     float deceleration;
 
-    VelocityComponent(Vector2 vel = {0.0f, 0.0f}, float max = 1.0f)
+    VelocityComponent(Vector2 vel = {0.0f, 0.0f}, float max = 0.75f)
         : velocity(vel), maxSpeed(max),
-          acceleration(6.0f), deceleration(4.0f) {}
+          acceleration(0.1f), deceleration(4.5f) {}
 };
 
 struct SpawnComponent {

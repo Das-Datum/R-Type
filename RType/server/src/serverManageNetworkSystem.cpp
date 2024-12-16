@@ -13,7 +13,7 @@ void ServerManageNetworkSystem::beam(Entity player) {
 
 void ServerManageNetworkSystem::up(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.y -= 0.8f;
+    velocity.velocity.y -= 1.0f;
 
     // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     // sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
@@ -21,7 +21,7 @@ void ServerManageNetworkSystem::up(Entity player) {
 
 void ServerManageNetworkSystem::down(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.y += 0.8f;
+    velocity.velocity.y += 1.0f;
 
     // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     // sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
@@ -29,7 +29,7 @@ void ServerManageNetworkSystem::down(Entity player) {
 
 void ServerManageNetworkSystem::right(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.x += 1.0f;
+    velocity.velocity.x += 0.7f;
 
     // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     // sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
@@ -37,7 +37,7 @@ void ServerManageNetworkSystem::right(Entity player) {
 
 void ServerManageNetworkSystem::left(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
-    velocity.velocity.x -= 1.0f;
+    velocity.velocity.x -= 0.7f;
 
     // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
     // sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));

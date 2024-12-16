@@ -28,7 +28,7 @@ public:
             if (fabs(velocity.velocity.y) <= 0.05f) velocity.velocity.y = 0.0f;
 
             transform.position.x += velocity.velocity.x * deltaTime;
-            transform.position.y += velocity.velocity.y * deltaTime * (16.0f / 9.0f);
+            transform.position.y += velocity.velocity.y * deltaTime;
         }
     }
 };
