@@ -39,7 +39,6 @@ void initCoordinator() {
     //? PhysicsSystem
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<BulletComponent>(), true);
     gCoordinator.setSystemSignature<PhysicsSystem>(signature);
 
     //? NetworkSystem

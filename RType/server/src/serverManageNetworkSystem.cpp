@@ -74,16 +74,17 @@ void ServerManageNetworkSystem::startGame(Entity player) {
 }
 
 void ServerManageNetworkSystem::update() {
-    while (isRunning()) {
-        for (auto const &entity : entities) {
-            auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
-            while (!player.lastMessagesReceived.empty()) {
-                std::string command = getCommand(player.lastMessagesReceived.front());
-                if (_protocolMap.find(command) != _protocolMap.end()) {
-                    _protocolMap[command](entity);
-                }
-                player.lastMessagesReceived.erase(player.lastMessagesReceived.begin());
+    for (auto const &entity : entities) {
+        auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
+        int playerSize = player.lastMessagesReceived.size();
+        if (playerSize != 0)
+            debug("Size " + std::to_string(playerSize));
+        while (!player.lastMessagesReceived.empty()) {
+            std::string command = getCommand(player.lastMessagesReceived.front());
+            if (_protocolMap.find(command) != _protocolMap.end()) {
+                _protocolMap[command](entity);
             }
+            player.lastMessagesReceived.erase(player.lastMessagesReceived.begin());
         }
     }
 }

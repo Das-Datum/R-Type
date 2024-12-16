@@ -140,6 +140,7 @@ class NetworkInstructionsSystem : public System {
             for (auto const &entity : entities) {
                 auto &player = gCoordinator.getComponent<NetworkInstructionsComponent>(entity);
                 while (!player.instructionsBuffer.empty()) {
+                    std::cout << "Sending instruction: " << player.instructionsBuffer.front() << std::endl;
                     gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData(player.instructionsBuffer.front());
                     player.instructionsBuffer.erase(player.instructionsBuffer.begin());
                 }
