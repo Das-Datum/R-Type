@@ -111,9 +111,9 @@ int main() {
         gCoordinator.getSystem<SpriteFrameSystem>()->update();
         gCoordinator.getSystem<TimerSystem>()->update();
         gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
-            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
-                std::cout << "Ship collided with enemy\n";
-            }
+            // if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
+            //     std::cout << "Ship collided with enemy\n";
+            // }
 
             if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
                 gCoordinator.destroyEntity(entityA);

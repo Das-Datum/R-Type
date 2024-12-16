@@ -51,12 +51,12 @@ class SpawnSystem : public System {
         void update(float frameTime = 0.0f) {
             for (const auto& entity : entities) {
                 if (!gCoordinator.hasComponent<SpawnComponent>(entity)) {
-                    std::cout << "No SpawnComponent for entity " << entity << std::endl;
+                    // std::cout << "No SpawnComponent for entity " << entity << std::endl;
                     continue;
                 }
                 auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
                 if (spawn.time_left <= 0.0f) {
-                    std::cout << "Removing SpawnComponent for entity " << entity << std::endl;
+                    // std::cout << "Removing SpawnComponent for entity " << entity << std::endl;
                     gCoordinator.removeComponent<SpawnComponent>(entity);
                     break;
                 } else {

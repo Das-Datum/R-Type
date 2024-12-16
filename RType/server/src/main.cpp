@@ -9,7 +9,15 @@ void game_tick(double elapsedTimeSeconds, int tick) {
     //! VELOCITY, PHYSICS, COLLISION
     gCoordinator.getSystem<VelocitySystem>()->update(elapsedTimeSeconds);
     gCoordinator.getSystem<PhysicsSystem>()->update(elapsedTimeSeconds);
-    gCoordinator.getSystem<CollisionSystem>()->update();
+    gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
+        // if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
+        //     std::cout << "Ship collided with enemy\n";
+        // }
+
+        if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
+            gCoordinator.destroyEntity(entityA);
+        }
+    });
 
     //! SPAWN
     gCoordinator.getSystem<SpawnSystem>()->update(elapsedTimeSeconds);
@@ -33,13 +41,13 @@ int main() {
     int tickCount = 1;
 
     initCoordinator();
-    std::thread networkHandlerThread = std::thread([&]() { gCoordinator.getSystem<ServerManageNetworkSystem>()->update(); });
 
     //? MAIN LOOP
     while (gCoordinator.getSystem<ServerManageNetworkSystem>()->isRunning()) {
         auto current_time = Clock::now();
         std::chrono::duration<double> elapsed_time = current_time - last_tick_time;
-
+        // std::cout << "Elapsed time: " << elapsed_time.count() << std::endl;
+        gCoordinator.getSystem<ServerManageNetworkSystem>()->update();
         if (elapsed_time.count() >= interval) {
             last_tick_time = current_time;
             try {
@@ -52,8 +60,6 @@ int main() {
             }
         }
     }
-    if (networkHandlerThread.joinable())
-        networkHandlerThread.join();
 
     return 0;
 }
