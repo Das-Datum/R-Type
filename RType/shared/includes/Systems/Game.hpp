@@ -2,6 +2,7 @@
 #include "ECS.hpp"
 #include <algorithm>
 #include "Components/GameComponents.hpp"
+#include <algorithm>
 
 class PhysicsSystem : public System {
   public:
@@ -9,6 +10,9 @@ class PhysicsSystem : public System {
         for (auto const &entity : entities) {
             if (!gCoordinator.hasComponent<TransformComponent>(entity))
                 continue;
+
+            // if (!gCoordinator.hasComponent<InputComponent>(entity))
+            //     continue;
 
             if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
                 continue;
@@ -48,12 +52,12 @@ class SpawnSystem : public System {
         void update(float frameTime = 0.0f) {
             for (const auto& entity : entities) {
                 if (!gCoordinator.hasComponent<SpawnComponent>(entity)) {
-                    std::cout << "No SpawnComponent for entity " << entity << std::endl;
+                    // std::cout << "No SpawnComponent for entity " << entity << std::endl;
                     continue;
                 }
                 auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
                 if (spawn.time_left <= 0.0f) {
-                    std::cout << "Removing SpawnComponent for entity " << entity << std::endl;
+                    // std::cout << "Removing SpawnComponent for entity " << entity << std::endl;
                     gCoordinator.removeComponent<SpawnComponent>(entity);
                     break;
                 } else {

@@ -12,35 +12,35 @@ void ServerManageNetworkSystem::beam(Entity player) {
 }
 
 void ServerManageNetworkSystem::up(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.y -= speed * (16.0 / 9.0);
-    sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y -= 1.0f;
+
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::down(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.y += speed * (16.0 / 9.0);
-    sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.y += 1.0f;
+
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::right(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.x += speed;
-    sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x += 0.7f;
+
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::left(Entity player) {
-    float speed = (1000.0f / 1920.0f) * _elapsed_time;
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    auto &pos = gCoordinator.getComponent<TransformComponent>(player);
-    pos.position.x -= speed;
-    sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
+    auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
+    velocity.velocity.x -= 0.7f;
+
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::disconnectClient(Entity entity) {
@@ -57,6 +57,9 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     info("Game started by the player " + playerNetwork.id);
     //! TODO: call singleton stage loader -> load stage1.json
 
+    sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
+    sendAllPlayer(0, "LOD0stages/stage1.json");
+
     auto &stageLoader = StageLoader::getInstance();
     try {
         stageLoader.loadConfig("stages/stage1.json");
@@ -66,16 +69,16 @@ void ServerManageNetworkSystem::startGame(Entity player) {
         error(e.what());
     }
 
+    _gameStarted = true;
     info("Game started");
-
-    sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
-    sendAllPlayer(0, "LOD0sstages/stage1.json");
 }
 
-void ServerManageNetworkSystem::update(double elapsed_time) {
-    _elapsed_time = elapsed_time;
+void ServerManageNetworkSystem::update() {
     for (auto const &entity : entities) {
         auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
+        int playerSize = player.lastMessagesReceived.size();
+        if (playerSize != 0)
+            debug("Size " + std::to_string(playerSize));
         while (!player.lastMessagesReceived.empty()) {
             std::string command = getCommand(player.lastMessagesReceived.front());
             if (_protocolMap.find(command) != _protocolMap.end()) {
@@ -114,5 +117,20 @@ void ServerManageNetworkSystem::createNewClient(std::string name, int id, std::s
         auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
         auto& pos = gCoordinator.getComponent<TransformComponent>(entityList[i]);
         sendDataToPlayer("NEW" + std::to_string(player.id) + std::to_string(pos.position.x) + std::string(",") + std::to_string(pos.position.y) + ";" + player.name, ip, port);
+    }
+
+    //! if the game is already started, send STA and LOD
+    if (_gameStarted) {
+        std::string nowTimestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
+        sendDataToPlayer("STA" + std::to_string(id) + nowTimestamp, ip, port);
+        sendDataToPlayer("LOD0stages/stage1.json", ip, port);
+    }
+}
+
+void ServerManageNetworkSystem::sendAllPlayersPosition() {
+    for (auto const &entity : entities) {
+        auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
+        auto &pos = gCoordinator.getComponent<TransformComponent>(entity);
+        sendAllPlayer(player.id, "POS" + std::to_string(player.id) + std::to_string(pos.position.x) + std::string(",") + std::to_string(pos.position.y) + ";");
     }
 }
