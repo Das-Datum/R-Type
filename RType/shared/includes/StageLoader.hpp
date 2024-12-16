@@ -49,6 +49,7 @@ class StageLoader {
             _config.background_path = j["background_path"];
             _config.music_path = j["music_path"];
             _config.time = j["time"];
+            _remainingTime = static_cast<double>(_config.time);
             for (auto type : j["mobs_types"]) {
                 if (this->isMobTypeValid(type)) {
                     _config.mobs_types.push_back(type);
@@ -133,6 +134,9 @@ class StageLoader {
         std::vector<std::size_t> getWavesMobsCount() const { return _wavesMobsCount; };
         std::map<std::size_t, std::vector<std::size_t>> getWavesMobsTypes() const { return _wavesMobsTypes; };
 
+        double getRemainingTime() const { return _remainingTime; };
+        void setRemainingTime(double time) { _remainingTime = time; };
+
         // Displayers
         void printStageConfig() const {
             std::cout << " --- Stage Config --- " << std::endl;
@@ -179,6 +183,8 @@ class StageLoader {
         StageConfig _config;
 
         std::vector<EnemyType> _enemyTypes;
+
+        double _remainingTime;
 
         // waves attributs
         std::size_t _waveCount;
