@@ -6,6 +6,7 @@ var classCoordinator =
     [ "getComponent", "classCoordinator.html#a3b2fdeead936cdf3274408b618a3907c", null ],
     [ "getComponentTypeID", "classCoordinator.html#a2ace979a7ab5abd778fdc0b52f823fa7", null ],
     [ "getEntitySignature", "classCoordinator.html#ab199b65713c1abc5a8409e49da539131", null ],
+    [ "getSystem", "classCoordinator.html#af58dd71d990befd5f5929b55c1835d03", null ],
     [ "hasComponent", "classCoordinator.html#a95479f4dca8ae1a8a7ecb64b32d05b52", null ],
     [ "init", "classCoordinator.html#a70ce14302b4b3d08a97719cb5f9cefd8", null ],
     [ "processEntityDestruction", "classCoordinator.html#a42797821c18433a9e8aa96fc26d0e74d", null ],

@@ -1,6 +1,8 @@
 #pragma once
+
 #include <raylib.h>
 #include <algorithm>
+#include "Components/GameComponents.hpp"
 
 struct TimerComponent {
     float elapsedTime = 0.0f;

@@ -1,4 +1,0 @@
-<map id="ComponentStorage&lt; T &gt;" name="ComponentStorage&lt; T &gt;">
-<area shape="rect" id="node1" title="Stores component data for entities using an unordered map." alt="" coords="5,80,191,107"/>
-<area shape="rect" id="node2" href="$classAComponentStorage.html" title="Abstract base class for component arrays." alt="" coords="20,5,176,32"/>
-</map>

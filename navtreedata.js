@@ -25,22 +25,14 @@
 var NAVTREE =
 [
   [ "R-Type", "index.html", [
-    [ "Auteurs", "index.html#autotoc_md1", null ],
-    [ "Comparative Study", "md_docs_comparative_study.html", [
-      [ "Overview", "md_docs_comparative_study.html#autotoc_md3", null ],
-      [ "Key Points", "md_docs_comparative_study.html#autotoc_md4", [
-        [ "Approach A", "md_docs_comparative_study.html#autotoc_md5", null ],
-        [ "Approach B", "md_docs_comparative_study.html#autotoc_md6", null ],
-        [ "Approach C", "md_docs_comparative_study.html#autotoc_md7", null ]
-      ] ],
-      [ "Conclusion", "md_docs_comparative_study.html#autotoc_md8", null ],
-      [ "References", "md_docs_comparative_study.html#autotoc_md9", null ]
-    ] ],
+    [ "License", "index.html#autotoc_md1", null ],
+    [ "Authors", "index.html#autotoc_md2", null ],
+    [ "Documentation Dev", "md_docs_dev_docs.html", null ],
+    [ "Protocol", "md_docs_protocol_client_server.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
-      [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ]
@@ -54,7 +46,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"AComponentStorage_8hpp_source.html"
+"Coordinator_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

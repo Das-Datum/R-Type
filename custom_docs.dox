@@ -11,3 +11,20 @@
  *
  *  Cette page contient l'étude comparative.
  */
+
+
+/*! \page protocol_client_server Protocol Client/Server
+ *  \ingroup my_docs
+ *
+ *  @htmlinclude docs/protocol_client_server.md
+ *
+ *  Cette page contient le protocal client/server.
+ */
+
+/*! \page dev_docs.md Documentation Dev
+ *  \ingroup my_docs
+ *
+ *  @htmlinclude docs/dev_docs.md.md
+ *
+ *  Cette page contient la documentation dev.
+ */

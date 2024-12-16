@@ -14,6 +14,8 @@ Manages systems and their signatures.
 \item 
 {\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{classSystemManager_aa3f49b9bb45d8af754fc725934cc3602}{register\+System}} ()
 \begin{DoxyCompactList}\small\item\em Registers a new system. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{classSystemManager_a276373128e4359be0a9dd74e3c0adce2}{get\+System}} ()
+\begin{DoxyCompactList}\small\item\em Gets an existing system. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classSystemManager_a2064240b2e13242fc7dab16c19dffdae}{set\+Signature}} (Signature signature)
 \begin{DoxyCompactList}\small\item\em Sets the signature for a system. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classSystemManager_a8e4d8dfca2326b23e9d0d2567e10d79f}{entity\+Destroyed}} (Entity entity)
@@ -58,6 +60,25 @@ Updates systems when an entity\textquotesingle{}s signature changes.
 {\em entity\+Signature} & The new signature. \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classSystemManager_a276373128e4359be0a9dd74e3c0adce2}\label{classSystemManager_a276373128e4359be0a9dd74e3c0adce2}} 
+\index{SystemManager@{SystemManager}!getSystem@{getSystem}}
+\index{getSystem@{getSystem}!SystemManager@{SystemManager}}
+\doxysubsubsection{\texorpdfstring{getSystem()}{getSystem()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::shared\+\_\+ptr$<$T$>$ System\+Manager\+::get\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets an existing system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & System type. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+A shared pointer to the system. 
+\end{DoxyReturn}
 \mbox{\Hypertarget{classSystemManager_aa3f49b9bb45d8af754fc725934cc3602}\label{classSystemManager_aa3f49b9bb45d8af754fc725934cc3602}} 
 \index{SystemManager@{SystemManager}!registerSystem@{registerSystem}}
 \index{registerSystem@{registerSystem}!SystemManager@{SystemManager}}
@@ -71,7 +92,7 @@ Registers a new system.
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+{\em T} & System type. \\
 \hline
 \end{DoxyTemplParams}
 \begin{DoxyReturn}{Returns}
@@ -90,7 +111,7 @@ Sets the signature for a system.
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+{\em T} & System type. \\
 \hline
 \end{DoxyTemplParams}
 

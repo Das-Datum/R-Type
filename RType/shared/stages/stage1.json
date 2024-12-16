@@ -1,0 +1,11 @@
+{
+    "numero": 1,
+    "background_path": "backgrounds/stage1.png",
+    "music_path": "sounds/stage1.mp3",
+    "time": 120,
+    "mobs_types": [
+        "asteroid",
+        "classic",
+        "ship"
+    ]
+}

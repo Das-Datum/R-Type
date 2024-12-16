@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['r_2dtype_103',['R-Type',['../index.html',1,'']]]
+  ['documentation_20dev_44',['Documentation Dev',['../group__my__docs.html',1,'(Global Namespace)'],['../md_docs_dev_docs.html',1,'(Global Namespace)']]]
 ];

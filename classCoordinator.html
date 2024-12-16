@@ -133,6 +133,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:a3f1bcd1e870e5eb78a5d3ecb007453d1"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classCoordinator.html#a3f1bcd1e870e5eb78a5d3ecb007453d1">registerSystem</a> ()</td></tr>
 <tr class="memdesc:a3f1bcd1e870e5eb78a5d3ecb007453d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a system.  <a href="classCoordinator.html#a3f1bcd1e870e5eb78a5d3ecb007453d1">More...</a><br /></td></tr>
 <tr class="separator:a3f1bcd1e870e5eb78a5d3ecb007453d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af58dd71d990befd5f5929b55c1835d03"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:af58dd71d990befd5f5929b55c1835d03"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classCoordinator.html#af58dd71d990befd5f5929b55c1835d03">getSystem</a> ()</td></tr>
+<tr class="memdesc:af58dd71d990befd5f5929b55c1835d03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a system.  <a href="classCoordinator.html#af58dd71d990befd5f5929b55c1835d03">More...</a><br /></td></tr>
+<tr class="separator:af58dd71d990befd5f5929b55c1835d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e52a97668cd56e3522e5303cca66c49"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a6e52a97668cd56e3522e5303cca66c49"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classCoordinator.html#a6e52a97668cd56e3522e5303cca66c49">setSystemSignature</a> (Signature signature)</td></tr>
 <tr class="memdesc:a6e52a97668cd56e3522e5303cca66c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the signature for a system.  <a href="classCoordinator.html#a6e52a97668cd56e3522e5303cca66c49">More...</a><br /></td></tr>
@@ -377,6 +381,42 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="af58dd71d990befd5f5929b55c1835d03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af58dd71d990befd5f5929b55c1835d03">&#9670;&nbsp;</a></span>getSystem()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;T&gt; Coordinator::getSystem </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets a system. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>System type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A shared pointer to the system. </dd></dl>
+
+</div>
+</div>
 <a id="a95479f4dca8ae1a8a7ecb64b32d05b52"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a95479f4dca8ae1a8a7ecb64b32d05b52">&#9670;&nbsp;</a></span>hasComponent()</h2>
 
@@ -483,7 +523,7 @@ template&lt;typename T &gt; </div>
 <p>Registers a system. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td><a class="el" href="classSystem.html" title="Base class for all systems.">System</a> type. </td></tr>
+    <tr><td class="paramname">T</td><td>System type. </td></tr>
   </table>
   </dd>
 </dl>
@@ -562,7 +602,7 @@ template&lt;typename T &gt; </div>
 <p>Sets the signature for a system. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td><a class="el" href="classSystem.html" title="Base class for all systems.">System</a> type. </td></tr>
+    <tr><td class="paramname">T</td><td>System type. </td></tr>
   </table>
   </dd>
 </dl>

@@ -107,49 +107,57 @@ $(document).ready(function(){initNavTree('SystemManager_8hpp_source.html',''); i
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        }</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">   37</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">setSignature</a>(Signature signature)</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classSystemManager.html#a276373128e4359be0a9dd74e3c0adce2">   37</a></span>&#160;        std::shared_ptr&lt;T&gt; <a class="code" href="classSystemManager.html#a276373128e4359be0a9dd74e3c0adce2">getSystem</a>()</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        {</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            std::type_index typeName = <span class="keyword">typeid</span>(T);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            signatures.insert({typeName, signature});</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            <span class="keywordflow">return</span> std::static_pointer_cast&lt;T&gt;(systems.at(typeName));</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        }</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">   47</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">entityDestroyed</a>(Entity entity)</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : systems)</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            {</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;system = pair.second;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                system-&gt;entities.erase(entity);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            }</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="classSystemManager.html#af59a78e7d984c50994aab6447883da96">   61</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classSystemManager.html#af59a78e7d984c50994aab6447883da96">entitySignatureChanged</a>(Entity entity, Signature entitySignature)</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : systems)</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;type = pair.first;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;system = pair.second;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;systemSignature = signatures[type];</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;                <span class="keywordflow">if</span> ((entitySignature &amp; systemSignature) == systemSignature)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;                    system-&gt;entities.insert(entity);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                    system-&gt;entities.erase(entity);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            }</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        std::unordered_map&lt;std::type_index, Signature&gt; signatures{};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        std::unordered_map&lt;std::type_index, std::shared_ptr&lt;System&gt;&gt; systems{};</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;};</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">   49</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">setSignature</a>(Signature signature)</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;            std::type_index typeName = <span class="keyword">typeid</span>(T);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            signatures.insert({typeName, signature});</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        }</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">   59</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">entityDestroyed</a>(Entity entity)</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        {</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : systems)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            {</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;system = pair.second;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                system-&gt;entities.erase(entity);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            }</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="classSystemManager.html#af59a78e7d984c50994aab6447883da96">   73</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classSystemManager.html#af59a78e7d984c50994aab6447883da96">entitySignatureChanged</a>(Entity entity, Signature entitySignature)</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;pair : systems)</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;type = pair.first;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;system = pair.second;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                <span class="keyword">auto</span> <span class="keyword">const</span> &amp;systemSignature = signatures[type];</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                <span class="keywordflow">if</span> ((entitySignature &amp; systemSignature) == systemSignature)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                    system-&gt;entities.insert(entity);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                    system-&gt;entities.erase(entity);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        std::unordered_map&lt;std::type_index, Signature&gt; signatures{};</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        std::unordered_map&lt;std::type_index, std::shared_ptr&lt;System&gt;&gt; systems{};</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;};</div>
 <div class="ttc" id="aclassSystemManager_html"><div class="ttname"><a href="classSystemManager.html">SystemManager</a></div><div class="ttdoc">Manages systems and their signatures.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:14</div></div>
-<div class="ttc" id="aclassSystemManager_html_a2064240b2e13242fc7dab16c19dffdae"><div class="ttname"><a href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">SystemManager::setSignature</a></div><div class="ttdeci">void setSignature(Signature signature)</div><div class="ttdoc">Sets the signature for a system.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:37</div></div>
-<div class="ttc" id="aclassSystemManager_html_a8e4d8dfca2326b23e9d0d2567e10d79f"><div class="ttname"><a href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">SystemManager::entityDestroyed</a></div><div class="ttdeci">void entityDestroyed(Entity entity)</div><div class="ttdoc">Notifies systems that an entity has been destroyed.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:47</div></div>
+<div class="ttc" id="aclassSystemManager_html_a2064240b2e13242fc7dab16c19dffdae"><div class="ttname"><a href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">SystemManager::setSignature</a></div><div class="ttdeci">void setSignature(Signature signature)</div><div class="ttdoc">Sets the signature for a system.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:49</div></div>
+<div class="ttc" id="aclassSystemManager_html_a276373128e4359be0a9dd74e3c0adce2"><div class="ttname"><a href="classSystemManager.html#a276373128e4359be0a9dd74e3c0adce2">SystemManager::getSystem</a></div><div class="ttdeci">std::shared_ptr&lt; T &gt; getSystem()</div><div class="ttdoc">Gets an existing system.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:37</div></div>
+<div class="ttc" id="aclassSystemManager_html_a8e4d8dfca2326b23e9d0d2567e10d79f"><div class="ttname"><a href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">SystemManager::entityDestroyed</a></div><div class="ttdeci">void entityDestroyed(Entity entity)</div><div class="ttdoc">Notifies systems that an entity has been destroyed.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:59</div></div>
 <div class="ttc" id="aclassSystemManager_html_aa3f49b9bb45d8af754fc725934cc3602"><div class="ttname"><a href="classSystemManager.html#aa3f49b9bb45d8af754fc725934cc3602">SystemManager::registerSystem</a></div><div class="ttdeci">std::shared_ptr&lt; T &gt; registerSystem()</div><div class="ttdoc">Registers a new system.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:22</div></div>
-<div class="ttc" id="aclassSystemManager_html_af59a78e7d984c50994aab6447883da96"><div class="ttname"><a href="classSystemManager.html#af59a78e7d984c50994aab6447883da96">SystemManager::entitySignatureChanged</a></div><div class="ttdeci">void entitySignatureChanged(Entity entity, Signature entitySignature)</div><div class="ttdoc">Updates systems when an entity's signature changes.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:61</div></div>
+<div class="ttc" id="aclassSystemManager_html_af59a78e7d984c50994aab6447883da96"><div class="ttname"><a href="classSystemManager.html#af59a78e7d984c50994aab6447883da96">SystemManager::entitySignatureChanged</a></div><div class="ttdeci">void entitySignatureChanged(Entity entity, Signature entitySignature)</div><div class="ttdoc">Updates systems when an entity's signature changes.</div><div class="ttdef"><b>Definition:</b> SystemManager.hpp:73</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

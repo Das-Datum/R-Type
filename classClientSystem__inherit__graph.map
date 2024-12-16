@@ -1,4 +1,0 @@
-<map id="ClientSystem" name="ClientSystem">
-<area shape="rect" id="node1" title="Manages the client system." alt="" coords="5,80,115,107"/>
-<area shape="rect" id="node2" href="$classSystem.html" title="Base class for all systems." alt="" coords="25,5,95,32"/>
-</map>

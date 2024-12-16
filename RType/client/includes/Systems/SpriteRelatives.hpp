@@ -1,28 +1,30 @@
 #pragma once
-#include "../../../../ECS/includes/ECS.hpp"
-#include "../Components.hpp"
+#include "ECS.hpp"
+#include "Components.hpp"
 
 class SpriteFrameSystem : public System {
   public:
     void update() {
+        auto &settings = Settings::getInstance();
+
         for (auto const &entity : entities) {
             auto &spriteFrame = gCoordinator.getComponent<SpriteFrameComponent>(entity);
 
             //? Ship sprite animation on move
             if (gCoordinator.hasComponent<ShipComponent>(entity)) {
-                if (IsKeyPressed(KEY_UP)) {
+                if (IsKeyPressed(settings.getMoveUpKey())) {
                     spriteFrame.nextFrame();
                 }
 
-                if (IsKeyPressed(KEY_DOWN)) {
+                if (IsKeyPressed(settings.getMoveDownKey())) {
                     spriteFrame.prevFrame();
                 }
 
-                if (IsKeyReleased(KEY_UP)) {
+                if (IsKeyReleased(settings.getMoveUpKey())) {
                     spriteFrame.prevFrame();
                 }
 
-                if (IsKeyReleased(KEY_DOWN)) {
+                if (IsKeyReleased(settings.getMoveDownKey())) {
                     spriteFrame.nextFrame();
                 }
             }

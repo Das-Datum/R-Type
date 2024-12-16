@@ -34,6 +34,8 @@ void \mbox{\hyperlink{classCoordinator_a42797821c18433a9e8aa96fc26d0e74d}{proces
 \begin{DoxyCompactList}\small\item\em Gets the component type ID. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{classCoordinator_a3f1bcd1e870e5eb78a5d3ecb007453d1}{register\+System}} ()
 \begin{DoxyCompactList}\small\item\em Registers a system. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\std\+::shared\+\_\+ptr$<$ T $>$ \mbox{\hyperlink{classCoordinator_af58dd71d990befd5f5929b55c1835d03}{get\+System}} ()
+\begin{DoxyCompactList}\small\item\em Gets a system. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classCoordinator_a6e52a97668cd56e3522e5303cca66c49}{set\+System\+Signature}} (Signature signature)
 \begin{DoxyCompactList}\small\item\em Sets the signature for a system. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename T $>$ }\\bool \mbox{\hyperlink{classCoordinator_a95479f4dca8ae1a8a7ecb64b32d05b52}{has\+Component}} (Entity entity)
@@ -158,6 +160,25 @@ Gets the signature of an entity.
 \begin{DoxyReturn}{Returns}
 The entity\textquotesingle{}s signature. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classCoordinator_af58dd71d990befd5f5929b55c1835d03}\label{classCoordinator_af58dd71d990befd5f5929b55c1835d03}} 
+\index{Coordinator@{Coordinator}!getSystem@{getSystem}}
+\index{getSystem@{getSystem}!Coordinator@{Coordinator}}
+\doxysubsubsection{\texorpdfstring{getSystem()}{getSystem()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+std\+::shared\+\_\+ptr$<$T$>$ Coordinator\+::get\+System (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets a system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & System type. \\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+A shared pointer to the system. 
+\end{DoxyReturn}
 \mbox{\Hypertarget{classCoordinator_a95479f4dca8ae1a8a7ecb64b32d05b52}\label{classCoordinator_a95479f4dca8ae1a8a7ecb64b32d05b52}} 
 \index{Coordinator@{Coordinator}!hasComponent@{hasComponent}}
 \index{hasComponent@{hasComponent}!Coordinator@{Coordinator}}
@@ -211,7 +232,7 @@ Registers a system.
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+{\em T} & System type. \\
 \hline
 \end{DoxyTemplParams}
 \begin{DoxyReturn}{Returns}
@@ -251,7 +272,7 @@ Sets the signature for a system.
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em T} & \mbox{\hyperlink{classSystem}{System}} type. \\
+{\em T} & System type. \\
 \hline
 \end{DoxyTemplParams}
 
