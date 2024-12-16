@@ -15,32 +15,32 @@ void ServerManageNetworkSystem::up(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
     velocity.velocity.y -= 0.8f;
 
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MUP" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::down(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
     velocity.velocity.y += 0.8f;
 
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MDW" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::right(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
     velocity.velocity.x += 1.0f;
 
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MRT" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::left(Entity player) {
     auto &velocity = gCoordinator.getComponent<VelocityComponent>(player);
     velocity.velocity.x -= 1.0f;
 
-    auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
-    sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
+    // auto &playerNetwork = gCoordinator.getComponent<NetworkComponent>(player);
+    // sendAllPlayer(playerNetwork.id, "MLF" + std::to_string(playerNetwork.id));
 }
 
 void ServerManageNetworkSystem::disconnectClient(Entity entity) {

@@ -1,5 +1,5 @@
 #include "server.hpp"
-#define TPS 60.0
+#define TPS 30.0
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -15,8 +15,7 @@ void game_tick(double elapsedTimeSeconds, int tick) {
     gCoordinator.getSystem<SpawnSystem>()->update(elapsedTimeSeconds);
 
     //? Update position of all players
-    if (tick == 1)
-        gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayersPosition();
+    gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayersPosition();
 
     //! DESTROY
     gCoordinator.processEntityDestruction();
@@ -48,7 +47,6 @@ int main() {
                 if (tickCount >= static_cast<int>(TPS))
                     tickCount -= static_cast<int>(TPS);
                 game_tick(elapsed_time.count(), tickCount);
-
             } catch(std::exception& e) {
                 std::cerr << "Error while executing tick: " << e.what() << std::endl;
             }

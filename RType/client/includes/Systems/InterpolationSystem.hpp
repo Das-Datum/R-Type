@@ -21,5 +21,5 @@ class InterpolationSystem : public System {
     }
 
   private:
-    const float interpolationSpeed = 5.0f;
+    const float interpolationSpeed = 3.0f;
 };
