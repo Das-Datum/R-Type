@@ -1,159 +1,145 @@
-#include "../../../ECS/includes/ECS.hpp"
-#include "../includes/Components.hpp"
-#include "../includes/TexturesManager.hpp"
-#include "../includes/EntitiesManager.hpp"
-
-#include "../includes/Systems/ClientRelatives.hpp"
-#include "../includes/Systems/SpriteRelatives.hpp"
-#include "../includes/Systems/Generics.hpp"
-#include "../includes/Systems/CollisionSystem.hpp"
-#include "../includes/Systems/BackgroundScrollSystem.hpp"
-
-#include "../../shared/includes/Components/GameComponents.hpp"
-#include "../../shared/includes/Systems/Game.hpp"
+#include "client.hpp"
 
 Coordinator gCoordinator;
 
 int main() {
+    std::cout << "START\n";
+
+    std::srand(42);
     const int WINDOW_WIDTH = 1280;
     const int WINDOW_HEIGHT = 720;
-    const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
-    auto& TexturesManager = TexturesManager::getInstance();
-    auto& entitiesManager = EntitiesManager::getInstance();
-    entitiesManager.setWindowHeight(static_cast<float>(WINDOW_HEIGHT));
-
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
-    gCoordinator.init();
-    gCoordinator.registerComponent<TransformComponent>();
-    gCoordinator.registerComponent<InputComponent>();
-    gCoordinator.registerComponent<TimerComponent>();
+    // std::shared_ptr<MenuManager> menuManager = std::make_shared<MenuManager>();
+    // std::shared_ptr<Settings> settings = std::make_shared<Settings>();
+    auto &menuManager = MenuManager::getInstance();
 
-    gCoordinator.registerComponent<SpriteComponent>();
-    gCoordinator.registerComponent<SpriteAnimationComponent>();
-    gCoordinator.registerComponent<SpriteFrameComponent>();
+    initMenus(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    gCoordinator.registerComponent<ShipComponent>();
-    gCoordinator.registerComponent<BulletComponent>();
-    gCoordinator.registerComponent<EnemyComponent>();
-    gCoordinator.registerComponent<StaticComponent>();
+    const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
+    auto &texturesManager = TexturesManager::getInstance();
+    auto &entitiesManager = EntitiesManager::getInstance();
+    auto &shadersManager = ShadersManager::getInstance();
+    auto &settings = Settings::getInstance();
 
-    //? Shared components
-    gCoordinator.registerComponent<PhysicsComponent>();
-    gCoordinator.registerComponent<CollisionComponent>();
-    gCoordinator.registerComponent<BackgroundScrollComponent>();
+    initCoordinator();
 
-    //* Systems
-    auto renderSystem = gCoordinator.registerSystem<RenderSystem>();
-    auto inputSystem = gCoordinator.registerSystem<InputSystem>();
-    auto physicsSystem = gCoordinator.registerSystem<PhysicsSystem>();
-    auto timerSystem = gCoordinator.registerSystem<TimerSystem>();
-    auto spriteFrameSystem = gCoordinator.registerSystem<SpriteFrameSystem>();
-    auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
-    auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
-    // auto networkSystem = gCoordinator.registerSystem<ClientSystem>();
-    Signature signature;
-
-    //? NetworkSystem
-    // networkSystem->init("127.0.0.0", 5000);
-
-    //? RenderSystem
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    gCoordinator.setSystemSignature<RenderSystem>(signature);
-
-    //? InputSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<InputComponent>(), true);
-    gCoordinator.setSystemSignature<InputSystem>(signature);
-
-    //? PhysicsSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<BulletComponent>(), true);
-    gCoordinator.setSystemSignature<PhysicsSystem>(signature);
-
-    //? TimerSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TimerComponent>(), true);
-    gCoordinator.setSystemSignature<TimerSystem>(signature);
-
-    //? SpriteFrameSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<SpriteFrameComponent>(), true);
-    gCoordinator.setSystemSignature<SpriteFrameSystem>(signature);
-
-    //? CollisionSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<CollisionComponent>(), true);
-    gCoordinator.setSystemSignature<CollisionSystem>(signature);
-
-    //? BackgroundScrollSystem
-    signature.reset();
-    signature.set(gCoordinator.getComponentTypeID<BackgroundScrollComponent>(), true);
-    gCoordinator.setSystemSignature<BackgroundScrollSystem>(signature);
 
     //? User 1 (main player)
-    Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
-    entitiesManager.createShip(shipPosition);
+    // Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
+    // entitiesManager.createShip({0, 0}, 1, "Player");
 
     //* Test entity
-    Vector2 enemyPosition = {WINDOW_WIDTH * 0.9f, WINDOW_HEIGHT * 0.2f};
-    entitiesManager.createEnemy(enemyPosition);
+    // Vector2 enemyPosition = {0.9f, 0.5f};
+    // Enemy enemyInfos = Enemy(enemyPosition.x, enemyPosition.y, 0.0, EnemyType("ship", Vector2{145.0, 29.0}, 5, 100, true, true));
+    // entitiesManager.createEnemy(enemyInfos);
     // entitiesManager.removeEntity(enemy);
 
     //* Backgrounds
     entitiesManager.createScrollingBackground(
-        "../assets/textures/backgrounds/bg-back.png",
+        "./assets/textures/backgrounds/bg-back.png",
         {0, 0},
         static_cast<float>(WINDOW_WIDTH),
         static_cast<float>(WINDOW_HEIGHT),
         25.0f,
-        -1
-    );
+        -1);
 
     entitiesManager.createScrollingBackground(
-        "../assets/textures/backgrounds/bg-stars.png",
+        "./assets/textures/backgrounds/bg-stars.png",
         {0, 0},
         static_cast<float>(WINDOW_WIDTH),
         static_cast<float>(WINDOW_HEIGHT),
         50.0f,
-        -1
-    );
-
-    physicsSystem->setGameDimensions(static_cast<float>(WINDOW_WIDTH), static_cast<float>(WINDOW_HEIGHT));
+        -1);
+    //! END OF TEMPORARY CODE
 
     //! MAIN LOOP
-    while (!WindowShouldClose()) {
+    while (!(WindowShouldClose() && !IsKeyPressed(KEY_ESCAPE))) {
         float deltaTime = GetFrameTime();
+        float screenWidth = static_cast<float>(GetScreenWidth());
+        float screenHeight = static_cast<float>(GetScreenHeight());
+        float aspectRatio = 16.0f / 9.0f;
+        float viewportWidth = screenWidth;
+        float viewportHeight = viewportWidth / aspectRatio;
+        if (viewportHeight > screenHeight) {
+            viewportHeight = screenHeight;
+            viewportWidth = viewportHeight * aspectRatio;
+        }
+        float viewportX = (screenWidth - viewportWidth) * 0.5f;
+        float viewportY = (screenHeight - viewportHeight) * 0.5f;
+
+        if (IsKeyPressed(KEY_ESCAPE) && !menuManager.isPageActive()) {
+            menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
+        }
+
+        gCoordinator.getSystem<PhysicsSystem>()->setViewport(viewportWidth, viewportHeight);
+        gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
+
+        if (menuManager.isPageActive()) {
+            menuManager.handleEvent();
+            menuManager.update(deltaTime);
+            gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
+
+            BeginDrawing();
+            ClearBackground(BLACK);
+
+            Shader shader = shadersManager.getShaderForMode(settings.getColorBlindMode());
+
+            if (settings.getColorBlindMode() != NORMAL) {
+                BeginShaderMode(shader);
+            }
+
+            gCoordinator.getSystem<RenderSystem>()->update();
+            menuManager.draw();
+
+            if (settings.getColorBlindMode() != NORMAL) {
+                EndShaderMode();
+            }
+
+            EndDrawing();
+            continue;
+        }
 
         //? LOGIC
-        inputSystem->update();
-        spriteFrameSystem->update();
-        timerSystem->update();
-        collisionSystem->update();
-        backgroundScrollSystem->update(deltaTime);
-        physicsSystem->update(deltaTime);
+        gCoordinator.getSystem<InputSystem>()->update();
+        gCoordinator.getSystem<SpriteFrameSystem>()->update();
+        gCoordinator.getSystem<TimerSystem>()->update();
+        gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
+            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
+                std::cout << "Ship collided with enemy\n";
+            }
+
+            if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
+                gCoordinator.destroyEntity(entityA);
+            }
+        });
+
+        gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
+        gCoordinator.getSystem<PhysicsSystem>()->update(deltaTime);
+        gCoordinator.getSystem<EnemiesSystem>()->update(deltaTime);
 
         //! DESTROY
         gCoordinator.processEntityDestruction();
 
         //? NETWORK
-        // std::string response = networkSystem->update();
-        // if (response != "") {
-        //     networkSystem->sendData("Ok");
-        // }
+        gCoordinator.getSystem<ClientManageNetworkSystem>()->update();
+        gCoordinator.getSystem<NetworkInstructionsSystem>()->update();
 
         //? RENDER
         BeginDrawing();
         ClearBackground(BLACK);
-        renderSystem->update();
+        gCoordinator.getSystem<RenderSystem>()->update();
         EndDrawing();
+
+        //? SPAWN
+        gCoordinator.getSystem<SpawnSystem>()->update(deltaTime);
     }
-    // networkSystem->disconnect();
-    TexturesManager.unloadAllTextures();
+
+    gCoordinator.getSystem<ClientManageNetworkSystem>()->disconnect();
+    texturesManager.unloadAllTextures();
+    shadersManager.unloadAllShaders();
     CloseWindow();
     return 0;
 }

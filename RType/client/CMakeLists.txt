@@ -1,9 +1,3 @@
-cmake_minimum_required(VERSION 3.14)
-project(RTYPE)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     set(CMAKE_RC_COMPILER_INIT windres)
     find_program(CMAKE_RC_COMPILER NAMES windres)
@@ -13,31 +7,37 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     enable_language(RC OPTIONAL)
 endif()
 
-include(FetchContent)
-
-FetchContent_Declare(
-  raylib
-  GIT_REPOSITORY https://github.com/raysan5/raylib.git
-  GIT_TAG 4.5.0
+file(GLOB CLIENT_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Network/src/*.cpp"
 )
 
-FetchContent_MakeAvailable(raylib)
-
-file(GLOB HEADER_FILES "includes/*.hpp")
-file(GLOB HEADER_FILES_ECS "../../ECS/includes/*.hpp")
-file(GLOB HEADER_FILES_SHARED "../shared/includes/*.hpp")
-set(SOURCES
-    src/main.cpp
-    ${HEADER_FILES_ECS}
-    ${HEADER_FILES_SHARED}
-    ${HEADER_FILES}
+add_executable(client
+    ${CLIENT_SOURCES}
 )
 
-add_executable(client ${SOURCES})
+target_include_directories(client PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes
+    ${CMAKE_SOURCE_DIR}/ECS/includes
+    ${CMAKE_SOURCE_DIR}/Network/includes
+    ${CMAKE_SOURCE_DIR}/shared/includes
+)
 
-target_include_directories(client PRIVATE includes)
-target_link_libraries(client PRIVATE raylib)
+target_link_libraries(client PUBLIC ECS Shared)
 
-if(WIN32)
-  target_link_libraries(client PRIVATE opengl32 gdi32 winmm)
-endif()
+add_custom_command(TARGET client POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:client>/assets
+    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:client>/stages
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:client>/assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/RType/shared/stages
+        $<TARGET_FILE_DIR:client>/stages
+)
+
+set_target_properties(client PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/RType/client
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/RType/client
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/RType/client
+)
