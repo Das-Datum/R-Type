@@ -5,7 +5,7 @@ using Clock = std::chrono::high_resolution_clock;
 
 Coordinator gCoordinator;
 
-void game_tick(double elapsedTimeSeconds) {
+void game_tick(double elapsedTimeSeconds, int tick) {
     gCoordinator.getSystem<ServerManageNetworkSystem>()->update(elapsedTimeSeconds);
 
     //! VELOCITY, PHYSICS, COLLISION
@@ -17,7 +17,8 @@ void game_tick(double elapsedTimeSeconds) {
     gCoordinator.getSystem<SpawnSystem>()->update(elapsedTimeSeconds);
 
     //? Update position of all players
-    gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayersPosition();
+    if (tick == 1)
+        gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayersPosition();
 
     //! DESTROY
     gCoordinator.processEntityDestruction();
@@ -32,6 +33,7 @@ int main() {
     const float SHIP_HEIGHT = WINDOW_HEIGHT * 0.05f;
     const double interval = 1.0 / TPS;
     auto last_tick_time = Clock::now();
+    int tickCount = 1;
 
     initCoordinator();
 
@@ -43,7 +45,11 @@ int main() {
         if (elapsed_time.count() >= interval) {
             last_tick_time = current_time;
             try {
-                game_tick(elapsed_time.count());
+                tickCount++;
+                if (tickCount >= static_cast<int>(TPS))
+                    tickCount -= static_cast<int>(TPS);
+                game_tick(elapsed_time.count(), tickCount);
+
             } catch(std::exception& e) {
                 std::cerr << "Error while executing tick: " << e.what() << std::endl;
             }
