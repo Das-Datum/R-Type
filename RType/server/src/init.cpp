@@ -27,6 +27,7 @@ void initCoordinator() {
     auto physicsSystem = gCoordinator.registerSystem<PhysicsSystem>();
     auto spawnSystem = gCoordinator.registerSystem<SpawnSystem>();
     auto velocitySystem = gCoordinator.registerSystem<VelocitySystem>();
+    auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
 
     Signature signature;
 
@@ -61,6 +62,11 @@ void initCoordinator() {
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
     signature.set(gCoordinator.getComponentTypeID<VelocityComponent>(), true);
     gCoordinator.setSystemSignature<VelocitySystem>(signature);
+
+    //? EnemiesSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
+    gCoordinator.setSystemSignature<EnemiesSystem>(signature);
 
     //? Network Related
     serverManageNetworkSystem->init("127.0.0.0", 5000);

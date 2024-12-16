@@ -89,6 +89,8 @@ class StageLoader {
         void genMobsEntities(AEntitiesManager& manager) {
             for (std::size_t i = 0; i < _waveCount; i++) {
                 std::size_t waveMobsCount = _wavesMobsCount[i];
+                int enemiesTotal = 0;
+                for (std::size_t j = 0; j < i; j++) enemiesTotal += _wavesMobsCount[j];
 
                 float wave_beginning = 0.0f;
                 for (std::size_t w = 0; w < i; w++) wave_beginning += static_cast<float>(_wavesDurations[w]) + WAVE_TIME_INTERVAL;
@@ -96,8 +98,8 @@ class StageLoader {
                 float wave_ending = wave_beginning + static_cast<float>(_wavesDurations[i]);
 
                 for (std::size_t m = 0; m < waveMobsCount; m++) {
-                    float enemyPosX = 0.9f;
-                    float enemyPosY = this->lcg<double>(0.1, 0.9);
+                    float enemyPosX = 0.9;
+                    float enemyPosY = this->lcg<float>(0.1, 0.9);
                     float enemySpawnTime = this->lcg<double>(wave_beginning, wave_ending);
                     int typeIndex = _wavesMobsTypes[i][(this->lcg<int>(0, _wavesMobsTypes[i].size()))];
                     EnemyType enemyType = this->getEnemyTypeByName(_config.mobs_types[typeIndex]);
@@ -114,6 +116,7 @@ class StageLoader {
                     }
 
                     Enemy newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType, shootAtPlayer, hasEnemySpecificMove, enemyMovementBehavior);
+                    newEnemy.setUniqueId(enemiesTotal + m);
                     manager.createEnemy(newEnemy);
                 }
                 std::cout << std::endl;

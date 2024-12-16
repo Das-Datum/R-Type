@@ -10,13 +10,8 @@ class PhysicsSystem : public System {
         for (auto const &entity : entities) {
             if (!gCoordinator.hasComponent<TransformComponent>(entity))
                 continue;
-
-            // if (!gCoordinator.hasComponent<InputComponent>(entity))
-            //     continue;
-
-            if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
+            if (gCoordinator.hasComponent<SpawnComponent>(entity))
                 continue;
-            }
 
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
 
@@ -44,7 +39,6 @@ class PhysicsSystem : public System {
             }
         }
     }
-
 };
 
 class SpawnSystem : public System {
@@ -52,7 +46,6 @@ class SpawnSystem : public System {
         void update(float frameTime = 0.0f) {
             for (const auto& entity : entities) {
                 if (!gCoordinator.hasComponent<SpawnComponent>(entity)) {
-                    // std::cout << "No SpawnComponent for entity " << entity << std::endl;
                     continue;
                 }
                 auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);

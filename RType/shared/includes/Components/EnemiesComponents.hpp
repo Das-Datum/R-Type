@@ -20,12 +20,13 @@ struct EnemyHealthComponent {
 struct EnemyComponent {
     std::vector<BehaviorType> behaviors;
     std::string name;
+    int uniqueId;
 
-    EnemyComponent(std::initializer_list<BehaviorType> behaviorList = {}, const std::string& typeName = "classic")
-        : behaviors(behaviorList), name(typeName) {}
+    EnemyComponent(std::initializer_list<BehaviorType> behaviorList = {}, const std::string& typeName = "classic", int id = -1)
+        : behaviors(behaviorList), name(typeName), uniqueId(id) {}
 
-    EnemyComponent(std::vector<BehaviorType> behaviorList = {}, const std::string& typeName = "classic")
-        : behaviors(behaviorList), name(typeName) {}
+    EnemyComponent(std::vector<BehaviorType> behaviorList = {}, const std::string& typeName = "classic", int id = -1)
+        : behaviors(behaviorList), name(typeName), uniqueId(id) {}
 
     void addBehavior(BehaviorType behavior) {
         behaviors.push_back(behavior);

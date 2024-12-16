@@ -120,6 +120,12 @@ class ClientManageNetworkSystem : public ClientNetworkSystem {
          * @return int
          */
         int getPos(std::string text);
+
+        void pauseGame();
+        void resumeGame();
+
+        void syncEnemy();
+
     private:
         std::map<std::string, std::function<void(Entity)>> _protocolMap = {
             {"NEW", [this](Entity entity) { newPlayer(_options); }},
@@ -132,8 +138,11 @@ class ClientManageNetworkSystem : public ClientNetworkSystem {
             {"BGN", [this](Entity entity) { createPlayerShip(entity); }},
             {"LOD", [this](Entity entity) { loadStage(entity); }},
             {"STA", [this](Entity entity) { startGame(entity); }},
+            {"PAU", [this](Entity entity) { pauseGame(); }},
+            {"RES", [this](Entity entity) { resumeGame(); }},
             {"DEL", [this](Entity entity) { disconnectPlayer(entity); }},
             {"POS", [this](Entity entity) { setPos(entity); }},
+            {"ENM", [this](Entity entity) { syncEnemy(); }},
         };
         std::string _options;
         int _id;

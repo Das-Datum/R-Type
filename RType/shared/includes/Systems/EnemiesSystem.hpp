@@ -1,19 +1,33 @@
 #pragma once
-#include <float.h>
+
 #include "ECS.hpp"
-#include "Components.hpp"
 #include "Components/GameComponents.hpp"
-#include "ClientEntitiesManager.hpp"
+
+#include <float.h>
 #include "raylib.h"
 #include "raymath.h"
 
 class EnemiesSystem : public System {
 public:
-    void update(float deltaTime) {
-        for (auto const& entity : entities) {
-            if (!gCoordinator.hasComponent<EnemyComponent>(entity))
+    void syncAllEnemies(std::function<void(Entity)> callback = nullptr) {
+        for (auto const &entity : entities) {
+            if (!gCoordinator.hasComponent<EnemyComponent>(entity) ||
+                !gCoordinator.hasComponent<TransformComponent>(entity))
+                continue;
+            if (gCoordinator.hasComponent<SpawnComponent>(entity))
                 continue;
 
+            if (callback) {
+                callback(entity);
+            }
+        }
+    }
+
+    void update(AEntitiesManager &manager, float deltaTime) {
+        for (auto const& entity : entities) {
+            if (!gCoordinator.hasComponent<EnemyComponent>(entity) ||
+                !gCoordinator.hasComponent<TransformComponent>(entity))
+                continue;
             if (gCoordinator.hasComponent<SpawnComponent>(entity))
                 continue;
 
@@ -53,7 +67,7 @@ public:
                         patrol(entity, deltaTime);
                         break;
                     case BehaviorType::ShootAtPlayer:
-                        if (playerFound) shootAtPlayer(entity, deltaTime, playerPos);
+                        if (playerFound) shootAtPlayer(manager, entity, deltaTime, playerPos);
                         break;
                     case BehaviorType::FleeFromPlayer:
                         if (playerFound) fleeFromPlayer(entity, deltaTime, playerPos);
@@ -61,11 +75,25 @@ public:
                     case BehaviorType::RandomMovement:
                         randomMovement(entity, deltaTime);
                         break;
+                    case BehaviorType::None:
+                        break;
                     default:
                         break;
                 }
             }
         }
+    }
+
+    Entity getEnemyByUniqueId(int uniqueId) {
+        for (auto const &entity : entities) {
+            if (gCoordinator.hasComponent<EnemyComponent>(entity)) {
+                auto &enemy = gCoordinator.getComponent<EnemyComponent>(entity);
+                if (enemy.uniqueId == uniqueId) {
+                    return entity;
+                }
+            }
+        }
+        return 0;
     }
 
 private:
@@ -107,7 +135,7 @@ private:
         }
     }
 
-    void shootAtPlayer(Entity entity, float deltaTime, const Vector2& playerPos) {
+    void shootAtPlayer(AEntitiesManager &manager, Entity entity, float deltaTime, const Vector2& playerPos) {
         if (!gCoordinator.hasComponent<TransformComponent>(entity) || !gCoordinator.hasComponent<EnemyShootComponent>(entity)) {
             return;
         }
@@ -120,12 +148,11 @@ private:
             shoot.shootCooldown -= deltaTime;
             if (shoot.shootCooldown <= 0.0f) {
                 shoot.shootCooldown = shoot.shootInterval;
-                auto &entitiesManager = EntitiesManager::getInstance();
 
                 Vector2 direction = Vector2Normalize(Vector2Subtract(playerPos, transform.position));
                 Vector2 bulletPos = transform.position;
                 Vector2 normalizedVel = Vector2Normalize(Vector2Scale(direction, shoot.bulletSpeed));
-                entitiesManager.createEnemyBullet(bulletPos, normalizedVel);
+                manager.createEnemyBullet(bulletPos, normalizedVel);
             }
         }
     }

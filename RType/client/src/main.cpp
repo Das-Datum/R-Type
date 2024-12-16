@@ -70,6 +70,7 @@ int main() {
 
         if (IsKeyPressed(KEY_ESCAPE) && !menuManager.isPageActive()) {
             menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
+            // gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("PAU");
         }
 
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
@@ -88,26 +89,26 @@ int main() {
 
             Shader shader = shadersManager.getShaderForMode(settings.getColorBlindMode());
 
-            if (settings.getColorBlindMode() != NORMAL) {
+            if (settings.getColorBlindMode() != NORMAL)
                 BeginShaderMode(shader);
-            }
 
             gCoordinator.getSystem<RenderSystem>()->update();
             menuManager.draw();
 
-            if (settings.getColorBlindMode() != NORMAL) {
+            if (settings.getColorBlindMode() != NORMAL)
                 EndShaderMode();
-            }
 
             EndDrawing();
             continue;
         }
 
-        //? VelocitySystem
-        gCoordinator.getSystem<VelocitySystem>()->update(deltaTime);
 
         //? LOGIC
         gCoordinator.getSystem<InputSystem>()->update();
+
+        //? VelocitySystem
+        gCoordinator.getSystem<VelocitySystem>()->update(deltaTime);
+
         gCoordinator.getSystem<SpriteFrameSystem>()->update();
         gCoordinator.getSystem<TimerSystem>()->update();
         gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
@@ -122,7 +123,7 @@ int main() {
 
         gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
         gCoordinator.getSystem<PhysicsSystem>()->update(deltaTime);
-        gCoordinator.getSystem<EnemiesSystem>()->update(deltaTime);
+        gCoordinator.getSystem<EnemiesSystem>()->update(entitiesManager, deltaTime);
         gCoordinator.getSystem<InterpolationSystem>()->update(deltaTime);
 
         //! DESTROY

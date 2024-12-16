@@ -71,6 +71,20 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     info("Game started");
 }
 
+void ServerManageNetworkSystem::pauseGame() {
+    info("Game paused");
+    _gamePaused = true;
+
+    sendAllPlayer(0, "PAU");
+}
+
+void ServerManageNetworkSystem::resumeGame() {
+    info("Game resumed");
+    _gamePaused = false;
+
+    sendAllPlayer(0, "RES");
+}
+
 void ServerManageNetworkSystem::update() {
     for (auto const &entity : entities) {
         auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
@@ -99,7 +113,10 @@ std::string ServerManageNetworkSystem::getCommand(std::string command) {
     int pos = getPos(command.substr(4));
     if (command.size() == pos + 5)
         return command.substr(0, 3);
-    _options = command.substr(pos + 4);
+    if (pos == 0)
+        _options = command.substr(pos + 4);
+    else
+        _options = command.substr(pos + 5);
     return command.substr(0, 3);
 }
 

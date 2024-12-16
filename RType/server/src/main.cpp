@@ -6,15 +6,33 @@ using Clock = std::chrono::high_resolution_clock;
 Coordinator gCoordinator;
 
 void game_tick(double elapsedTimeSeconds, int tick) {
+    auto &manager = ServerEntitiesManager::getInstance();
+
     //! VELOCITY, PHYSICS, COLLISION
     gCoordinator.getSystem<VelocitySystem>()->update(elapsedTimeSeconds);
     gCoordinator.getSystem<PhysicsSystem>()->update(elapsedTimeSeconds);
+    gCoordinator.getSystem<EnemiesSystem>()->update(manager, elapsedTimeSeconds);
+
+    // if (tick == 1) {
+    //     //! RESYNC ENEMIES
+    //     std::cout << "-- Resyncing enemies..." << std::endl;
+    // }
+    gCoordinator.getSystem<EnemiesSystem>()->syncAllEnemies([](Entity entity) {
+        auto &enemy = gCoordinator.getComponent<EnemyComponent>(entity);
+        auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+        // auto &enemyHealth = gCoordinator.getComponent<EnemyHealthComponent>(entity);
+        // auto &enemyMovement = gCoordinator.getComponent<EnemyMovementComponent>(entity);
+        // auto &enemyShoot = gCoordinator.getComponent<EnemyShootComponent>(entity);
+        gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayer(0, "ENM0" + std::to_string(transform.position.x) + "," + std::to_string(transform.position.y) + ";" + std::to_string(enemy.uniqueId));
+    });
+
     gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
         // if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
         //     std::cout << "Ship collided with enemy\n";
         // }
 
         if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
+            std::cout << "Enemy hit by bullet" << std::endl;
             gCoordinator.destroyEntity(entityA);
         }
     });
