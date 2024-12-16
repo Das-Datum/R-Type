@@ -85,7 +85,56 @@ $(document).ready(function(){initNavTree('md_docs_protocol_client_server.html','
 <div class="title">Protocol </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"></div></div><!-- contents -->
+<div class="textblock"><p>This table outlines the commands, corresponding binary values, and their descriptions for the protocol used in the system.</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Command   </th><th class="markdownTableHeadNone">Binary   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>SHT</b>   </td><td class="markdownTableBodyNone">01010011 01001000 01010100 id;   </td><td class="markdownTableBodyNone">Shoot command    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>PSH</b>   </td><td class="markdownTableBodyNone">01010000 01010011 01001000 id;   </td><td class="markdownTableBodyNone">Power shot    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>SHD</b>   </td><td class="markdownTableBodyNone">01010011 01001000 01000100 id;   </td><td class="markdownTableBodyNone">Player uses its ability    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>KLL</b>   </td><td class="markdownTableBodyNone">01001011 01001100 01001100 id;   </td><td class="markdownTableBodyNone">An enemy is killed    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>DTH</b>   </td><td class="markdownTableBodyNone">01000100 01010100 01001000 id;   </td><td class="markdownTableBodyNone">Player dies    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>BDT MSG</b>   </td><td class="markdownTableBodyNone">01000010 01000100 01010100 id,msg;   </td><td class="markdownTableBodyNone">Player sends a message to all other players    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>POS X Y</b>   </td><td class="markdownTableBodyNone">01010000 01001111 01010011 id,x,y;   </td><td class="markdownTableBodyNone">Position of the player    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>NME</b>   </td><td class="markdownTableBodyNone">01001110 01001101 01000101 id;   </td><td class="markdownTableBodyNone">Name of the player    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>SCR</b>   </td><td class="markdownTableBodyNone">01010011 01000011 01010010 id;   </td><td class="markdownTableBodyNone">Score of the player    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>SCM</b>   </td><td class="markdownTableBodyNone">01010011 01000011 01001101 id;   </td><td class="markdownTableBodyNone">Max score or accumulated score of team    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>STM</b>   </td><td class="markdownTableBodyNone">01010011 01000011 01001101 id,val;   </td><td class="markdownTableBodyNone">Change time elapsed    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>GTM</b>   </td><td class="markdownTableBodyNone">01000111 01010100 01001101 id;   </td><td class="markdownTableBodyNone">Retrieve time from server    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>ENG</b>   </td><td class="markdownTableBodyNone">01000101 01001110 01000111 id;   </td><td class="markdownTableBodyNone">All players are dead    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>SVR MSG</b>   </td><td class="markdownTableBodyNone">01010011 01010110 01010010 id,msg;   </td><td class="markdownTableBodyNone">Server sends a message    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>NNM NAME</b>   </td><td class="markdownTableBodyNone">01001110 01001110 01001101 id,name;   </td><td class="markdownTableBodyNone">New player with their name    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>QIT</b>   </td><td class="markdownTableBodyNone">01010001 01001001 01010100 id;   </td><td class="markdownTableBodyNone">Player quits the server    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>ERN NAME</b>   </td><td class="markdownTableBodyNone">01000101 01010010 01001110 id,name;   </td><td class="markdownTableBodyNone">Error with player name    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>MUP</b>   </td><td class="markdownTableBodyNone">01001101 01010101 01010000 id;   </td><td class="markdownTableBodyNone">Player moves up    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>MDW</b>   </td><td class="markdownTableBodyNone">01001101 01000100 01010111 id;   </td><td class="markdownTableBodyNone">Player moves down    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>MLF</b>   </td><td class="markdownTableBodyNone">01001101 01001100 01000110 id;   </td><td class="markdownTableBodyNone">Player moves left    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><b>MRT</b>   </td><td class="markdownTableBodyNone">01001101 01010010 01010100 id;   </td><td class="markdownTableBodyNone">Player moves right    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><b>BGN</b>   </td><td class="markdownTableBodyNone">01000010 01000111 01001110 id;   </td><td class="markdownTableBodyNone">Server sends Begin   </td></tr>
+</table>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->

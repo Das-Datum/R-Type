@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['systemmanager_25',['SystemManager',['../classSystemManager.html',1,'']]]
+  ['backgroundscrollcomponent_77',['BackgroundScrollComponent',['../structBackgroundScrollComponent.html',1,'']]]
 ];

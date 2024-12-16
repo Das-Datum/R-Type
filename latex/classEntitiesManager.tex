@@ -1,0 +1,76 @@
+\hypertarget{classEntitiesManager}{}\doxysection{Entities\+Manager Class Reference}
+\label{classEntitiesManager}\index{EntitiesManager@{EntitiesManager}}
+
+
+Inheritance diagram for Entities\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{classEntitiesManager__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Entities\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{classEntitiesManager__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classEntitiesManager_a2523ba6965bd8c2135fff4bc395bb1f8}\label{classEntitiesManager_a2523ba6965bd8c2135fff4bc395bb1f8}} 
+Entity {\bfseries create\+Ship} (Vector2 position, int id, const std\+::string \&name, bool playable\+Entity=true)
+\item 
+\mbox{\Hypertarget{classEntitiesManager_a176f1a86a8a9d933ecf25ec6188b15d0}\label{classEntitiesManager_a176f1a86a8a9d933ecf25ec6188b15d0}} 
+Entity {\bfseries create\+Bullet} (Vector2 position, Vector2 velocity)
+\item 
+Entity \mbox{\hyperlink{classEntitiesManager_a8aa9bb58b7bfc9b0ef1b82ae054bb75d}{create\+Enemy}} (\mbox{\hyperlink{structEnemy}{Enemy}} enemy\+Infos) override
+\begin{DoxyCompactList}\small\item\em Create a \mbox{\hyperlink{structEnemy}{Enemy}} object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classEntitiesManager_ac3fcccc33d5dc59341b0a2764ed2592f}\label{classEntitiesManager_ac3fcccc33d5dc59341b0a2764ed2592f}} 
+Entity {\bfseries create\+Enemy\+Bullet} (Vector2 position, Vector2 velocity)
+\item 
+\mbox{\Hypertarget{classEntitiesManager_aacee5950bc2ebc39e912093e0237dbd8}\label{classEntitiesManager_aacee5950bc2ebc39e912093e0237dbd8}} 
+Entity {\bfseries create\+Static\+Entity} (const std\+::string \&texture\+Path, Vector2 position, float width, float height, int z\+Index=0)
+\item 
+\mbox{\Hypertarget{classEntitiesManager_abc9e3455a50b83239036a33f6f21b513}\label{classEntitiesManager_abc9e3455a50b83239036a33f6f21b513}} 
+Entity {\bfseries create\+Scrolling\+Background} (const std\+::string \&texture\+Path, Vector2 position, float width, float height, float scroll\+Speed, int z\+Index=-\/1)
+\item 
+\mbox{\Hypertarget{classEntitiesManager_a8b99809ecdbc037d0b64b78029866eee}\label{classEntitiesManager_a8b99809ecdbc037d0b64b78029866eee}} 
+void {\bfseries remove\+Entity} (Entity entity)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classEntitiesManager_ae72a9e0d849d112d5c380f3e994f9d04}\label{classEntitiesManager_ae72a9e0d849d112d5c380f3e994f9d04}} 
+static \mbox{\hyperlink{classEntitiesManager}{Entities\+Manager}} \& {\bfseries get\+Instance} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classEntitiesManager_a8aa9bb58b7bfc9b0ef1b82ae054bb75d}\label{classEntitiesManager_a8aa9bb58b7bfc9b0ef1b82ae054bb75d}} 
+\index{EntitiesManager@{EntitiesManager}!createEnemy@{createEnemy}}
+\index{createEnemy@{createEnemy}!EntitiesManager@{EntitiesManager}}
+\doxysubsubsection{\texorpdfstring{createEnemy()}{createEnemy()}}
+{\footnotesize\ttfamily Entity Entities\+Manager\+::create\+Enemy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structEnemy}{Enemy}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Create a \mbox{\hyperlink{structEnemy}{Enemy}} object. 
+
+\begin{DoxyReturn}{Returns}
+Entity 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classAEntitiesManager_a180c337300c4c368d6a425bc832dd69c}{AEntities\+Manager}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+RType/client/includes/Client\+Entities\+Manager.\+hpp\end{DoxyCompactItemize}

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['coordinator_24',['Coordinator',['../classCoordinator.html',1,'']]]
+  ['aentitiesmanager_76',['AEntitiesManager',['../classAEntitiesManager.html',1,'']]]
 ];

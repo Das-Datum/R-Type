@@ -1,0 +1,168 @@
+\hypertarget{classClientNetworkSystem}{}\doxysection{Client\+Network\+System Class Reference}
+\label{classClientNetworkSystem}\index{ClientNetworkSystem@{ClientNetworkSystem}}
+
+
+Manages the client system.  
+
+
+
+
+{\ttfamily \#include $<$Network\+Systems.\+hpp$>$}
+
+
+
+Inheritance diagram for Client\+Network\+System\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=203pt]{classClientNetworkSystem__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Client\+Network\+System\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=203pt]{classClientNetworkSystem__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classClientNetworkSystem_ad138f15dd8fe58b0b637c25a2cf8b106}{init}} (const std\+::string \&name, const std\+::string \&ip, int port)
+\begin{DoxyCompactList}\small\item\em Initialize the client system. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classClientNetworkSystem_ad350aa0c081d78a7d4df06020002b637}{connect\+To\+Server}} ()
+\begin{DoxyCompactList}\small\item\em Connect to the server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classClientNetworkSystem_a761b296c09547cc5f6b1415717691331}{disconnect}} ()
+\begin{DoxyCompactList}\small\item\em Disconnect from the server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classClientNetworkSystem_ae22717c2d26bc5c444726e9eba121fe3}{restart\+Connection}} ()
+\begin{DoxyCompactList}\small\item\em Restart the connection. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classClientNetworkSystem_a9433fdc7d0a24ea4706df9fecbb7789e}{is\+Connected}} () const
+\begin{DoxyCompactList}\small\item\em Check if the client is connected to the server. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classClientNetworkSystem_af0bd9cebe62b889faf04b6df65f02ed6}{send\+Data}} (const std\+::string \&data)
+\begin{DoxyCompactList}\small\item\em Send data to the server. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classClientNetworkSystem_a865b15f502265b74789031961aab0afc}{receive\+Data}} ()
+\begin{DoxyCompactList}\small\item\em Receive data from the server. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classClientNetworkSystem_a84280325c7c3cab70a7de80f8077f422}\label{classClientNetworkSystem_a84280325c7c3cab70a7de80f8077f422}} 
+void {\bfseries update\+\_\+read} ()
+\item 
+\mbox{\Hypertarget{classClientNetworkSystem_a8f52b8a26bfce87680cb2d9742e7b49e}\label{classClientNetworkSystem_a8f52b8a26bfce87680cb2d9742e7b49e}} 
+std\+::vector$<$ std\+::string $>$ {\bfseries get\+Last\+Messages} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages the client system. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classClientNetworkSystem_ad350aa0c081d78a7d4df06020002b637}\label{classClientNetworkSystem_ad350aa0c081d78a7d4df06020002b637}} 
+\index{ClientNetworkSystem@{ClientNetworkSystem}!connectToServer@{connectToServer}}
+\index{connectToServer@{connectToServer}!ClientNetworkSystem@{ClientNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{connectToServer()}{connectToServer()}}
+{\footnotesize\ttfamily bool Client\+Network\+System\+::connect\+To\+Server (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Connect to the server. 
+
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClientNetworkSystem_a761b296c09547cc5f6b1415717691331}\label{classClientNetworkSystem_a761b296c09547cc5f6b1415717691331}} 
+\index{ClientNetworkSystem@{ClientNetworkSystem}!disconnect@{disconnect}}
+\index{disconnect@{disconnect}!ClientNetworkSystem@{ClientNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{disconnect()}{disconnect()}}
+{\footnotesize\ttfamily void Client\+Network\+System\+::disconnect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Disconnect from the server. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClientNetworkSystem_ad138f15dd8fe58b0b637c25a2cf8b106}\label{classClientNetworkSystem_ad138f15dd8fe58b0b637c25a2cf8b106}} 
+\index{ClientNetworkSystem@{ClientNetworkSystem}!init@{init}}
+\index{init@{init}!ClientNetworkSystem@{ClientNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Client\+Network\+System\+::init (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const std\+::string \&}]{ip,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+
+
+Initialize the client system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & The server IP address. \\
+\hline
+{\em port} & The server port. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClientNetworkSystem_a9433fdc7d0a24ea4706df9fecbb7789e}\label{classClientNetworkSystem_a9433fdc7d0a24ea4706df9fecbb7789e}} 
+\index{ClientNetworkSystem@{ClientNetworkSystem}!isConnected@{isConnected}}
+\index{isConnected@{isConnected}!ClientNetworkSystem@{ClientNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{isConnected()}{isConnected()}}
+{\footnotesize\ttfamily bool Client\+Network\+System\+::is\+Connected (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check if the client is connected to the server. 
+
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClientNetworkSystem_a865b15f502265b74789031961aab0afc}\label{classClientNetworkSystem_a865b15f502265b74789031961aab0afc}} 
+\index{ClientNetworkSystem@{ClientNetworkSystem}!receiveData@{receiveData}}
+\index{receiveData@{receiveData}!ClientNetworkSystem@{ClientNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{receiveData()}{receiveData()}}
+{\footnotesize\ttfamily bool Client\+Network\+System\+::receive\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Receive data from the server. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClientNetworkSystem_ae22717c2d26bc5c444726e9eba121fe3}\label{classClientNetworkSystem_ae22717c2d26bc5c444726e9eba121fe3}} 
+\index{ClientNetworkSystem@{ClientNetworkSystem}!restartConnection@{restartConnection}}
+\index{restartConnection@{restartConnection}!ClientNetworkSystem@{ClientNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{restartConnection()}{restartConnection()}}
+{\footnotesize\ttfamily void Client\+Network\+System\+::restart\+Connection (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Restart the connection. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classClientNetworkSystem_af0bd9cebe62b889faf04b6df65f02ed6}\label{classClientNetworkSystem_af0bd9cebe62b889faf04b6df65f02ed6}} 
+\index{ClientNetworkSystem@{ClientNetworkSystem}!sendData@{sendData}}
+\index{sendData@{sendData}!ClientNetworkSystem@{ClientNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{sendData()}{sendData()}}
+{\footnotesize\ttfamily bool Client\+Network\+System\+::send\+Data (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{data }\end{DoxyParamCaption})}
+
+
+
+Send data to the server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The data to send. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Network/includes/Network\+Systems.\+hpp\end{DoxyCompactItemize}

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['setsignature_40',['setSignature',['../classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae',1,'SystemManager']]],
-  ['setsystemsignature_41',['setSystemSignature',['../classCoordinator.html#a6e52a97668cd56e3522e5303cca66c49',1,'Coordinator']]]
+  ['processentitydestruction_127',['processEntityDestruction',['../classCoordinator.html#a42797821c18433a9e8aa96fc26d0e74d',1,'Coordinator']]]
 ];

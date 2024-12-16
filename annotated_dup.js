@@ -1,5 +1,26 @@
 var annotated_dup =
 [
+    [ "AEntitiesManager", "classAEntitiesManager.html", "classAEntitiesManager" ],
+    [ "BackgroundScrollComponent", "structBackgroundScrollComponent.html", "structBackgroundScrollComponent" ],
+    [ "ClientNetworkSystem", "classClientNetworkSystem.html", "classClientNetworkSystem" ],
     [ "Coordinator", "classCoordinator.html", "classCoordinator" ],
-    [ "SystemManager", "classSystemManager.html", "classSystemManager" ]
+    [ "Enemy", "structEnemy.html", "structEnemy" ],
+    [ "EnemyType", "structEnemyType.html", "structEnemyType" ],
+    [ "EntitiesManager", "classEntitiesManager.html", "classEntitiesManager" ],
+    [ "InputComponent", "structInputComponent.html", null ],
+    [ "NetworkComponent", "structNetworkComponent.html", "structNetworkComponent" ],
+    [ "NetworkInstructionsComponent", "structNetworkInstructionsComponent.html", "structNetworkInstructionsComponent" ],
+    [ "NetworkSystem", "classNetworkSystem.html", "classNetworkSystem" ],
+    [ "ServerEntitiesManager", "classServerEntitiesManager.html", "classServerEntitiesManager" ],
+    [ "ServerNetworkSystem", "classServerNetworkSystem.html", "classServerNetworkSystem" ],
+    [ "ShadersManager", "classShadersManager.html", "classShadersManager" ],
+    [ "SpriteAnimationComponent", "structSpriteAnimationComponent.html", "structSpriteAnimationComponent" ],
+    [ "SpriteComponent", "structSpriteComponent.html", "structSpriteComponent" ],
+    [ "SpriteFrameComponent", "structSpriteFrameComponent.html", "structSpriteFrameComponent" ],
+    [ "StageConfig", "structStageConfig.html", "structStageConfig" ],
+    [ "StageLoader", "classStageLoader.html", "classStageLoader" ],
+    [ "StaticComponent", "structStaticComponent.html", null ],
+    [ "SystemManager", "classSystemManager.html", "classSystemManager" ],
+    [ "TexturesManager", "classTexturesManager.html", "classTexturesManager" ],
+    [ "TimerComponent", "structTimerComponent.html", "structTimerComponent" ]
 ];

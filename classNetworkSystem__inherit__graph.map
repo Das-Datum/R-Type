@@ -1,0 +1,6 @@
+<map id="NetworkSystem" name="NetworkSystem">
+<area shape="rect" id="node1" title=" " alt="" coords="119,80,245,107"/>
+<area shape="rect" id="node3" href="$classClientNetworkSystem.html" title="Manages the client system." alt="" coords="5,155,169,181"/>
+<area shape="rect" id="node4" href="$classServerNetworkSystem.html" title="Manages the server system." alt="" coords="194,155,362,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="147,5,217,32"/>
+</map>

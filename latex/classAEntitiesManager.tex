@@ -1,0 +1,74 @@
+\hypertarget{classAEntitiesManager}{}\doxysection{AEntities\+Manager Class Reference}
+\label{classAEntitiesManager}\index{AEntitiesManager@{AEntitiesManager}}
+
+
+Abstract base class for \mbox{\hyperlink{classEntitiesManager}{Entities\+Manager}} for server and client.  
+
+
+
+
+{\ttfamily \#include $<$AEntities\+Manager.\+hpp$>$}
+
+
+
+Inheritance diagram for AEntities\+Manager\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=322pt]{classAEntitiesManager__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual Entity \mbox{\hyperlink{classAEntitiesManager_a180c337300c4c368d6a425bc832dd69c}{create\+Enemy}} (\mbox{\hyperlink{structEnemy}{Enemy}})=0
+\begin{DoxyCompactList}\small\item\em Create a \mbox{\hyperlink{structEnemy}{Enemy}} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classAEntitiesManager_a3f461125619b5a5e74df7438e1d794bc}{remove\+Entity}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Remove an entity from the manager. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract base class for \mbox{\hyperlink{classEntitiesManager}{Entities\+Manager}} for server and client. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classAEntitiesManager_a180c337300c4c368d6a425bc832dd69c}\label{classAEntitiesManager_a180c337300c4c368d6a425bc832dd69c}} 
+\index{AEntitiesManager@{AEntitiesManager}!createEnemy@{createEnemy}}
+\index{createEnemy@{createEnemy}!AEntitiesManager@{AEntitiesManager}}
+\doxysubsubsection{\texorpdfstring{createEnemy()}{createEnemy()}}
+{\footnotesize\ttfamily virtual Entity AEntities\+Manager\+::create\+Enemy (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structEnemy}{Enemy}}}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Create a \mbox{\hyperlink{structEnemy}{Enemy}} object. 
+
+\begin{DoxyReturn}{Returns}
+Entity 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classServerEntitiesManager_a8f35dcfbcb11adb3543f4c0c7e676830}{Server\+Entities\+Manager}}, and \mbox{\hyperlink{classEntitiesManager_a8aa9bb58b7bfc9b0ef1b82ae054bb75d}{Entities\+Manager}}.
+
+\mbox{\Hypertarget{classAEntitiesManager_a3f461125619b5a5e74df7438e1d794bc}\label{classAEntitiesManager_a3f461125619b5a5e74df7438e1d794bc}} 
+\index{AEntitiesManager@{AEntitiesManager}!removeEntity@{removeEntity}}
+\index{removeEntity@{removeEntity}!AEntitiesManager@{AEntitiesManager}}
+\doxysubsubsection{\texorpdfstring{removeEntity()}{removeEntity()}}
+{\footnotesize\ttfamily void AEntities\+Manager\+::remove\+Entity (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Remove an entity from the manager. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+RType/shared/includes/AEntities\+Manager.\+hpp\end{DoxyCompactItemize}

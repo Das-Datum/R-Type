@@ -1,0 +1,56 @@
+This page presents a detailed comparative study of various methodologies, tools, and approaches relevant to the project.\hypertarget{md_docs_comparative_study_autotoc_md18}{}\doxysection{Graphical\+: Raylib}\label{md_docs_comparative_study_autotoc_md18}
+Raylib is a simple and easy-\/to-\/use C library designed for developing games and multimedia applications. It is a lightweight, cross-\/platform framework that supports various features like 2D and 3D rendering, sound, input management, and more. Raylib stands out for its straightforward approach, making it a popular choice for both beginners and experienced developers working on projects that require fast, efficient rendering and multimedia handling.\hypertarget{md_docs_comparative_study_autotoc_md19}{}\doxysubsection{Key Advantages\+:}\label{md_docs_comparative_study_autotoc_md19}
+
+\begin{DoxyItemize}
+\item Lightweight and easy to integrate into any project.
+\item Simple and clear API for quick learning.
+\item Supports 2D and 3D graphics, as well as audio and input management.
+\item Cross-\/platform compatibility (Windows, Linux, mac\+OS, and more).
+\item Active community and a variety of resources available for learning.
+\end{DoxyItemize}\hypertarget{md_docs_comparative_study_autotoc_md20}{}\doxysubsection{Key Disadvantages\+:}\label{md_docs_comparative_study_autotoc_md20}
+
+\begin{DoxyItemize}
+\item Limited high-\/level abstraction compared to other game engines.
+\item May require more manual control for complex projects.
+\item Smaller ecosystem and fewer third-\/party tools than larger engines like Unity or Unreal Engine.
+\end{DoxyItemize}\hypertarget{md_docs_comparative_study_autotoc_md21}{}\doxysection{Architecture\+: ECS (\+Entity-\/\+Component-\/\+System)}\label{md_docs_comparative_study_autotoc_md21}
+ECS is an architectural pattern used in game development and simulations. It organizes data into entities, components, and systems, helping developers achieve more flexibility and performance. Each entity is a unique object, and its components define its attributes (like position, velocity, or health). Systems are responsible for processing entities that have certain components.\hypertarget{md_docs_comparative_study_autotoc_md22}{}\doxysubsection{Key Advantages\+:}\label{md_docs_comparative_study_autotoc_md22}
+
+\begin{DoxyItemize}
+\item Improves performance through data-\/oriented design, as systems can operate on large sets of entities efficiently.
+\item Highly scalable, making it ideal for large and complex games or simulations.
+\item Promotes clean separation of concerns, with logic organized into reusable systems.
+\item Facilitates parallel processing and multithreading, maximizing performance.
+\end{DoxyItemize}\hypertarget{md_docs_comparative_study_autotoc_md23}{}\doxysubsection{Key Disadvantages\+:}\label{md_docs_comparative_study_autotoc_md23}
+
+\begin{DoxyItemize}
+\item More complex to learn and implement compared to traditional object-\/oriented design.
+\item Requires careful planning and organization to avoid becoming overly complicated.
+\item Not always the best fit for smaller projects with simpler requirements.
+\end{DoxyItemize}\hypertarget{md_docs_comparative_study_autotoc_md24}{}\doxysection{Protocol\+: Binary UDP}\label{md_docs_comparative_study_autotoc_md24}
+Binary UDP (User Datagram Protocol) is a communication protocol that is lightweight, fast, and used for transmitting data in a format that is machine-\/readable. UDP is connectionless, meaning it does not establish a reliable connection before sending data, which makes it faster but less reliable than other protocols like TCP.\hypertarget{md_docs_comparative_study_autotoc_md25}{}\doxysubsection{Key Advantages\+:}\label{md_docs_comparative_study_autotoc_md25}
+
+\begin{DoxyItemize}
+\item Fast transmission with minimal overhead.
+\item Ideal for real-\/time applications such as multiplayer games or streaming, where speed is crucial.
+\item Low latency due to its connectionless nature.
+\end{DoxyItemize}\hypertarget{md_docs_comparative_study_autotoc_md26}{}\doxysubsection{Key Disadvantages\+:}\label{md_docs_comparative_study_autotoc_md26}
+
+\begin{DoxyItemize}
+\item No guarantee of message delivery, which can lead to data loss.
+\item Does not have built-\/in error correction or retransmission features.
+\item More difficult to implement error handling and reliability features manually.
+\end{DoxyItemize}\hypertarget{md_docs_comparative_study_autotoc_md27}{}\doxysection{License\+: GNU General Public License v3.\+0}\label{md_docs_comparative_study_autotoc_md27}
+The GNU General Public License v3.\+0 (GPL-\/3.\+0) is a free software license that ensures the software remains open source and allows users to freely modify, distribute, and use the software. It aims to protect the rights of users and developers by preventing proprietary use of open-\/source software.\hypertarget{md_docs_comparative_study_autotoc_md28}{}\doxysubsection{Key Advantages\+:}\label{md_docs_comparative_study_autotoc_md28}
+
+\begin{DoxyItemize}
+\item Ensures software remains free and open, protecting users\textquotesingle{} freedom to modify and distribute it.
+\item Provides strong copyleft protection, meaning derivative works must also be licensed under the GPL.
+\item Wide acceptance in the open-\/source community, making it ideal for projects that want to contribute to or benefit from the open-\/source ecosystem.
+\end{DoxyItemize}\hypertarget{md_docs_comparative_study_autotoc_md29}{}\doxysubsection{Key Disadvantages\+:}\label{md_docs_comparative_study_autotoc_md29}
+
+\begin{DoxyItemize}
+\item May discourage commercial use or proprietary licensing due to the copyleft requirements.
+\item Requires careful compliance with licensing terms, especially when redistributing or modifying the software.
+\item Some developers or companies might prefer more permissive licenses like MIT or Apache for less restrictive terms. 
+\end{DoxyItemize}

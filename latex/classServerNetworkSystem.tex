@@ -1,0 +1,318 @@
+\hypertarget{classServerNetworkSystem}{}\doxysection{Server\+Network\+System Class Reference}
+\label{classServerNetworkSystem}\index{ServerNetworkSystem@{ServerNetworkSystem}}
+
+
+Manages the server system.  
+
+
+
+
+{\ttfamily \#include $<$Network\+Systems.\+hpp$>$}
+
+
+
+Inheritance diagram for Server\+Network\+System\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=206pt]{classServerNetworkSystem__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Server\+Network\+System\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=206pt]{classServerNetworkSystem__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classServerNetworkSystem_afec4c15fe45c07a9fd3d96da57cb1458}{init}} (const std\+::string \&ip, int port)
+\begin{DoxyCompactList}\small\item\em Initialize the server system. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_a535aa17549ddac0cb017075017741157}{get\+Help}} ()
+\begin{DoxyCompactList}\small\item\em Display an error message. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_abf96ea2db1114beb439fe18fc12886d7}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Display an error message. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_afe469dd40a9a63b1be1c8c7ad47cb7c6}{read\+Clients}} ()
+\begin{DoxyCompactList}\small\item\em Read file descriptors. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classServerNetworkSystem_ab99c07af3b9aba7fb6aed3d5363559e7}\label{classServerNetworkSystem_ab99c07af3b9aba7fb6aed3d5363559e7}} 
+void {\bfseries update\+Read} ()
+\item 
+\mbox{\Hypertarget{classServerNetworkSystem_a8527530d85e50883c241f41a00efb4bd}\label{classServerNetworkSystem_a8527530d85e50883c241f41a00efb4bd}} 
+virtual void {\bfseries create\+New\+Client} (std\+::string name, int id, std\+::string ip, int port)=0
+\item 
+void \mbox{\hyperlink{classServerNetworkSystem_a193b62d1b118109ecffd623fdeef9d47}{send\+All\+Player}} (int id, const std\+::string \&message)
+\begin{DoxyCompactList}\small\item\em Send a message to all players except the one with the specified id. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_a561682337937ac96fc325d2f4a140f49}{update}} ()
+\begin{DoxyCompactList}\small\item\em Update the server system. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_ae33f838e053e458f80d2f5b400406495}{handle\+Command}} ()
+\begin{DoxyCompactList}\small\item\em Handle the command. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_a68af67df84c2894f58f55923a45851a9}{add\+Command}} (const std\+::string \&command, const std\+::function$<$ void()$>$ \&func, const std\+::string \&description=\char`\"{}\char`\"{})
+\begin{DoxyCompactList}\small\item\em Add a command. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classServerNetworkSystem_a5e3afe17a4ab8220c2f4c16f3025eab3}{get\+Option}} ()
+\begin{DoxyCompactList}\small\item\em Get the command option. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_ac3a07155c7e8299b3b38db738c426a67}{restart}} ()
+\begin{DoxyCompactList}\small\item\em Restart the server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_a290317296fe34493b2b5b3b9cc2d27e1}{help}} ()
+\begin{DoxyCompactList}\small\item\em Display an error message. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_a685f8aeeb07e2969c103c9ca77915d4a}{send\+Data\+All\+Player}} ()
+\begin{DoxyCompactList}\small\item\em Send data to all players. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerNetworkSystem_afaa60388c011d5b160ed5130e309f82a}{send\+Data\+To\+Player}} (const std\+::string \&message, std\+::string ip, int port)
+\begin{DoxyCompactList}\small\item\em Send data to a player. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classServerNetworkSystem_ad5b400dfab5207bc6c87ac83c3cba2fc}{is\+Running}} () const
+\begin{DoxyCompactList}\small\item\em Check if the server is running. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classServerNetworkSystem_afb66514fc4145eb3063b7d3203b61492}\label{classServerNetworkSystem_afb66514fc4145eb3063b7d3203b61492}} 
+int {\bfseries get\+Server\+Fd} () const
+\item 
+\mbox{\Hypertarget{classServerNetworkSystem_aff1818d615e64bb79e24306dc993c336}\label{classServerNetworkSystem_aff1818d615e64bb79e24306dc993c336}} 
+void {\bfseries info} (const std\+::string \&message)
+\item 
+\mbox{\Hypertarget{classServerNetworkSystem_a6c16a6b9e69b72f28adbbaef49efb75d}\label{classServerNetworkSystem_a6c16a6b9e69b72f28adbbaef49efb75d}} 
+void {\bfseries error} (const std\+::string \&message)
+\item 
+\mbox{\Hypertarget{classServerNetworkSystem_a4d1ad17dac6035d9117ad95506d8aba3}\label{classServerNetworkSystem_a4d1ad17dac6035d9117ad95506d8aba3}} 
+void {\bfseries debug} (const std\+::string \&message)
+\item 
+\mbox{\Hypertarget{classServerNetworkSystem_a267c9c8f62a8839bbef0c3a3b57fa88a}\label{classServerNetworkSystem_a267c9c8f62a8839bbef0c3a3b57fa88a}} 
+void {\bfseries warning} (const std\+::string \&message)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manages the server system. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classServerNetworkSystem_a68af67df84c2894f58f55923a45851a9}\label{classServerNetworkSystem_a68af67df84c2894f58f55923a45851a9}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!addCommand@{addCommand}}
+\index{addCommand@{addCommand}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{addCommand()}{addCommand()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::add\+Command (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{command,  }\item[{const std\+::function$<$ void()$>$ \&}]{func,  }\item[{const std\+::string \&}]{description = {\ttfamily \char`\"{}\char`\"{}} }\end{DoxyParamCaption})}
+
+
+
+Add a command. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em command} & The command. \\
+\hline
+{\em func} & The function to execute. \\
+\hline
+{\em description} & The command description. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_a535aa17549ddac0cb017075017741157}\label{classServerNetworkSystem_a535aa17549ddac0cb017075017741157}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!getHelp@{getHelp}}
+\index{getHelp@{getHelp}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{getHelp()}{getHelp()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::get\+Help (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Display an error message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The error message. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_a5e3afe17a4ab8220c2f4c16f3025eab3}\label{classServerNetworkSystem_a5e3afe17a4ab8220c2f4c16f3025eab3}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!getOption@{getOption}}
+\index{getOption@{getOption}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{getOption()}{getOption()}}
+{\footnotesize\ttfamily std\+::string Server\+Network\+System\+::get\+Option (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Get the command option. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_ae33f838e053e458f80d2f5b400406495}\label{classServerNetworkSystem_ae33f838e053e458f80d2f5b400406495}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!handleCommand@{handleCommand}}
+\index{handleCommand@{handleCommand}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{handleCommand()}{handleCommand()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::handle\+Command (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Handle the command. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_a290317296fe34493b2b5b3b9cc2d27e1}\label{classServerNetworkSystem_a290317296fe34493b2b5b3b9cc2d27e1}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!help@{help}}
+\index{help@{help}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{help()}{help()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::help (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Display an error message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The error message. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_afec4c15fe45c07a9fd3d96da57cb1458}\label{classServerNetworkSystem_afec4c15fe45c07a9fd3d96da57cb1458}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!init@{init}}
+\index{init@{init}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::init (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{ip,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+
+
+Initialize the server system. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip} & The server IP address. \\
+\hline
+{\em port} & The server port. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_ad5b400dfab5207bc6c87ac83c3cba2fc}\label{classServerNetworkSystem_ad5b400dfab5207bc6c87ac83c3cba2fc}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!isRunning@{isRunning}}
+\index{isRunning@{isRunning}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{isRunning()}{isRunning()}}
+{\footnotesize\ttfamily bool Server\+Network\+System\+::is\+Running (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check if the server is running. 
+
+\begin{DoxyReturn}{Returns}
+bool 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_afe469dd40a9a63b1be1c8c7ad47cb7c6}\label{classServerNetworkSystem_afe469dd40a9a63b1be1c8c7ad47cb7c6}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!readClients@{readClients}}
+\index{readClients@{readClients}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{readClients()}{readClients()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::read\+Clients (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Read file descriptors. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_ac3a07155c7e8299b3b38db738c426a67}\label{classServerNetworkSystem_ac3a07155c7e8299b3b38db738c426a67}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!restart@{restart}}
+\index{restart@{restart}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{restart()}{restart()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::restart (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Restart the server. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_a193b62d1b118109ecffd623fdeef9d47}\label{classServerNetworkSystem_a193b62d1b118109ecffd623fdeef9d47}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!sendAllPlayer@{sendAllPlayer}}
+\index{sendAllPlayer@{sendAllPlayer}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{sendAllPlayer()}{sendAllPlayer()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::send\+All\+Player (\begin{DoxyParamCaption}\item[{int}]{id,  }\item[{const std\+::string \&}]{message }\end{DoxyParamCaption})}
+
+
+
+Send a message to all players except the one with the specified id. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em id} & The id of the player to exclude from the message. \\
+\hline
+{\em message} & The message to send to all other players. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerNetworkSystem_a685f8aeeb07e2969c103c9ca77915d4a}\label{classServerNetworkSystem_a685f8aeeb07e2969c103c9ca77915d4a}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!sendDataAllPlayer@{sendDataAllPlayer}}
+\index{sendDataAllPlayer@{sendDataAllPlayer}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{sendDataAllPlayer()}{sendDataAllPlayer()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::send\+Data\+All\+Player (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Send data to all players. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_afaa60388c011d5b160ed5130e309f82a}\label{classServerNetworkSystem_afaa60388c011d5b160ed5130e309f82a}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!sendDataToPlayer@{sendDataToPlayer}}
+\index{sendDataToPlayer@{sendDataToPlayer}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{sendDataToPlayer()}{sendDataToPlayer()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::send\+Data\+To\+Player (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{message,  }\item[{std\+::string}]{ip,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+
+
+Send data to a player. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The message to send. \\
+\hline
+{\em player\+ID} & The player ID. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_abf96ea2db1114beb439fe18fc12886d7}\label{classServerNetworkSystem_abf96ea2db1114beb439fe18fc12886d7}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!stop@{stop}}
+\index{stop@{stop}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Display an error message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The error message. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerNetworkSystem_a561682337937ac96fc325d2f4a140f49}\label{classServerNetworkSystem_a561682337937ac96fc325d2f4a140f49}} 
+\index{ServerNetworkSystem@{ServerNetworkSystem}!update@{update}}
+\index{update@{update}!ServerNetworkSystem@{ServerNetworkSystem}}
+\doxysubsubsection{\texorpdfstring{update()}{update()}}
+{\footnotesize\ttfamily void Server\+Network\+System\+::update (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Update the server system. 
+
+\begin{DoxyReturn}{Returns}
+void 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Network/includes/Network\+Systems.\+hpp\end{DoxyCompactItemize}

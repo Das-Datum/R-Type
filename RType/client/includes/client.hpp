@@ -19,10 +19,13 @@
 #include "Systems/Generics.hpp"
 #include "Systems/BackgroundScrollSystem.hpp"
 #include "Systems/ClientManageNetworkSystem.hpp"
+#include "Systems/InterpolationSystem.hpp"
 
+// Shared
 #include "Components/GameComponents.hpp"
 #include "Systems/Game.hpp"
 #include "Systems/CollisionSystem.hpp"
+#include "Systems/VelocitySystem.hpp"
 
 #include "NetworkComponent.hpp"
 #include "NetworkSystems.hpp"
