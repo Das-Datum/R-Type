@@ -68,9 +68,8 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
         /**
          * @brief Update the network system with the elapsed time.
          *
-         * @param elapsed_time The time elapsed since the last update.
          */
-        void update(double elapsed_time);
+        void update();
 
         /**
          * @brief Get the command string based on the input command.

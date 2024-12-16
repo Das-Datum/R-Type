@@ -6,7 +6,6 @@ using Clock = std::chrono::high_resolution_clock;
 Coordinator gCoordinator;
 
 void game_tick(double elapsedTimeSeconds) {
-    gCoordinator.getSystem<ServerManageNetworkSystem>()->update(elapsedTimeSeconds);
 
     //! VELOCITY, PHYSICS, COLLISION
     gCoordinator.getSystem<VelocitySystem>()->update(elapsedTimeSeconds);
@@ -34,6 +33,7 @@ int main() {
     auto last_tick_time = Clock::now();
 
     initCoordinator();
+    std::thread networkHandlerThread = std::thread([&]() { gCoordinator.getSystem<ServerManageNetworkSystem>()->update(); });
 
     //? MAIN LOOP
     while (gCoordinator.getSystem<ServerManageNetworkSystem>()->isRunning()) {
@@ -49,6 +49,8 @@ int main() {
             }
         }
     }
+    if (networkHandlerThread.joinable())
+        networkHandlerThread.join();
 
     return 0;
 }
