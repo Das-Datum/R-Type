@@ -1,7 +1,7 @@
 /*! \defgroup my_docs My Docs
- *  \brief Regroupe des documents personnalisés
+ *  \brief Groups custom documentation pages.
  *
- *  Cette section contient des pages personnalisées ajoutées à la documentation.
+ *  This section contains custom pages added to the documentation.
  */
 
 /*! \page comparative_study Comparative Study
@@ -9,22 +9,21 @@
  *
  *  @htmlinclude docs/comparative_study.md
  *
- *  Cette page contient l'étude comparative.
+ *  This page contains the comparative study.
  */
-
 
 /*! \page protocol_client_server Protocol Client/Server
  *  \ingroup my_docs
  *
  *  @htmlinclude docs/protocol_client_server.md
  *
- *  Cette page contient le protocal client/server.
+ *  This page contains the client/server protocol documentation.
  */
 
-/*! \page dev_docs.md Documentation Dev
+/*! \page dev_docs Developer Documentation
  *  \ingroup my_docs
  *
- *  @htmlinclude docs/dev_docs.md.md
+ *  @htmlinclude docs/dev_docs.md
  *
- *  Cette page contient la documentation dev.
+ *  This page contains the developer documentation.
  */
