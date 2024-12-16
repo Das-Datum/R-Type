@@ -195,22 +195,22 @@ class InputSystem : public System {
             auto &playerNetwork = gCoordinator.getComponent<NetworkInstructionsComponent>(entity);
 
             if (IsKeyDown(settings.getMoveRightKey())) {
-                velocity.velocity.x += 0.7f * velocity.acceleration;
+                velocity.velocity.x += 0.7f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MRT" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveLeftKey())) {
-                velocity.velocity.x -= 0.7f * velocity.acceleration;
+                velocity.velocity.x -= 0.7f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MLF" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveUpKey())) {
-                velocity.velocity.y -= 1.0f * velocity.acceleration;
+                velocity.velocity.y -= 1.0f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MUP" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveDownKey())) {
-                velocity.velocity.y += 1.0f * velocity.acceleration;
+                velocity.velocity.y += 1.0f;
                 if (settings.isMultiplayer())
                     playerNetwork.instructionsBuffer.push_back("MDW" + std::to_string(playerNetwork.id));
             }
