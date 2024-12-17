@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include "Types.hpp"
 #include <iostream>
+#include <string>
 
 /**
  * @class EntityManager

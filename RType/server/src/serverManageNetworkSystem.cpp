@@ -86,6 +86,8 @@ void ServerManageNetworkSystem::resumeGame() {
 }
 
 void ServerManageNetworkSystem::update() {
+    // info("update");
+    // std::unique_lock<std::mutex> lock(clientsMutex);
     for (auto const &entity : entities) {
         auto &player = gCoordinator.getComponent<NetworkComponent>(entity);
         int playerSize = player.lastMessagesReceived.size();
