@@ -215,6 +215,12 @@ class RenderSystem : public System {
             }
         }
     }
+
+    void renderScore(int score) {
+        int posX = static_cast<int>(viewportX) + 10;
+        int posY = static_cast<int>(viewportY) + 10;
+        DrawText(TextFormat("Score: %d", score), posX, posY, 20, WHITE);
+    }
 };
 
 class InputSystem : public System {
@@ -274,13 +280,13 @@ class InputSystem : public System {
                 bulletPosition.y += 0.01f;
 
                 if (timer.elapsedTime >= timer.duration) {
-                    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
+                    entitiesManager.createBullet(bulletPosition, {0.4f, 0.0f});
                     if (settings.isMultiplayer())
                         playerNetwork.instructionsBuffer.push_back("DEM" + std::to_string(playerNetwork.id));
                 } else {
                     if (settings.isMultiplayer())
                         playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id) + std::to_string(bulletPosition.x) + "," + std::to_string(bulletPosition.y) + ";");
-                    entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
+                    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
                 }
                 timer.active = false;
                 timer.elapsedTime = 0.0f;

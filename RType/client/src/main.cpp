@@ -53,6 +53,8 @@ int main() {
         -1);
     //! END OF TEMPORARY CODE
 
+    int currentScore = 0;
+
     //! MAIN LOOP
     while (!(WindowShouldClose() && !IsKeyPressed(KEY_ESCAPE))) {
         float deltaTime = GetFrameTime();
@@ -145,6 +147,8 @@ int main() {
 
                 gCoordinator.destroyEntity(entityA);
                 gCoordinator.destroyEntity(entityB);
+
+                entitiesManager.addScore(1);
             }
         });
 
@@ -165,6 +169,7 @@ int main() {
         }
 
         gCoordinator.getSystem<RenderSystem>()->update();
+        gCoordinator.getSystem<RenderSystem>()->renderScore(entitiesManager.getTotalScore());
 
         if (IsKeyDown(KEY_G))
             gCoordinator.getSystem<CollisionSystem>()->drawGrid(viewportX, viewportY, viewportWidth, viewportHeight);

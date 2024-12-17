@@ -80,4 +80,10 @@ class AEntitiesManager {
          * @return Entity
          */
         virtual Entity createBullet(Vector2 position, Vector2 velocity) = 0;
+
+        int getTotalScore() const { return _totalScore; }
+        void addScore(int score) { _totalScore += score; }
+
+    private:
+        int _totalScore = 0;
 };

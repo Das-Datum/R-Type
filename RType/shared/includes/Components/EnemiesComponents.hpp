@@ -59,6 +59,6 @@ struct EnemyShootComponent {
     float shootCooldown;
     float bulletSpeed;
 
-    EnemyShootComponent(float range = 100.0f, float interval = 1.0f, float speed = 200.0f)
+    EnemyShootComponent(float range = 0.75f, float interval = 2.0f, float speed = 0.25f)
         : shootRange(range), shootInterval(interval), shootCooldown(interval), bulletSpeed(speed) {}
 };

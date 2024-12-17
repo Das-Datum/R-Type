@@ -33,8 +33,7 @@ public:
         gCoordinator.addComponent(enemy, DestroyOutOfBoundsComponent());
 
         if (enemyInfos.type.isShooting) {
-            gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 200.0f));
-            // add this if enemyInfos.shootAtPlayer is true
+            gCoordinator.addComponent(enemy, EnemyShootComponent(0.75f, 2.0f, 0.25f));
             behaviors.push_back(BehaviorType::ShootAtPlayer);
         }
 

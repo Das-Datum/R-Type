@@ -73,7 +73,7 @@ public:
         gCoordinator.addComponent(enemy, SpawnComponent(enemyInfos.spawnTime));
 
         if (enemyInfos.type.isShooting) {
-            gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 100.0f));
+            gCoordinator.addComponent(enemy, EnemyShootComponent(0.75f, 2.0f, 0.25f));
             // add this if enemyInfos.shootAtPlayer is true
             behaviors.push_back(BehaviorType::ShootAtPlayer);
         }

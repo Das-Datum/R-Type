@@ -15,7 +15,7 @@ void ClientManageNetworkSystem::shoot(Entity player) {
     auto &entitiesManager = EntitiesManager::getInstance();
 
     Vector2 bulletPosition = {_x, _y};
-    entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
+    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
 }
 
 void ClientManageNetworkSystem::beam(Entity player) {
@@ -23,7 +23,7 @@ void ClientManageNetworkSystem::beam(Entity player) {
     auto &entitiesManager = EntitiesManager::getInstance();
 
     Vector2 bulletPosition = {_x, _y};
-    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
+    entitiesManager.createBullet(bulletPosition, {0.4f, 0.0f});
 }
 
 void ClientManageNetworkSystem::up(Entity player) {
