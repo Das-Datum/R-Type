@@ -107,17 +107,17 @@ void ServerNetworkSystem::readClients() {
     if (bytes_received < 0) {
         if (inet_ntoa(new_client_addr.sin_addr) == "204.204.204.204")
             return;
-        std::unique_lock<std::mutex> lock(_clientsMutex);
-        std::vector<Entity> entityList(entities.begin(), entities.end());
-        for (size_t i = 0; i < entityList.size(); ++i) {
-            auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
-            if (player.ip == std::string(inet_ntoa(new_client_addr.sin_addr)) && player.port == ntohs(new_client_addr.sin_port)) {
-                sendAllPlayer(player.id, "DEL" + std::to_string(player.id));
-                gCoordinator.destroyEntity(entityList[i]);
-                break;
-            }
-        }
-        return;
+        // std::unique_lock<std::mutex> lock(_clientsMutex);
+        // std::vector<Entity> entityList(entities.begin(), entities.end());
+        // for (size_t i = 0; i < entityList.size(); ++i) {
+        //     auto& player = gCoordinator.getComponent<NetworkComponent>(entityList[i]);
+        //     if (player.ip == std::string(inet_ntoa(new_client_addr.sin_addr)) && player.port == ntohs(new_client_addr.sin_port)) {
+        //         sendAllPlayer(player.id, "DEL" + std::to_string(player.id));
+        //         gCoordinator.destroyEntity(entityList[i]);
+        //         break;
+        //     }
+        // }
+        // return;
     }
 
     std::string client_ip = inet_ntoa(new_client_addr.sin_addr);

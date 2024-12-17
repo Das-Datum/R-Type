@@ -95,8 +95,18 @@ class RenderSystem : public System {
                         auto &animation = gCoordinator.getComponent<SpriteAnimationComponent>(entity);
                         animation.elapsedTime += GetFrameTime();
                         if (animation.elapsedTime >= animation.frameDuration) {
-                            animation.currentFrame = (animation.currentFrame + 1) % animation.frameCount;
                             animation.elapsedTime = 0.0f;
+                            animation.currentFrame++;
+
+                            if (animation.currentFrame >= animation.frameCount) {
+                                if (animation.loop) {
+                                    animation.currentFrame = 0;
+                                } else {
+                                    gCoordinator.destroyEntity(entity);
+                                    continue;
+                                }
+                            }
+
                             sprite.sourceRect.x = animation.currentFrame * sprite.sourceRect.width;
                         }
                     }
@@ -176,8 +186,40 @@ class RenderSystem : public System {
                     DrawLineEx(corners[2], corners[3], 2.0f, RED);
                     DrawLineEx(corners[3], corners[0], 2.0f, RED);
                 }
+
+                if (gCoordinator.hasComponent<EnemyComponent>(entity)) {
+                    auto &enemy = gCoordinator.getComponent<EnemyComponent>(entity);
+                    auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+                    auto &collider = gCoordinator.getComponent<CollisionComponent>(entity);
+                    auto &sprite = gCoordinator.getComponent<SpriteComponent>(entity);
+
+                    float desiredHeight = transform.size.y * viewportHeight;
+                    float spriteAspectRatio = (float)sprite.sourceRect.width / sprite.sourceRect.height;
+                    float scaledWidth = desiredHeight * spriteAspectRatio;
+                    float scaledHeight = desiredHeight;
+                    float scaledX = viewportX + (transform.position.x * viewportWidth);
+                    float scaledY = viewportY + (transform.position.y * viewportHeight);
+
+                    Vector2 origin = {scaledWidth * 0.5f, scaledHeight * 0.5f};
+
+                    Rectangle destRect = {
+                        scaledX,
+                        scaledY,
+                        scaledWidth,
+                        scaledHeight};
+
+                    int textSize = 20;
+                    Vector2 textSizeMeasure = MeasureTextEx(GetFontDefault(), std::to_string(enemy.uniqueId).c_str(), textSize, 1);
+                    DrawText(std::to_string(enemy.uniqueId).c_str(), scaledX - textSizeMeasure.x / 2, scaledY - textSizeMeasure.y / 2, textSize, GREEN);
+                }
             }
         }
+    }
+
+    void renderScore(int score) {
+        int posX = static_cast<int>(viewportX) + 10;
+        int posY = static_cast<int>(viewportY) + 10;
+        DrawText(TextFormat("Score: %d", score), posX, posY, 20, WHITE);
     }
 };
 
@@ -238,13 +280,13 @@ class InputSystem : public System {
                 bulletPosition.y += 0.01f;
 
                 if (timer.elapsedTime >= timer.duration) {
-                    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
+                    entitiesManager.createBullet(bulletPosition, {0.4f, 0.0f});
                     if (settings.isMultiplayer())
                         playerNetwork.instructionsBuffer.push_back("DEM" + std::to_string(playerNetwork.id));
                 } else {
                     if (settings.isMultiplayer())
-                        playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id));
-                    entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
+                        playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id) + std::to_string(bulletPosition.x) + "," + std::to_string(bulletPosition.y) + ";");
+                    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
                 }
                 timer.active = false;
                 timer.elapsedTime = 0.0f;

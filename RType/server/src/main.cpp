@@ -6,15 +6,39 @@ using Clock = std::chrono::high_resolution_clock;
 Coordinator gCoordinator;
 
 void game_tick(double elapsedTimeSeconds, int tick) {
+    auto &manager = ServerEntitiesManager::getInstance();
+
     //! VELOCITY, PHYSICS, COLLISION
     gCoordinator.getSystem<VelocitySystem>()->update(elapsedTimeSeconds);
     gCoordinator.getSystem<PhysicsSystem>()->update(elapsedTimeSeconds);
+    gCoordinator.getSystem<EnemiesSystem>()->update(manager, elapsedTimeSeconds);
+
+    if (tick == 1) {
+        //! RESYNC ENEMIES
+        std::cout << "-- Resyncing enemies..." << std::endl;
+        gCoordinator.getSystem<EnemiesSystem>()->syncAllEnemies([](Entity entity) {
+            auto &enemy = gCoordinator.getComponent<EnemyComponent>(entity);
+            auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+            if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
+                auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
+                gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayer(0, "ENM0" + std::to_string(transform.position.x) + "," + std::to_string(transform.position.y) + ";" + std::to_string(enemy.uniqueId) + ";" + std::to_string(spawn.time_left));
+                return;
+            }
+            // auto &enemyHealth = gCoordinator.getComponent<EnemyHealthComponent>(entity);
+            // auto &enemyMovement = gCoordinator.getComponent<EnemyMovementComponent>(entity);
+            // auto &enemyShoot = gCoordinator.getComponent<EnemyShootComponent>(entity);
+            gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayer(0, "ENM0" + std::to_string(transform.position.x) + "," + std::to_string(transform.position.y) + ";" + std::to_string(enemy.uniqueId) + ";0.0");
+        });
+        std::cout << "-- Resyncing enemies done!" << std::endl;
+    }
+
     gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
         // if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
         //     std::cout << "Ship collided with enemy\n";
         // }
 
         if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
+            // std::cout << "Enemy hit by bullet" << std::endl;
             gCoordinator.destroyEntity(entityA);
         }
     });
@@ -54,7 +78,9 @@ int main() {
                 tickCount++;
                 if (tickCount >= static_cast<int>(TPS))
                     tickCount -= static_cast<int>(TPS);
-                game_tick(elapsed_time.count(), tickCount);
+                if (gCoordinator.getSystem<ServerManageNetworkSystem>()->isGameStarted() &&
+                    !gCoordinator.getSystem<ServerManageNetworkSystem>()->isGamePaused())
+                    game_tick(elapsed_time.count(), tickCount);
             } catch(std::exception& e) {
                 std::cerr << "Error while executing tick: " << e.what() << std::endl;
             }

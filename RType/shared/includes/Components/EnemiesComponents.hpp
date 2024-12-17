@@ -20,12 +20,13 @@ struct EnemyHealthComponent {
 struct EnemyComponent {
     std::vector<BehaviorType> behaviors;
     std::string name;
+    int uniqueId;
 
-    EnemyComponent(std::initializer_list<BehaviorType> behaviorList = {}, const std::string& typeName = "classic")
-        : behaviors(behaviorList), name(typeName) {}
+    EnemyComponent(std::initializer_list<BehaviorType> behaviorList = {}, const std::string& typeName = "classic", int id = -1)
+        : behaviors(behaviorList), name(typeName), uniqueId(id) {}
 
-    EnemyComponent(std::vector<BehaviorType> behaviorList = {}, const std::string& typeName = "classic")
-        : behaviors(behaviorList), name(typeName) {}
+    EnemyComponent(std::vector<BehaviorType> behaviorList = {}, const std::string& typeName = "classic", int id = -1)
+        : behaviors(behaviorList), name(typeName), uniqueId(id) {}
 
     void addBehavior(BehaviorType behavior) {
         behaviors.push_back(behavior);
@@ -58,6 +59,6 @@ struct EnemyShootComponent {
     float shootCooldown;
     float bulletSpeed;
 
-    EnemyShootComponent(float range = 100.0f, float interval = 1.0f, float speed = 200.0f)
+    EnemyShootComponent(float range = 0.75f, float interval = 2.0f, float speed = 0.25f)
         : shootRange(range), shootInterval(interval), shootCooldown(interval), bulletSpeed(speed) {}
 };

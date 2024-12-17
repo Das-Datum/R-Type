@@ -9,6 +9,7 @@
 #include "Systems/ServerManageNetworkSystem.hpp"
 #include "Systems/CollisionSystem.hpp"
 #include "Systems/VelocitySystem.hpp"
+#include "Systems/EnemiesSystem.hpp"
 
 #include <string>
 

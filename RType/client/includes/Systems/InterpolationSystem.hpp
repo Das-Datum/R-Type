@@ -10,6 +10,19 @@ class InterpolationSystem : public System {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
             auto &networkPos = gCoordinator.getComponent<NetworkPositionComponent>(entity);
 
+            if (gCoordinator.hasComponent<InputComponent>(entity)) {
+              if (gCoordinator.hasComponent<VelocityComponent>(entity)) {
+                auto &velocity = gCoordinator.getComponent<VelocityComponent>(entity);
+
+                if (abs(velocity.velocity.x) > 0.0f || abs(velocity.velocity.y) > 0.0f) {
+                  networkPos.lastPosition = transform.position;
+                  networkPos.targetPosition = transform.position;
+                  networkPos.lerpFactor = 0.0f;
+                  continue;
+                }
+              }
+            }
+
             networkPos.lerpFactor += deltaTime * interpolationSpeed;
             if (networkPos.lerpFactor > 1.0f)
                 networkPos.lerpFactor = 1.0f;
@@ -21,5 +34,5 @@ class InterpolationSystem : public System {
     }
 
   private:
-    const float interpolationSpeed = 3.0f;
+    const float interpolationSpeed = 2.0f;
 };

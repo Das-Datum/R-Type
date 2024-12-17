@@ -28,8 +28,14 @@ struct Enemy {
     bool hasSpecificMove = false;
     BehaviorType specificMove;
 
+    int uniqueId;
+
     Enemy(float xPos, float yPos, float enemySpawnTime, EnemyType enemyType, bool isEnemyShootAtPlayer = false, bool hasEnemySpecificMove = false, BehaviorType enemySpecificMove = BehaviorType::None)
     : x(xPos), y(yPos), spawnTime(enemySpawnTime), type(enemyType), shootAtPlayer(isEnemyShootAtPlayer), hasSpecificMove(hasEnemySpecificMove), specificMove(enemySpecificMove) {}
+
+    void setUniqueId(int id) {
+        uniqueId = id;
+    }
 };
 
 /**
@@ -56,4 +62,28 @@ class AEntitiesManager {
         void removeEntity(Entity entity) {
             gCoordinator.destroyEntity(entity);
         }
+
+        /**
+         * @brief Create a enemy bullet object
+         *
+         * @param position
+         * @param velocity
+         * @return Entity
+         */
+        virtual Entity createEnemyBullet(Vector2 position, Vector2 velocity) = 0;
+
+        /**
+         * @brief Create a bullet object
+         *
+         * @param position
+         * @param velocity
+         * @return Entity
+         */
+        virtual Entity createBullet(Vector2 position, Vector2 velocity) = 0;
+
+        int getTotalScore() const { return _totalScore; }
+        void addScore(int score) { _totalScore += score; }
+
+    private:
+        int _totalScore = 0;
 };

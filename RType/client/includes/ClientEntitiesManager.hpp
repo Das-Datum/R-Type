@@ -4,6 +4,7 @@
 #include "AEntitiesManager.hpp"
 #include "Components.hpp"
 #include "TexturesManager.hpp"
+#include "client.hpp"
 
 #include <cmath>
 
@@ -14,43 +15,7 @@ public:
         return instance;
     }
 
-    Entity createShip(Vector2 position, int id, const std::string &name, bool playableEntity = true) {
-        Vector2 normalizedPos = position;
-
-        Entity ship = gCoordinator.createEntity();
-
-        std::string shipTexturePath = "./assets/textures/ships/ship_" + std::to_string(id) + ".png";
-        auto &texturesManager = TexturesManager::getInstance();
-        Texture2D shipTexture = texturesManager.loadTexture(shipTexturePath);
-        Rectangle initialFrame = texturesManager.getFrame(shipTexturePath, 2, 5);
-
-        float frameWidth = static_cast<float>(shipTexture.width) / 5;
-        float frameAspectRatio = frameWidth / static_cast<float>(shipTexture.height);
-        float normalizedHeight = 0.05f;
-        float normalizedWidth = normalizedHeight * frameAspectRatio;
-
-        gCoordinator.addComponent(ship, SpriteComponent(shipTexture, initialFrame, 1));
-        gCoordinator.addComponent(ship, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
-
-        Rectangle collider = {0, 0, normalizedWidth, normalizedHeight};
-        gCoordinator.addComponent(ship, ShipComponent());
-        if (playableEntity) {
-            gCoordinator.addComponent(ship, InputComponent());
-            gCoordinator.addComponent(ship, NetworkInstructionsComponent(name, id));
-            gCoordinator.addComponent(ship, SpriteFrameComponent(1, 5));
-        } else {
-            gCoordinator.addComponent(ship, NetworkComponent{name, "", 0, id});
-            gCoordinator.addComponent(ship, NetworkPositionComponent(position));
-        }
-        gCoordinator.addComponent(ship, TimerComponent());
-        gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
-        gCoordinator.addComponent(ship, CollisionComponent(collider));
-        gCoordinator.addComponent(ship, VelocityComponent(Vector2{0.0f, 0.0f}));
-
-        return ship;
-    }
-
-    Entity createBullet(Vector2 position, Vector2 velocity) {
+    Entity createBullet(Vector2 position, Vector2 velocity) override {
         Vector2 normalizedPos = position;
         Vector2 normalizedVelocity = velocity;
 
@@ -108,7 +73,7 @@ public:
         gCoordinator.addComponent(enemy, SpawnComponent(enemyInfos.spawnTime));
 
         if (enemyInfos.type.isShooting) {
-            gCoordinator.addComponent(enemy, EnemyShootComponent(1000.0f, 1.0f, 100.0f));
+            gCoordinator.addComponent(enemy, EnemyShootComponent(0.75f, 2.0f, 0.25f));
             // add this if enemyInfos.shootAtPlayer is true
             behaviors.push_back(BehaviorType::ShootAtPlayer);
         }
@@ -121,12 +86,12 @@ public:
             gCoordinator.addComponent(enemy, EnemyHealthComponent(enemyInfos.type.maxHealth));
 
         gCoordinator.addComponent(enemy, FixedVelocityComponent{Vector2{-0.1f, 0.0f}});
-        gCoordinator.addComponent(enemy, EnemyComponent((behaviors.size() > 0 ? behaviors : std::vector<BehaviorType>{BehaviorType::None}), enemyInfos.type.name));
+        gCoordinator.addComponent(enemy, EnemyComponent((behaviors.size() > 0 ? behaviors : std::vector<BehaviorType>{BehaviorType::None}), enemyInfos.type.name, enemyInfos.uniqueId));
 
         return enemy;
     }
 
-    Entity createEnemyBullet(Vector2 position, Vector2 velocity) {
+    Entity createEnemyBullet(Vector2 position, Vector2 velocity) override {
         Vector2 normalizedPos = position;
         Vector2 normalizedVelocity = velocity;
         Entity bullet = gCoordinator.createEntity();
@@ -156,6 +121,45 @@ public:
         // gCoordinator.addComponent(bullet, SpriteFrameComponent(1, 2));
 
         return bullet;
+    }
+
+public:
+
+    Entity createShip(Vector2 position, int id, const std::string &name, bool playableEntity = true) {
+        Vector2 normalizedPos = position;
+
+        Entity ship = gCoordinator.createEntity();
+
+        std::string shipTexturePath = "./assets/textures/ships/ship_" + std::to_string(id) + ".png";
+        auto &texturesManager = TexturesManager::getInstance();
+        Texture2D shipTexture = texturesManager.loadTexture(shipTexturePath);
+        Rectangle initialFrame = texturesManager.getFrame(shipTexturePath, 2, 5);
+
+        float frameWidth = static_cast<float>(shipTexture.width) / 5;
+        float frameAspectRatio = frameWidth / static_cast<float>(shipTexture.height);
+        float normalizedHeight = 0.05f;
+        float normalizedWidth = normalizedHeight * frameAspectRatio;
+
+        gCoordinator.addComponent(ship, SpriteComponent(shipTexture, initialFrame, 1));
+        gCoordinator.addComponent(ship, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
+
+        Rectangle collider = {0, 0, normalizedWidth, normalizedHeight};
+        gCoordinator.addComponent(ship, ShipComponent());
+
+        if (playableEntity) {
+            gCoordinator.addComponent(ship, InputComponent());
+            gCoordinator.addComponent(ship, NetworkInstructionsComponent(name, id));
+            gCoordinator.addComponent(ship, SpriteFrameComponent(1, 5));
+        }
+
+        gCoordinator.addComponent(ship, NetworkComponent{name, "", 0, id});
+        gCoordinator.addComponent(ship, NetworkPositionComponent(position));
+        gCoordinator.addComponent(ship, TimerComponent());
+        gCoordinator.addComponent(ship, BlockOutOfBoundsComponent());
+        gCoordinator.addComponent(ship, CollisionComponent(collider));
+        gCoordinator.addComponent(ship, VelocityComponent(Vector2{0.0f, 0.0f}));
+
+        return ship;
     }
 
     Entity createStaticEntity(const std::string &texturePath, Vector2 position, float width, float height, int zIndex = 0) {
@@ -195,8 +199,34 @@ public:
         return entity;
     }
 
-    void removeEntity(Entity entity) {
-        gCoordinator.destroyEntity(entity);
+    Entity createExplosion(Vector2 position) {
+        Vector2 normalizedPos = position;
+
+        Entity bullet = gCoordinator.createEntity();
+
+        auto &texturesManager = TexturesManager::getInstance();
+        std::string bulletTexturePath = "./assets/textures/explosions/explosion.png";
+        Texture2D bulletTexture = texturesManager.loadTexture(bulletTexturePath);
+        Rectangle initialFrame = texturesManager.getFrame(bulletTexturePath, 0, 7);
+
+        float normalizedHeight = 0.05f;
+        float frameAspectRatio = (float)initialFrame.width / initialFrame.height;
+        float normalizedWidth = normalizedHeight * frameAspectRatio;
+
+        Rectangle collider = {
+            -normalizedWidth * 0.5f,
+            -normalizedHeight * 0.5f,
+            normalizedWidth,
+            normalizedHeight};
+
+        gCoordinator.addComponent(bullet, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
+
+        gCoordinator.addComponent(bullet, SpriteComponent(bulletTexture, initialFrame, 3));
+        gCoordinator.addComponent(bullet, DestroyOutOfBoundsComponent());
+        gCoordinator.addComponent(bullet, CollisionComponent(collider, 0.0f));
+        gCoordinator.addComponent(bullet, SpriteAnimationComponent(7, 0.1f, false));
+
+        return bullet;
     }
 
   private:

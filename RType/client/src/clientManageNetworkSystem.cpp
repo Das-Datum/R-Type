@@ -12,21 +12,18 @@ void ClientManageNetworkSystem::createPlayerShip(Entity entity) {
 }
 
 void ClientManageNetworkSystem::shoot(Entity player) {
-    auto &transform = gCoordinator.getComponent<TransformComponent>(player);
     auto &entitiesManager = EntitiesManager::getInstance();
 
-    Vector2 bulletPosition = {transform.position.x + transform.size.x / 2,
-        transform.position.y};
-        entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
+    Vector2 bulletPosition = {_x, _y};
+    entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
 }
 
 void ClientManageNetworkSystem::beam(Entity player) {
     auto &transform = gCoordinator.getComponent<TransformComponent>(player);
     auto &entitiesManager = EntitiesManager::getInstance();
 
-    Vector2 bulletPosition = {transform.position.x + transform.size.x / 2,
-        transform.position.y};
-        entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
+    Vector2 bulletPosition = {_x, _y};
+    entitiesManager.createBullet(bulletPosition, {0.4f, 0.0f});
 }
 
 void ClientManageNetworkSystem::up(Entity player) {
@@ -50,6 +47,7 @@ void ClientManageNetworkSystem::left(Entity player) {
 }
 
 void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
+    std::cout << "Disconnecting player:" << _id << std::endl;
     gCoordinator.destroyEntity(entity);
 }
 
@@ -72,19 +70,38 @@ void ClientManageNetworkSystem::startGame(Entity entity) {
     menuManager.closeCurrentPage();
 }
 
+void ClientManageNetworkSystem::pauseGame() {
+    std::cout << "Game paused remotly!" << std::endl;
+    auto &menuManager = MenuManager::getInstance();
+    menuManager.setActivePage("PauseMenu", GetScreenWidth(), GetScreenHeight());
+}
+
+void ClientManageNetworkSystem::resumeGame() {
+    std::cout << "Game resumed remotly!" << std::endl;
+    auto &menuManager = MenuManager::getInstance();
+    menuManager.closeCurrentPage();
+}
+
+void ClientManageNetworkSystem::setPos(Entity entity) {
+    if (gCoordinator.hasComponent<NetworkPositionComponent>(entity)) {
+        auto &networkPos = gCoordinator.getComponent<NetworkPositionComponent>(entity);
+        auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+        if (gCoordinator.hasComponent<InputComponent>(entity)) {
+            networkPos.lastPosition = transform.position;
+        } else {
+            networkPos.lastPosition = networkPos.targetPosition;
+        }
+        networkPos.targetPosition = {_x, _y};
+        networkPos.lerpFactor = 0.0f;
+    }
+}
+
 void ClientManageNetworkSystem::update() {
     std::vector<std::string> messages = getLastMessages();
     for (const auto &msg : messages) {
+        std::cout << "Received: " << msg << std::endl;
         std::string command = getCommand(msg);
-        if (command == "POS") {
-            Entity entity = getEntityById(_id);
-            if (entity != 0 && gCoordinator.hasComponent<NetworkPositionComponent>(entity)) {
-                auto &networkPos = gCoordinator.getComponent<NetworkPositionComponent>(entity);
-                networkPos.lastPosition = networkPos.targetPosition;
-                networkPos.targetPosition = {_x, _y};
-                networkPos.lerpFactor = 0.0f;
-            }
-        } else if (_protocolMap.find(command) != _protocolMap.end()) {
+        if (_protocolMap.find(command) != _protocolMap.end()) {
             _protocolMap[command](getEntityById(_id));
         }
     }
@@ -96,11 +113,12 @@ Entity ClientManageNetworkSystem::getEntityById(int id) {
         if (player.id == id)
             return entity;
     }
+    std::cerr << "Entity not found" << std::endl;
     return 0;
 }
 
 std::string ClientManageNetworkSystem::getCommand(std::string command) {
-    std::cout << command << std::endl;
+    // std::cout << command << std::endl;
     if (command.size() < 3)
         return "";
     if (command.size() == 3)
@@ -111,7 +129,10 @@ std::string ClientManageNetworkSystem::getCommand(std::string command) {
     int pos = getPos(command.substr(4));
     if (command.size() == pos + 5)
         return command.substr(0, 3);
-    _options = command.substr(pos + 4);
+    if (pos == 0)
+        _options = command.substr(pos + 4);
+    else
+        _options = command.substr(pos + 5);
     return command.substr(0, 3);
 }
 
@@ -128,5 +149,33 @@ int ClientManageNetworkSystem::getPos(std::string text) {
         _x = 0;
         _y = 0;
         return 0;
+    }
+}
+
+void ClientManageNetworkSystem::syncEnemy() {
+    try {
+        size_t semicolonPos = _options.find(';');
+        int id = 0;
+        float spawnTime = 0.0f;
+
+        if (semicolonPos != std::string::npos) {
+            id = std::stoi(_options.substr(0, semicolonPos));
+            spawnTime = std::stof(_options.substr(semicolonPos + 1));
+        } else {
+            id = std::stoi(_options);
+        }
+        auto &entitiesManager = EntitiesManager::getInstance();
+        Entity entity = gCoordinator.getSystem<EnemiesSystem>()->getEnemyByUniqueId(id);
+
+        auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+        // std::cout << "EnemyID: " << id << " Syncing at " << _x << ", " << _y << " FROM: " << transform.position.x << ", " << transform.position.y << " <> DIST: " << Vector2Distance(transform.position, {_x, _y}) << " <> SPAWN TIME: " << spawnTime << std::endl;
+        transform.position = {_x, _y};
+
+        if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
+            auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
+            spawn.time_left = spawnTime;
+        }
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
     }
 }
