@@ -68,9 +68,14 @@ int main() {
         float viewportX = (screenWidth - viewportWidth) * 0.5f;
         float viewportY = (screenHeight - viewportHeight) * 0.5f;
 
-        if (IsKeyPressed(KEY_ESCAPE) && !menuManager.isPageActive()) {
-            menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
-            // gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("PAU");
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            if (!menuManager.isPageActive()) {
+                menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
+                gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("PAU");
+            } else if (menuManager.getActivePageName() == "PauseMenu") {
+                menuManager.closeCurrentPage();
+                gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("RES");
+            }
         }
 
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
@@ -112,12 +117,34 @@ int main() {
         gCoordinator.getSystem<SpriteFrameSystem>()->update();
         gCoordinator.getSystem<TimerSystem>()->update();
         gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
-            // if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
-            //     std::cout << "Ship collided with enemy\n";
-            // }
+            auto &entitiesManager = EntitiesManager::getInstance();
+
+            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
+                auto &transformA = gCoordinator.getComponent<TransformComponent>(entityA);
+                auto &transformB = gCoordinator.getComponent<TransformComponent>(entityB);
+                Vector2 spot = Vector2Lerp(transformA.position, transformB.position, 0.5f);
+                entitiesManager.createExplosion(spot);
+
+                gCoordinator.destroyEntity(entityB);
+            }
+
+            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyBulletComponent>(entityB)) {
+                auto &transformA = gCoordinator.getComponent<TransformComponent>(entityA);
+                auto &transformB = gCoordinator.getComponent<TransformComponent>(entityB);
+                Vector2 spot = Vector2Lerp(transformA.position, transformB.position, 0.5f);
+                entitiesManager.createExplosion(spot);
+
+                gCoordinator.destroyEntity(entityB);
+            }
 
             if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
+                auto &transformA = gCoordinator.getComponent<TransformComponent>(entityA);
+                auto &transformB = gCoordinator.getComponent<TransformComponent>(entityB);
+                Vector2 spot = Vector2Lerp(transformA.position, transformB.position, 0.5f);
+                entitiesManager.createExplosion(spot);
+
                 gCoordinator.destroyEntity(entityA);
+                gCoordinator.destroyEntity(entityB);
             }
         });
 

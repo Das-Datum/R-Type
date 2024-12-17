@@ -265,6 +265,8 @@ void initMenus(int windowWidth, int windowHeight) {
         5, 2,
         [windowWidth, windowHeight]() {
             MenuManager::getInstance().closeCurrentPage();
+
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("RES");
         },
         style));
 

@@ -78,7 +78,9 @@ int main() {
                 tickCount++;
                 if (tickCount >= static_cast<int>(TPS))
                     tickCount -= static_cast<int>(TPS);
-                game_tick(elapsed_time.count(), tickCount);
+                if (gCoordinator.getSystem<ServerManageNetworkSystem>()->isGameStarted() &&
+                    !gCoordinator.getSystem<ServerManageNetworkSystem>()->isGamePaused())
+                    game_tick(elapsed_time.count(), tickCount);
             } catch(std::exception& e) {
                 std::cerr << "Error while executing tick: " << e.what() << std::endl;
             }

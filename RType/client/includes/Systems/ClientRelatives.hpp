@@ -95,8 +95,18 @@ class RenderSystem : public System {
                         auto &animation = gCoordinator.getComponent<SpriteAnimationComponent>(entity);
                         animation.elapsedTime += GetFrameTime();
                         if (animation.elapsedTime >= animation.frameDuration) {
-                            animation.currentFrame = (animation.currentFrame + 1) % animation.frameCount;
                             animation.elapsedTime = 0.0f;
+                            animation.currentFrame++;
+
+                            if (animation.currentFrame >= animation.frameCount) {
+                                if (animation.loop) {
+                                    animation.currentFrame = 0;
+                                } else {
+                                    gCoordinator.destroyEntity(entity);
+                                    continue;
+                                }
+                            }
+
                             sprite.sourceRect.x = animation.currentFrame * sprite.sourceRect.width;
                         }
                     }

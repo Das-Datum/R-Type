@@ -199,6 +199,36 @@ public:
         return entity;
     }
 
+    Entity createExplosion(Vector2 position) {
+        Vector2 normalizedPos = position;
+
+        Entity bullet = gCoordinator.createEntity();
+
+        auto &texturesManager = TexturesManager::getInstance();
+        std::string bulletTexturePath = "./assets/textures/explosions/explosion.png";
+        Texture2D bulletTexture = texturesManager.loadTexture(bulletTexturePath);
+        Rectangle initialFrame = texturesManager.getFrame(bulletTexturePath, 0, 7);
+
+        float normalizedHeight = 0.05f;
+        float frameAspectRatio = (float)initialFrame.width / initialFrame.height;
+        float normalizedWidth = normalizedHeight * frameAspectRatio;
+
+        Rectangle collider = {
+            -normalizedWidth * 0.5f,
+            -normalizedHeight * 0.5f,
+            normalizedWidth,
+            normalizedHeight};
+
+        gCoordinator.addComponent(bullet, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
+
+        gCoordinator.addComponent(bullet, SpriteComponent(bulletTexture, initialFrame, 3));
+        gCoordinator.addComponent(bullet, DestroyOutOfBoundsComponent());
+        gCoordinator.addComponent(bullet, CollisionComponent(collider, 0.0f));
+        gCoordinator.addComponent(bullet, SpriteAnimationComponent(7, 0.1f, false));
+
+        return bullet;
+    }
+
   private:
     EntitiesManager() = default;
     ~EntitiesManager() = default;

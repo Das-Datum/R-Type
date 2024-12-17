@@ -110,6 +110,9 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
         void pauseGame();
         void resumeGame();
 
+        bool isGameStarted() const { return _gameStarted; }
+        bool isGamePaused() const { return _gamePaused; }
+
     private:
         std::map<std::string, std::function<void(Entity)>> _protocolMap = {
             {"SHT", [this](Entity entity) { shoot(entity); }},

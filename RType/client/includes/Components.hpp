@@ -25,9 +25,10 @@ struct SpriteAnimationComponent {
     int currentFrame;
     float frameDuration;
     float elapsedTime;
+    bool loop = true;
 
-    SpriteAnimationComponent(int frames = 1, float duration = 0.1f)
-        : frameCount(frames), currentFrame(0), frameDuration(duration), elapsedTime(0.0f) {}
+    SpriteAnimationComponent(int frames = 1, float duration = 0.1f, bool loop = true)
+        : frameCount(frames), currentFrame(0), frameDuration(duration), elapsedTime(0.0f), loop(loop) {}
 };
 
 struct SpriteFrameComponent {
