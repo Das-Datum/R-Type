@@ -14,8 +14,6 @@ public:
             if (!gCoordinator.hasComponent<EnemyComponent>(entity) ||
                 !gCoordinator.hasComponent<TransformComponent>(entity))
                 continue;
-            if (gCoordinator.hasComponent<SpawnComponent>(entity))
-                continue;
 
             if (callback) {
                 callback(entity);

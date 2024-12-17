@@ -176,6 +176,32 @@ class RenderSystem : public System {
                     DrawLineEx(corners[2], corners[3], 2.0f, RED);
                     DrawLineEx(corners[3], corners[0], 2.0f, RED);
                 }
+
+                if (gCoordinator.hasComponent<EnemyComponent>(entity)) {
+                    auto &enemy = gCoordinator.getComponent<EnemyComponent>(entity);
+                    auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+                    auto &collider = gCoordinator.getComponent<CollisionComponent>(entity);
+                    auto &sprite = gCoordinator.getComponent<SpriteComponent>(entity);
+
+                    float desiredHeight = transform.size.y * viewportHeight;
+                    float spriteAspectRatio = (float)sprite.sourceRect.width / sprite.sourceRect.height;
+                    float scaledWidth = desiredHeight * spriteAspectRatio;
+                    float scaledHeight = desiredHeight;
+                    float scaledX = viewportX + (transform.position.x * viewportWidth);
+                    float scaledY = viewportY + (transform.position.y * viewportHeight);
+
+                    Vector2 origin = {scaledWidth * 0.5f, scaledHeight * 0.5f};
+
+                    Rectangle destRect = {
+                        scaledX,
+                        scaledY,
+                        scaledWidth,
+                        scaledHeight};
+
+                    int textSize = 20;
+                    Vector2 textSizeMeasure = MeasureTextEx(GetFontDefault(), std::to_string(enemy.uniqueId).c_str(), textSize, 1);
+                    DrawText(std::to_string(enemy.uniqueId).c_str(), scaledX - textSizeMeasure.x / 2, scaledY - textSizeMeasure.y / 2, textSize, GREEN);
+                }
             }
         }
     }

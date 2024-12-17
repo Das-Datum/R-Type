@@ -51,6 +51,8 @@ class SpawnSystem : public System {
                 auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
                 if (spawn.time_left <= 0.0f) {
                     // std::cout << "Removing SpawnComponent for entity " << entity << std::endl;
+                    if (gCoordinator.hasComponent<EnemyComponent>(entity))
+                        std::cout << "Enemy UniqueID: " << gCoordinator.getComponent<EnemyComponent>(entity).uniqueId << " spawned!" << std::endl;
                     gCoordinator.removeComponent<SpawnComponent>(entity);
                     break;
                 } else {

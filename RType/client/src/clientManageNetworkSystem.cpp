@@ -151,13 +151,27 @@ int ClientManageNetworkSystem::getPos(std::string text) {
 
 void ClientManageNetworkSystem::syncEnemy() {
     try {
-        int id = std::stoi(_options);
+        size_t semicolonPos = _options.find(';');
+        int id = 0;
+        float spawnTime = 0.0f;
+
+        if (semicolonPos != std::string::npos) {
+            id = std::stoi(_options.substr(0, semicolonPos));
+            spawnTime = std::stof(_options.substr(semicolonPos + 1));
+        } else {
+            id = std::stoi(_options);
+        }
         auto &entitiesManager = EntitiesManager::getInstance();
         Entity entity = gCoordinator.getSystem<EnemiesSystem>()->getEnemyByUniqueId(id);
 
         auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+        // std::cout << "EnemyID: " << id << " Syncing at " << _x << ", " << _y << " FROM: " << transform.position.x << ", " << transform.position.y << " <> DIST: " << Vector2Distance(transform.position, {_x, _y}) << " <> SPAWN TIME: " << spawnTime << std::endl;
         transform.position = {_x, _y};
-        std::cout << "EnemyID: " << id << " Syncing at " << _x << ", " << _y << std::endl;
+
+        if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
+            auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
+            spawn.time_left = spawnTime;
+        }
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }

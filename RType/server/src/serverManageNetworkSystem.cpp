@@ -53,10 +53,6 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     std::string nowTimestamp = std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count());
 
     info("Game started by the player " + playerNetwork.id);
-    //! TODO: call singleton stage loader -> load stage1.json
-
-    sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
-    sendAllPlayer(0, "LOD0stages/stage1.json");
 
     auto &stageLoader = StageLoader::getInstance();
     try {
@@ -66,6 +62,9 @@ void ServerManageNetworkSystem::startGame(Entity player) {
     } catch (const std::exception &e) {
         error(e.what());
     }
+
+    sendAllPlayer(0, "STA" + std::to_string(playerNetwork.id) + nowTimestamp);
+    sendAllPlayer(0, "LOD0stages/stage1.json");
 
     _gameStarted = true;
     info("Game started");

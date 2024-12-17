@@ -6,6 +6,7 @@ void initCoordinator() {
     gCoordinator.registerComponent<NetworkComponent>();
     gCoordinator.registerComponent<ShipComponent>();
     gCoordinator.registerComponent<BulletComponent>();
+    gCoordinator.registerComponent<EnemyBulletComponent>();
     gCoordinator.registerComponent<TransformComponent>();
     gCoordinator.registerComponent<SpawnComponent>();
     gCoordinator.registerComponent<DestroyOutOfBoundsComponent>();

@@ -97,7 +97,7 @@ public:
 
         gCoordinator.addComponent(bullet, TransformComponent(normalizedPos, 0.0f, Vector2{1.0f, 1.0f}, Vector2{normalizedWidth, normalizedHeight}));
 
-        gCoordinator.addComponent(bullet, BulletComponent());
+        gCoordinator.addComponent(bullet, EnemyBulletComponent());
         gCoordinator.addComponent(bullet, FixedVelocityComponent{normalizedVelocity});
         gCoordinator.addComponent(bullet, DestroyOutOfBoundsComponent());
         gCoordinator.addComponent(bullet, CollisionComponent(collider, 0.0f));
