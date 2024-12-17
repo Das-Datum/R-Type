@@ -1,5 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classAEntitiesManager.html" title="Abstract base class for EntitiesManager for server and client." alt="" coords="5,31,143,57"/>
-<area shape="rect" id="node2" href="$classEntitiesManager.html" title=" " alt="" coords="212,5,340,32"/>
-<area shape="rect" id="node3" href="$classServerEntitiesManager.html" title=" " alt="" coords="191,56,361,83"/>
+<area shape="rect" id="node1" href="$classAComponentStorage.html" title="Abstract base class for component arrays." alt="" coords="5,5,161,32"/>
+<area shape="rect" id="node2" href="$classComponentStorage.html" title="Stores component data for entities using an unordered map." alt="" coords="209,5,395,32"/>
 </map>

@@ -105,7 +105,7 @@ $(document).ready(function(){initNavTree('NetworkSystems_8hpp_source.html',''); 
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">extern</span> <a class="code" href="classCoordinator.html">Coordinator</a> gCoordinator;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classNetworkSystem.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="classNetworkSystem.html">NetworkSystem</a> : <span class="keyword">public</span> System {</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classNetworkSystem.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="classNetworkSystem.html">NetworkSystem</a> : <span class="keyword">public</span> <a class="code" href="classSystem.html">System</a> {</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        <span class="keywordtype">int</span> sendTo(<span class="keywordtype">int</span> socket, <span class="keyword">const</span> std::string&amp; message, std::string ip, <span class="keywordtype">int</span> port);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;};</div>
@@ -186,8 +186,8 @@ $(document).ready(function(){initNavTree('NetworkSystems_8hpp_source.html',''); 
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    std::thread _receivedMsgThread;</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    std::map&lt;std::string, std::function&lt;void()&gt;&gt; _commandMap = {</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;        {<span class="stringliteral">&quot;stop&quot;</span>, [<span class="keyword">this</span>]() { <a class="code" href="classServerNetworkSystem.html#abf96ea2db1114beb439fe18fc12886d7">stop</a>(); }},</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        {<span class="stringliteral">&quot;restart&quot;</span>, [<span class="keyword">this</span>]() { <a class="code" href="classServerNetworkSystem.html#ac3a07155c7e8299b3b38db738c426a67">restart</a>(); }},</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        {<span class="stringliteral">&quot;send&quot;</span>, [<span class="keyword">this</span>]() { <a class="code" href="classServerNetworkSystem.html#a685f8aeeb07e2969c103c9ca77915d4a">sendDataAllPlayer</a>(); }},</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        <span class="comment">// {&quot;restart&quot;, [this]() { restart(); }},</span></div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        <span class="comment">// {&quot;send&quot;, [this]() { sendDataAllPlayer(); }},</span></div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;        {<span class="stringliteral">&quot;help&quot;</span>, [<span class="keyword">this</span>]() { <a class="code" href="classServerNetworkSystem.html#a290317296fe34493b2b5b3b9cc2d27e1">help</a>(); }},</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    };</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;};</div>
@@ -261,6 +261,7 @@ $(document).ready(function(){initNavTree('NetworkSystems_8hpp_source.html',''); 
 <div class="ttc" id="aclassServerNetworkSystem_html_afaa60388c011d5b160ed5130e309f82a"><div class="ttname"><a href="classServerNetworkSystem.html#afaa60388c011d5b160ed5130e309f82a">ServerNetworkSystem::sendDataToPlayer</a></div><div class="ttdeci">void sendDataToPlayer(const std::string &amp;message, std::string ip, int port)</div><div class="ttdoc">Send data to a player.</div></div>
 <div class="ttc" id="aclassServerNetworkSystem_html_afe469dd40a9a63b1be1c8c7ad47cb7c6"><div class="ttname"><a href="classServerNetworkSystem.html#afe469dd40a9a63b1be1c8c7ad47cb7c6">ServerNetworkSystem::readClients</a></div><div class="ttdeci">void readClients()</div><div class="ttdoc">Read file descriptors.</div></div>
 <div class="ttc" id="aclassServerNetworkSystem_html_afec4c15fe45c07a9fd3d96da57cb1458"><div class="ttname"><a href="classServerNetworkSystem.html#afec4c15fe45c07a9fd3d96da57cb1458">ServerNetworkSystem::init</a></div><div class="ttdeci">void init(const std::string &amp;ip, int port)</div><div class="ttdoc">Initialize the server system.</div></div>
+<div class="ttc" id="aclassSystem_html"><div class="ttname"><a href="classSystem.html">System</a></div><div class="ttdoc">Base class for all systems.</div><div class="ttdef"><b>Definition:</b> System.hpp:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

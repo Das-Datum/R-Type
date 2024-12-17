@@ -23,16 +23,14 @@ Collaboration diagram for Entities\+Manager\+:
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classEntitiesManager_a2523ba6965bd8c2135fff4bc395bb1f8}\label{classEntitiesManager_a2523ba6965bd8c2135fff4bc395bb1f8}} 
-Entity {\bfseries create\+Ship} (Vector2 position, int id, const std\+::string \&name, bool playable\+Entity=true)
-\item 
-\mbox{\Hypertarget{classEntitiesManager_a176f1a86a8a9d933ecf25ec6188b15d0}\label{classEntitiesManager_a176f1a86a8a9d933ecf25ec6188b15d0}} 
-Entity {\bfseries create\+Bullet} (Vector2 position, Vector2 velocity)
-\item 
+Entity \mbox{\hyperlink{classEntitiesManager_af0d5e00e341df33fa03e343667401157}{create\+Bullet}} (Vector2 position, Vector2 velocity) override
+\begin{DoxyCompactList}\small\item\em Create a bullet object. \end{DoxyCompactList}\item 
 Entity \mbox{\hyperlink{classEntitiesManager_a8aa9bb58b7bfc9b0ef1b82ae054bb75d}{create\+Enemy}} (\mbox{\hyperlink{structEnemy}{Enemy}} enemy\+Infos) override
 \begin{DoxyCompactList}\small\item\em Create a \mbox{\hyperlink{structEnemy}{Enemy}} object. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classEntitiesManager_ac3fcccc33d5dc59341b0a2764ed2592f}\label{classEntitiesManager_ac3fcccc33d5dc59341b0a2764ed2592f}} 
-Entity {\bfseries create\+Enemy\+Bullet} (Vector2 position, Vector2 velocity)
+Entity \mbox{\hyperlink{classEntitiesManager_ae35953af983b2d49f1fb6889943c4715}{create\+Enemy\+Bullet}} (Vector2 position, Vector2 velocity) override
+\begin{DoxyCompactList}\small\item\em Create a enemy bullet object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classEntitiesManager_a2523ba6965bd8c2135fff4bc395bb1f8}\label{classEntitiesManager_a2523ba6965bd8c2135fff4bc395bb1f8}} 
+Entity {\bfseries create\+Ship} (Vector2 position, int id, const std\+::string \&name, bool playable\+Entity=true)
 \item 
 \mbox{\Hypertarget{classEntitiesManager_aacee5950bc2ebc39e912093e0237dbd8}\label{classEntitiesManager_aacee5950bc2ebc39e912093e0237dbd8}} 
 Entity {\bfseries create\+Static\+Entity} (const std\+::string \&texture\+Path, Vector2 position, float width, float height, int z\+Index=0)
@@ -40,8 +38,8 @@ Entity {\bfseries create\+Static\+Entity} (const std\+::string \&texture\+Path, 
 \mbox{\Hypertarget{classEntitiesManager_abc9e3455a50b83239036a33f6f21b513}\label{classEntitiesManager_abc9e3455a50b83239036a33f6f21b513}} 
 Entity {\bfseries create\+Scrolling\+Background} (const std\+::string \&texture\+Path, Vector2 position, float width, float height, float scroll\+Speed, int z\+Index=-\/1)
 \item 
-\mbox{\Hypertarget{classEntitiesManager_a8b99809ecdbc037d0b64b78029866eee}\label{classEntitiesManager_a8b99809ecdbc037d0b64b78029866eee}} 
-void {\bfseries remove\+Entity} (Entity entity)
+\mbox{\Hypertarget{classEntitiesManager_a38144211821f4ff36105bf01811a39f9}\label{classEntitiesManager_a38144211821f4ff36105bf01811a39f9}} 
+Entity {\bfseries create\+Explosion} (Vector2 position)
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
@@ -52,6 +50,30 @@ static \mbox{\hyperlink{classEntitiesManager}{Entities\+Manager}} \& {\bfseries 
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classEntitiesManager_af0d5e00e341df33fa03e343667401157}\label{classEntitiesManager_af0d5e00e341df33fa03e343667401157}} 
+\index{EntitiesManager@{EntitiesManager}!createBullet@{createBullet}}
+\index{createBullet@{createBullet}!EntitiesManager@{EntitiesManager}}
+\doxysubsubsection{\texorpdfstring{createBullet()}{createBullet()}}
+{\footnotesize\ttfamily Entity Entities\+Manager\+::create\+Bullet (\begin{DoxyParamCaption}\item[{Vector2}]{position,  }\item[{Vector2}]{velocity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Create a bullet object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & \\
+\hline
+{\em velocity} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Entity 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classAEntitiesManager_aa74cd6a4fe19bf4e51d82d6a4065fd56}{AEntities\+Manager}}.
+
 \mbox{\Hypertarget{classEntitiesManager_a8aa9bb58b7bfc9b0ef1b82ae054bb75d}\label{classEntitiesManager_a8aa9bb58b7bfc9b0ef1b82ae054bb75d}} 
 \index{EntitiesManager@{EntitiesManager}!createEnemy@{createEnemy}}
 \index{createEnemy@{createEnemy}!EntitiesManager@{EntitiesManager}}
@@ -68,6 +90,30 @@ Entity
 
 
 Implements \mbox{\hyperlink{classAEntitiesManager_a180c337300c4c368d6a425bc832dd69c}{AEntities\+Manager}}.
+
+\mbox{\Hypertarget{classEntitiesManager_ae35953af983b2d49f1fb6889943c4715}\label{classEntitiesManager_ae35953af983b2d49f1fb6889943c4715}} 
+\index{EntitiesManager@{EntitiesManager}!createEnemyBullet@{createEnemyBullet}}
+\index{createEnemyBullet@{createEnemyBullet}!EntitiesManager@{EntitiesManager}}
+\doxysubsubsection{\texorpdfstring{createEnemyBullet()}{createEnemyBullet()}}
+{\footnotesize\ttfamily Entity Entities\+Manager\+::create\+Enemy\+Bullet (\begin{DoxyParamCaption}\item[{Vector2}]{position,  }\item[{Vector2}]{velocity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Create a enemy bullet object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & \\
+\hline
+{\em velocity} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Entity 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classAEntitiesManager_a34710944357dcf165571529e1060c6bd}{AEntities\+Manager}}.
 
 
 

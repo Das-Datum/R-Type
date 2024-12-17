@@ -90,7 +90,8 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="classServerNetworkSystem.html#a68af67df84c2894f58f55923a45851a9">ServerNetworkSystem</a>
 </li>
 <li>addComponent()
-: <a class="el" href="classCoordinator.html#a38179502eab0f2dadcc6a9ba49ec149b">Coordinator</a>
+: <a class="el" href="classComponentManager.html#afde9df1aea1b03650c3b154e803be0f0">ComponentManager</a>
+, <a class="el" href="classCoordinator.html#a38179502eab0f2dadcc6a9ba49ec149b">Coordinator</a>
 </li>
 </ul>
 
@@ -99,13 +100,24 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>connectToServer()
 : <a class="el" href="classClientNetworkSystem.html#ad350aa0c081d78a7d4df06020002b637">ClientNetworkSystem</a>
 </li>
+<li>createBullet()
+: <a class="el" href="classAEntitiesManager.html#aa74cd6a4fe19bf4e51d82d6a4065fd56">AEntitiesManager</a>
+, <a class="el" href="classEntitiesManager.html#af0d5e00e341df33fa03e343667401157">EntitiesManager</a>
+, <a class="el" href="classServerEntitiesManager.html#a5e3039ae9a875cf61d942b33fb1df7ec">ServerEntitiesManager</a>
+</li>
 <li>createEnemy()
 : <a class="el" href="classAEntitiesManager.html#a180c337300c4c368d6a425bc832dd69c">AEntitiesManager</a>
 , <a class="el" href="classEntitiesManager.html#a8aa9bb58b7bfc9b0ef1b82ae054bb75d">EntitiesManager</a>
 , <a class="el" href="classServerEntitiesManager.html#a8f35dcfbcb11adb3543f4c0c7e676830">ServerEntitiesManager</a>
 </li>
+<li>createEnemyBullet()
+: <a class="el" href="classAEntitiesManager.html#a34710944357dcf165571529e1060c6bd">AEntitiesManager</a>
+, <a class="el" href="classEntitiesManager.html#ae35953af983b2d49f1fb6889943c4715">EntitiesManager</a>
+, <a class="el" href="classServerEntitiesManager.html#a9f779034df3be2392f9032298292875c">ServerEntitiesManager</a>
+</li>
 <li>createEntity()
 : <a class="el" href="classCoordinator.html#ada9b6182047cfc657aff195cdbb19270">Coordinator</a>
+, <a class="el" href="classEntityManager.html#ac7482168f0df8b2ff2570435f67b3fb0">EntityManager</a>
 </li>
 </ul>
 
@@ -113,6 +125,7 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <h3><a id="index_d"></a>- d -</h3><ul>
 <li>destroyEntity()
 : <a class="el" href="classCoordinator.html#aafd7f295bc0f5dcf54e060748f68ab53">Coordinator</a>
+, <a class="el" href="classEntityManager.html#aacc08e93994c20f37b1388ab81e62e19">EntityManager</a>
 </li>
 <li>disconnect()
 : <a class="el" href="classClientNetworkSystem.html#a761b296c09547cc5f6b1415717691331">ClientNetworkSystem</a>
@@ -122,7 +135,10 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 
 <h3><a id="index_e"></a>- e -</h3><ul>
 <li>entityDestroyed()
-: <a class="el" href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">SystemManager</a>
+: <a class="el" href="classAComponentStorage.html#a0dd13258e2e352694de127b6da4e44fd">AComponentStorage</a>
+, <a class="el" href="classComponentManager.html#ac9b631d1e3d30866cfcc76cbe3a7ca24">ComponentManager</a>
+, <a class="el" href="classComponentStorage.html#a6740dd4d8e46f595d4050eda654e4e77">ComponentStorage&lt; T &gt;</a>
+, <a class="el" href="classSystemManager.html#a8e4d8dfca2326b23e9d0d2567e10d79f">SystemManager</a>
 </li>
 <li>entitySignatureChanged()
 : <a class="el" href="classSystemManager.html#af59a78e7d984c50994aab6447883da96">SystemManager</a>
@@ -138,10 +154,15 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="classStageLoader.html#a7ae922b5a5e4171412a125415d599039">StageLoader</a>
 </li>
 <li>getComponent()
-: <a class="el" href="classCoordinator.html#a3b2fdeead936cdf3274408b618a3907c">Coordinator</a>
+: <a class="el" href="classComponentManager.html#ab1501a51eb54c4ed8fa32df5dc6902cc">ComponentManager</a>
+, <a class="el" href="classCoordinator.html#a3b2fdeead936cdf3274408b618a3907c">Coordinator</a>
 </li>
 <li>getComponentTypeID()
-: <a class="el" href="classCoordinator.html#a2ace979a7ab5abd778fdc0b52f823fa7">Coordinator</a>
+: <a class="el" href="classComponentManager.html#abed7136fdde946080c9a98988000a681">ComponentManager</a>
+, <a class="el" href="classCoordinator.html#a2ace979a7ab5abd778fdc0b52f823fa7">Coordinator</a>
+</li>
+<li>getData()
+: <a class="el" href="classComponentStorage.html#a9c56ecade0edc816c51a1b0f1e0e93a7">ComponentStorage&lt; T &gt;</a>
 </li>
 <li>getEntitySignature()
 : <a class="el" href="classCoordinator.html#ab199b65713c1abc5a8409e49da539131">Coordinator</a>
@@ -157,6 +178,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 </li>
 <li>getOption()
 : <a class="el" href="classServerNetworkSystem.html#a5e3afe17a4ab8220c2f4c16f3025eab3">ServerNetworkSystem</a>
+</li>
+<li>getSignature()
+: <a class="el" href="classEntityManager.html#ad60fd822c39bbe8b0d0cc366a7de965d">EntityManager</a>
 </li>
 <li>getSystem()
 : <a class="el" href="classCoordinator.html#af58dd71d990befd5f5929b55c1835d03">Coordinator</a>
@@ -175,6 +199,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>hasComponent()
 : <a class="el" href="classCoordinator.html#a95479f4dca8ae1a8a7ecb64b32d05b52">Coordinator</a>
 </li>
+<li>hasData()
+: <a class="el" href="classComponentStorage.html#a565c060ec97d59f89f13fdab24524ed2">ComponentStorage&lt; T &gt;</a>
+</li>
 <li>help()
 : <a class="el" href="classServerNetworkSystem.html#a290317296fe34493b2b5b3b9cc2d27e1">ServerNetworkSystem</a>
 </li>
@@ -185,6 +212,9 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>init()
 : <a class="el" href="classClientNetworkSystem.html#ad138f15dd8fe58b0b637c25a2cf8b106">ClientNetworkSystem</a>
 , <a class="el" href="classServerNetworkSystem.html#afec4c15fe45c07a9fd3d96da57cb1458">ServerNetworkSystem</a>
+</li>
+<li>insertData()
+: <a class="el" href="classComponentStorage.html#a1a9618d0870b2e39b263004c20be2af9">ComponentStorage&lt; T &gt;</a>
 </li>
 <li>isConnected()
 : <a class="el" href="classClientNetworkSystem.html#a9433fdc7d0a24ea4706df9fecbb7789e">ClientNetworkSystem</a>
@@ -220,14 +250,19 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="classClientNetworkSystem.html#a865b15f502265b74789031961aab0afc">ClientNetworkSystem</a>
 </li>
 <li>registerComponent()
-: <a class="el" href="classCoordinator.html#add9d0a2a3c650d779c4e9175b183415a">Coordinator</a>
+: <a class="el" href="classComponentManager.html#a1ad7d043cc6ad4b1dcb2a442d5c5b822">ComponentManager</a>
+, <a class="el" href="classCoordinator.html#add9d0a2a3c650d779c4e9175b183415a">Coordinator</a>
 </li>
 <li>registerSystem()
 : <a class="el" href="classCoordinator.html#a3f1bcd1e870e5eb78a5d3ecb007453d1">Coordinator</a>
 , <a class="el" href="classSystemManager.html#aa3f49b9bb45d8af754fc725934cc3602">SystemManager</a>
 </li>
 <li>removeComponent()
-: <a class="el" href="classCoordinator.html#aadc8b78646ba7ed2894274abbd954892">Coordinator</a>
+: <a class="el" href="classComponentManager.html#a34bc2408c0ec2610e3368bff45d08228">ComponentManager</a>
+, <a class="el" href="classCoordinator.html#aadc8b78646ba7ed2894274abbd954892">Coordinator</a>
+</li>
+<li>removeData()
+: <a class="el" href="classComponentStorage.html#a5e6ce185c54533fd56e38d5ab79dc332">ComponentStorage&lt; T &gt;</a>
 </li>
 <li>removeEntity()
 : <a class="el" href="classAEntitiesManager.html#a3f461125619b5a5e74df7438e1d794bc">AEntitiesManager</a>
@@ -255,7 +290,8 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 : <a class="el" href="classServerNetworkSystem.html#afaa60388c011d5b160ed5130e309f82a">ServerNetworkSystem</a>
 </li>
 <li>setSignature()
-: <a class="el" href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">SystemManager</a>
+: <a class="el" href="classEntityManager.html#a2c6e0507876c18d2ee1ed03b65d60c78">EntityManager</a>
+, <a class="el" href="classSystemManager.html#a2064240b2e13242fc7dab16c19dffdae">SystemManager</a>
 </li>
 <li>setSystemSignature()
 : <a class="el" href="classCoordinator.html#a6e52a97668cd56e3522e5303cca66c49">Coordinator</a>

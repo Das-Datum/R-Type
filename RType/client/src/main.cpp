@@ -53,6 +53,8 @@ int main() {
         -1);
     //! END OF TEMPORARY CODE
 
+    int currentScore = 0;
+
     //! MAIN LOOP
     while (!(WindowShouldClose() && !IsKeyPressed(KEY_ESCAPE))) {
         float deltaTime = GetFrameTime();
@@ -68,8 +70,14 @@ int main() {
         float viewportX = (screenWidth - viewportWidth) * 0.5f;
         float viewportY = (screenHeight - viewportHeight) * 0.5f;
 
-        if (IsKeyPressed(KEY_ESCAPE) && !menuManager.isPageActive()) {
-            menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            if (!menuManager.isPageActive()) {
+                menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
+                gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("PAU");
+            } else if (menuManager.getActivePageName() == "PauseMenu") {
+                menuManager.closeCurrentPage();
+                gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("RES");
+            }
         }
 
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
@@ -88,41 +96,65 @@ int main() {
 
             Shader shader = shadersManager.getShaderForMode(settings.getColorBlindMode());
 
-            if (settings.getColorBlindMode() != NORMAL) {
+            if (settings.getColorBlindMode() != NORMAL)
                 BeginShaderMode(shader);
-            }
 
             gCoordinator.getSystem<RenderSystem>()->update();
             menuManager.draw();
 
-            if (settings.getColorBlindMode() != NORMAL) {
+            if (settings.getColorBlindMode() != NORMAL)
                 EndShaderMode();
-            }
 
             EndDrawing();
             continue;
         }
 
-        //? VelocitySystem
-        gCoordinator.getSystem<VelocitySystem>()->update(deltaTime);
 
         //? LOGIC
         gCoordinator.getSystem<InputSystem>()->update();
+
+        //? VelocitySystem
+        gCoordinator.getSystem<VelocitySystem>()->update(deltaTime);
+
         gCoordinator.getSystem<SpriteFrameSystem>()->update();
         gCoordinator.getSystem<TimerSystem>()->update();
         gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
-            // if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
-            //     std::cout << "Ship collided with enemy\n";
-            // }
+            auto &entitiesManager = EntitiesManager::getInstance();
+
+            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
+                auto &transformA = gCoordinator.getComponent<TransformComponent>(entityA);
+                auto &transformB = gCoordinator.getComponent<TransformComponent>(entityB);
+                Vector2 spot = Vector2Lerp(transformA.position, transformB.position, 0.5f);
+                entitiesManager.createExplosion(spot);
+
+                gCoordinator.destroyEntity(entityB);
+            }
+
+            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyBulletComponent>(entityB)) {
+                auto &transformA = gCoordinator.getComponent<TransformComponent>(entityA);
+                auto &transformB = gCoordinator.getComponent<TransformComponent>(entityB);
+                Vector2 spot = Vector2Lerp(transformA.position, transformB.position, 0.5f);
+                entitiesManager.createExplosion(spot);
+
+                gCoordinator.destroyEntity(entityB);
+            }
 
             if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
+                auto &transformA = gCoordinator.getComponent<TransformComponent>(entityA);
+                auto &transformB = gCoordinator.getComponent<TransformComponent>(entityB);
+                Vector2 spot = Vector2Lerp(transformA.position, transformB.position, 0.5f);
+                entitiesManager.createExplosion(spot);
+
                 gCoordinator.destroyEntity(entityA);
+                gCoordinator.destroyEntity(entityB);
+
+                entitiesManager.addScore(1);
             }
         });
 
         gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
         gCoordinator.getSystem<PhysicsSystem>()->update(deltaTime);
-        gCoordinator.getSystem<EnemiesSystem>()->update(deltaTime);
+        gCoordinator.getSystem<EnemiesSystem>()->update(entitiesManager, deltaTime);
         gCoordinator.getSystem<InterpolationSystem>()->update(deltaTime);
 
         //! DESTROY
@@ -137,6 +169,7 @@ int main() {
         }
 
         gCoordinator.getSystem<RenderSystem>()->update();
+        gCoordinator.getSystem<RenderSystem>()->renderScore(entitiesManager.getTotalScore());
 
         if (IsKeyDown(KEY_G))
             gCoordinator.getSystem<CollisionSystem>()->drawGrid(viewportX, viewportY, viewportWidth, viewportHeight);

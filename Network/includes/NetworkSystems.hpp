@@ -173,8 +173,8 @@ private:
     std::thread _receivedMsgThread;
     std::map<std::string, std::function<void()>> _commandMap = {
         {"stop", [this]() { stop(); }},
-        {"restart", [this]() { restart(); }},
-        {"send", [this]() { sendDataAllPlayer(); }},
+        // {"restart", [this]() { restart(); }},
+        // {"send", [this]() { sendDataAllPlayer(); }},
         {"help", [this]() { help(); }},
     };
 };

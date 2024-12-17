@@ -5,4 +5,54 @@ To better understand the system\textquotesingle{}s architecture, you can view th
 \href{./docs/public/R_type_architecture.pdf}{\texttt{ here}} ~\newline
 
 
-The diagram outlines the key components and interactions within the project, showing how different modules and services communicate with each other. 
+The diagram outlines the key components and interactions within the project, showing how different modules and services communicate with each other.\hypertarget{md_docs_dev_docs_autotoc_md33}{}\doxysection{ECS}\label{md_docs_dev_docs_autotoc_md33}
+\hypertarget{md_docs_dev_docs_autotoc_md34}{}\doxysection{Binary Protocol}\label{md_docs_dev_docs_autotoc_md34}
+Regarding communication between client and server, we use a binary protocol. To achieve this, we defined a few basic commands so both client and server can communicate. You can find all of them here\+:
+
+\mbox{\hyperlink{md_docs_protocol_client_server}{here}}\hypertarget{md_docs_dev_docs_autotoc_md35}{}\doxysection{Stage Loader}\label{md_docs_dev_docs_autotoc_md35}
+The {\bfseries{stage loader}} is a module that loads the stages from a config file in JSON format and creates the required entities.
+
+Here how it works\+:\hypertarget{md_docs_dev_docs_autotoc_md36}{}\doxysubsubsection{The config file}\label{md_docs_dev_docs_autotoc_md36}
+The config file is a JSON file that contains the information about the stages.
+
+Here an example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    "{}numero"{}: 1,}
+\DoxyCodeLine{    "{}background\_path"{}: "{}backgrounds/stage1.png"{},}
+\DoxyCodeLine{    "{}music\_path"{}: "{}sounds/stage1.mp3"{},}
+\DoxyCodeLine{    "{}time"{}: 120,}
+\DoxyCodeLine{    "{}seed"{}: 42,}
+\DoxyCodeLine{    "{}mobs\_types"{}: [}
+\DoxyCodeLine{        "{}asteroid"{},}
+\DoxyCodeLine{        "{}classic"{},}
+\DoxyCodeLine{        "{}ship"{}}
+\DoxyCodeLine{    ]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ {\ttfamily numero}\+: design the stage number. ~\newline
+ {\ttfamily background\+\_\+path}\+: the path to the background image. ~\newline
+ {\ttfamily music\+\_\+path}\+: the path to the music file. ~\newline
+ {\ttfamily time}\+: the time in seconds that the stage will last. ~\newline
+ {\ttfamily seed}\+: the seed for the random informations generator. ~\newline
+ {\ttfamily mobs\+\_\+types}\+: the types of mobs that will be spawned in the stage. Chosen between\+: {\itshape asteroid}, {\itshape classic}, {\itshape ship}.\hypertarget{md_docs_dev_docs_autotoc_md37}{}\doxysubsubsection{The Loader}\label{md_docs_dev_docs_autotoc_md37}
+The logic of the loader is defined in the {\ttfamily \mbox{\hyperlink{classStageLoader}{Stage\+Loader}}} class. This class uses the {\itshape Singleton} pattern to ensure that only one instance of the loader is created. The method {\ttfamily get\+Instance()} is used to get the instance of the loader.
+
+The loader contains the following methods, each with a specific purpose\+:
+\begin{DoxyItemize}
+\item {\ttfamily load\+Config}\+: loads the config file and stores the information in a {\ttfamily \mbox{\hyperlink{structStageConfig}{Stage\+Config}}} object.
+\item {\ttfamily gen\+Waves}\+: generates the waves configuration (duration, mobs count, mobs type) for the stage.
+\item {\ttfamily gen\+Mobs\+Entities}\+: add the mobs entities in the ECS\textquotesingle{}s entities manager, based on the waves configuration. These three methods are called successively to load the stage.
+\end{DoxyItemize}
+
+The method {\ttfamily reset\+Config} is used to reset the loader\textquotesingle{}s configuration to load a new stage.\hypertarget{md_docs_dev_docs_autotoc_md38}{}\doxysubsubsection{The Loader System}\label{md_docs_dev_docs_autotoc_md38}
+The loader system is used to load the system successivelly during the game. It is defined in the {\ttfamily Stage\+Loader\+System} class.
+
+The system contains two methods\+:
+\begin{DoxyItemize}
+\item {\ttfamily update}\+: check if the current stage is finished and load the next stage if neccessary.
+\item {\ttfamily load\+Config}\+: call the Stage Loader\textquotesingle{}s {\ttfamily load\+Config} method, passing the filepath.
+\end{DoxyItemize}
+
+Stages\textquotesingle{}s filepath are stored in a list in the {\ttfamily Stage\+Loader\+System} class. 

@@ -41,7 +41,6 @@ void initCoordinator() {
     auto spriteFrameSystem = gCoordinator.registerSystem<SpriteFrameSystem>();
     auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
-    auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
     auto interpolationSystem = gCoordinator.registerSystem<InterpolationSystem>();
 
     auto clientManageNetworkSystem = gCoordinator.registerSystem<ClientManageNetworkSystem>();
@@ -49,6 +48,7 @@ void initCoordinator() {
 
     auto spawnSystem = gCoordinator.registerSystem<SpawnSystem>();
     auto velocitySystem = gCoordinator.registerSystem<VelocitySystem>();
+    auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
 
     Signature signature;
 
@@ -112,7 +112,6 @@ void initCoordinator() {
     //? EnemiesSystem
     signature.reset();
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
-    signature.set(gCoordinator.getComponentTypeID<EnemyComponent>(), true);
     gCoordinator.setSystemSignature<EnemiesSystem>(signature);
 
     //? InterpolationSystem
@@ -120,4 +119,5 @@ void initCoordinator() {
     signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
     signature.set(gCoordinator.getComponentTypeID<NetworkPositionComponent>(), true);
     gCoordinator.setSystemSignature<InterpolationSystem>(signature);
+
 }

@@ -110,10 +110,70 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3f461125619b5a5e74df7438e1d794bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAEntitiesManager.html#a3f461125619b5a5e74df7438e1d794bc">removeEntity</a> (Entity entity)</td></tr>
 <tr class="memdesc:a3f461125619b5a5e74df7438e1d794bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove an entity from the manager.  <a href="classAEntitiesManager.html#a3f461125619b5a5e74df7438e1d794bc">More...</a><br /></td></tr>
 <tr class="separator:a3f461125619b5a5e74df7438e1d794bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34710944357dcf165571529e1060c6bd"><td class="memItemLeft" align="right" valign="top">virtual Entity&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAEntitiesManager.html#a34710944357dcf165571529e1060c6bd">createEnemyBullet</a> (Vector2 position, Vector2 velocity)=0</td></tr>
+<tr class="memdesc:a34710944357dcf165571529e1060c6bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a enemy bullet object.  <a href="classAEntitiesManager.html#a34710944357dcf165571529e1060c6bd">More...</a><br /></td></tr>
+<tr class="separator:a34710944357dcf165571529e1060c6bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa74cd6a4fe19bf4e51d82d6a4065fd56"><td class="memItemLeft" align="right" valign="top">virtual Entity&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAEntitiesManager.html#aa74cd6a4fe19bf4e51d82d6a4065fd56">createBullet</a> (Vector2 position, Vector2 velocity)=0</td></tr>
+<tr class="memdesc:aa74cd6a4fe19bf4e51d82d6a4065fd56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a bullet object.  <a href="classAEntitiesManager.html#aa74cd6a4fe19bf4e51d82d6a4065fd56">More...</a><br /></td></tr>
+<tr class="separator:aa74cd6a4fe19bf4e51d82d6a4065fd56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70b54f6e21b3d14ba28bb577e3b9ad25"><td class="memItemLeft" align="right" valign="top"><a id="a70b54f6e21b3d14ba28bb577e3b9ad25"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getTotalScore</b> () const</td></tr>
+<tr class="separator:a70b54f6e21b3d14ba28bb577e3b9ad25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedcee7335803f0fd1aeba0b7d58db570"><td class="memItemLeft" align="right" valign="top"><a id="aedcee7335803f0fd1aeba0b7d58db570"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addScore</b> (int score)</td></tr>
+<tr class="separator:aedcee7335803f0fd1aeba0b7d58db570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract base class for <a class="el" href="classEntitiesManager.html">EntitiesManager</a> for server and client. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="aa74cd6a4fe19bf4e51d82d6a4065fd56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa74cd6a4fe19bf4e51d82d6a4065fd56">&#9670;&nbsp;</a></span>createBullet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Entity AEntitiesManager::createBullet </td>
+          <td>(</td>
+          <td class="paramtype">Vector2&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vector2&#160;</td>
+          <td class="paramname"><em>velocity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a bullet object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">position</td><td></td></tr>
+    <tr><td class="paramname">velocity</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Entity </dd></dl>
+
+<p>Implemented in <a class="el" href="classServerEntitiesManager.html#a5e3039ae9a875cf61d942b33fb1df7ec">ServerEntitiesManager</a>, and <a class="el" href="classEntitiesManager.html#af0d5e00e341df33fa03e343667401157">EntitiesManager</a>.</p>
+
+</div>
+</div>
 <a id="a180c337300c4c368d6a425bc832dd69c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a180c337300c4c368d6a425bc832dd69c">&#9670;&nbsp;</a></span>createEnemy()</h2>
 
@@ -142,6 +202,54 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Entity </dd></dl>
 
 <p>Implemented in <a class="el" href="classServerEntitiesManager.html#a8f35dcfbcb11adb3543f4c0c7e676830">ServerEntitiesManager</a>, and <a class="el" href="classEntitiesManager.html#a8aa9bb58b7bfc9b0ef1b82ae054bb75d">EntitiesManager</a>.</p>
+
+</div>
+</div>
+<a id="a34710944357dcf165571529e1060c6bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34710944357dcf165571529e1060c6bd">&#9670;&nbsp;</a></span>createEnemyBullet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual Entity AEntitiesManager::createEnemyBullet </td>
+          <td>(</td>
+          <td class="paramtype">Vector2&#160;</td>
+          <td class="paramname"><em>position</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Vector2&#160;</td>
+          <td class="paramname"><em>velocity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a enemy bullet object. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">position</td><td></td></tr>
+    <tr><td class="paramname">velocity</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Entity </dd></dl>
+
+<p>Implemented in <a class="el" href="classServerEntitiesManager.html#a9f779034df3be2392f9032298292875c">ServerEntitiesManager</a>, and <a class="el" href="classEntitiesManager.html#ae35953af983b2d49f1fb6889943c4715">EntitiesManager</a>.</p>
 
 </div>
 </div>

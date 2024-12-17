@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>R-Type: Documentation Dev</title>
+<title>R-Type: Developer Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -84,7 +84,7 @@ $(document).ready(function(){initNavTree('md_docs_dev_docs.html',''); initResiza
 
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">Documentation Dev </div>  </div>
+<div class="title">Developer Documentation </div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>This section provides an overview of the project's architecture and related resources.</p>
@@ -94,7 +94,55 @@ Architecture Diagram</h1>
 </p>
 <p><a href="./docs/public/R_type_architecture.pdf">here</a> <br  />
 </p>
-<p>The diagram outlines the key components and interactions within the project, showing how different modules and services communicate with each other. </p>
+<p>The diagram outlines the key components and interactions within the project, showing how different modules and services communicate with each other.</p>
+<h1><a class="anchor" id="autotoc_md33"></a>
+ECS</h1>
+<h1><a class="anchor" id="autotoc_md34"></a>
+Binary Protocol</h1>
+<p>Regarding communication between client and server, we use a binary protocol. To achieve this, we defined a few basic commands so both client and server can communicate. You can find all of them here:</p>
+<p><a class="el" href="md_docs_protocol_client_server.html">here</a></p>
+<h1><a class="anchor" id="autotoc_md35"></a>
+Stage Loader</h1>
+<p>The <b>stage loader</b> is a module that loads the stages from a config file in JSON format and creates the required entities.</p>
+<p>Here how it works:</p>
+<h3><a class="anchor" id="autotoc_md36"></a>
+The config file</h3>
+<p>The config file is a JSON file that contains the information about the stages.</p>
+<p>Here an example: </p><div class="fragment"><div class="line">{</div>
+<div class="line">    &quot;numero&quot;: 1,</div>
+<div class="line">    &quot;background_path&quot;: &quot;backgrounds/stage1.png&quot;,</div>
+<div class="line">    &quot;music_path&quot;: &quot;sounds/stage1.mp3&quot;,</div>
+<div class="line">    &quot;time&quot;: 120,</div>
+<div class="line">    &quot;seed&quot;: 42,</div>
+<div class="line">    &quot;mobs_types&quot;: [</div>
+<div class="line">        &quot;asteroid&quot;,</div>
+<div class="line">        &quot;classic&quot;,</div>
+<div class="line">        &quot;ship&quot;</div>
+<div class="line">    ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <code>numero</code>: design the stage number. <br  />
+ <code>background_path</code>: the path to the background image. <br  />
+ <code>music_path</code>: the path to the music file. <br  />
+ <code>time</code>: the time in seconds that the stage will last. <br  />
+ <code>seed</code>: the seed for the random informations generator. <br  />
+ <code>mobs_types</code>: the types of mobs that will be spawned in the stage. Chosen between: <em>asteroid</em>, <em>classic</em>, <em>ship</em>.</p>
+<h3><a class="anchor" id="autotoc_md37"></a>
+The Loader</h3>
+<p>The logic of the loader is defined in the <code><a class="el" href="classStageLoader.html">StageLoader</a></code> class. This class uses the <em>Singleton</em> pattern to ensure that only one instance of the loader is created. The method <code>getInstance()</code> is used to get the instance of the loader.</p>
+<p>The loader contains the following methods, each with a specific purpose:</p><ul>
+<li><code>loadConfig</code>: loads the config file and stores the information in a <code><a class="el" href="structStageConfig.html">StageConfig</a></code> object.</li>
+<li><code>genWaves</code>: generates the waves configuration (duration, mobs count, mobs type) for the stage.</li>
+<li><code>genMobsEntities</code>: add the mobs entities in the ECS's entities manager, based on the waves configuration. These three methods are called successively to load the stage.</li>
+</ul>
+<p>The method <code>resetConfig</code> is used to reset the loader's configuration to load a new stage.</p>
+<h3><a class="anchor" id="autotoc_md38"></a>
+The Loader System</h3>
+<p>The loader system is used to load the system successivelly during the game. It is defined in the <code>StageLoaderSystem</code> class.</p>
+<p>The system contains two methods:</p><ul>
+<li><code>update</code>: check if the current stage is finished and load the next stage if neccessary.</li>
+<li><code>loadConfig</code>: call the Stage Loader's <code>loadConfig</code> method, passing the filepath.</li>
+</ul>
+<p>Stages's filepath are stored in a list in the <code>StageLoaderSystem</code> class. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

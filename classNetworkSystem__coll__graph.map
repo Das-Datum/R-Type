@@ -1,4 +1,4 @@
 <map id="NetworkSystem" name="NetworkSystem">
 <area shape="rect" id="node1" title=" " alt="" coords="5,80,132,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="33,5,104,32"/>
+<area shape="rect" id="node2" href="$classSystem.html" title="Base class for all systems." alt="" coords="33,5,104,32"/>
 </map>

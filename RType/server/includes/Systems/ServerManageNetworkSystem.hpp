@@ -100,6 +100,19 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
          * @brief Send the position of all players to all clients.
          */
         void sendAllPlayersPosition();
+
+        /**
+         * @brief Get the position
+         * @return int
+         */
+        int getPos(std::string text);
+
+        void pauseGame();
+        void resumeGame();
+
+        bool isGameStarted() const { return _gameStarted; }
+        bool isGamePaused() const { return _gamePaused; }
+
     private:
         std::map<std::string, std::function<void(Entity)>> _protocolMap = {
             {"SHT", [this](Entity entity) { shoot(entity); }},
@@ -109,6 +122,8 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
             {"MLF", [this](Entity entity) { left(entity); }},
             {"DEM", [this](Entity entity) { beam(entity); }},
             {"STA", [this](Entity entity) { startGame(entity); }},
+            {"PAU", [this](Entity entity) { pauseGame(); }},
+            {"RES", [this](Entity entity) { resumeGame(); }},
             {"QIT", [this](Entity entity) { disconnectClient(entity); }},
 
         };
@@ -116,5 +131,10 @@ class ServerManageNetworkSystem : public ServerNetworkSystem {
         std::string _options;
         double _elapsed_time;
 
+        int _id;
+        float _x;
+        float _y;
+
         bool _gameStarted = false;
+        bool _gamePaused = false;
 };

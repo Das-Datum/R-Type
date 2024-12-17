@@ -1,0 +1,162 @@
+\hypertarget{classComponentStorage}{}\doxysection{Component\+Storage$<$ T $>$ Class Template Reference}
+\label{classComponentStorage}\index{ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}}
+
+
+Stores component data for entities using an unordered map.  
+
+
+
+
+{\ttfamily \#include $<$Component\+Storage.\+hpp$>$}
+
+
+
+Inheritance diagram for Component\+Storage$<$ T $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{classComponentStorage__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Component\+Storage$<$ T $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=219pt]{classComponentStorage__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classComponentStorage_a1a9618d0870b2e39b263004c20be2af9}{insert\+Data}} (Entity entity, T component)
+\begin{DoxyCompactList}\small\item\em Inserts or updates component data for an entity. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classComponentStorage_a5e6ce185c54533fd56e38d5ab79dc332}{remove\+Data}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Removes component data for an entity. \end{DoxyCompactList}\item 
+T \& \mbox{\hyperlink{classComponentStorage_a9c56ecade0edc816c51a1b0f1e0e93a7}{get\+Data}} (Entity entity)
+\begin{DoxyCompactList}\small\item\em Retrieves component data for an entity. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classComponentStorage_a565c060ec97d59f89f13fdab24524ed2}{has\+Data}} (Entity entity) const
+\begin{DoxyCompactList}\small\item\em Checks if an entity has a component. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classComponentStorage_a6740dd4d8e46f595d4050eda654e4e77}{entity\+Destroyed}} (Entity entity) override
+\begin{DoxyCompactList}\small\item\em Called when an entity is destroyed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class Component\+Storage$<$ T $>$}
+
+Stores component data for entities using an unordered map. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & Component type. \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classComponentStorage_a6740dd4d8e46f595d4050eda654e4e77}\label{classComponentStorage_a6740dd4d8e46f595d4050eda654e4e77}} 
+\index{ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}!entityDestroyed@{entityDestroyed}}
+\index{entityDestroyed@{entityDestroyed}!ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{entityDestroyed()}{entityDestroyed()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classComponentStorage}{Component\+Storage}}$<$ T $>$\+::entity\+Destroyed (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Called when an entity is destroyed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The destroyed entity. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classAComponentStorage_a0dd13258e2e352694de127b6da4e44fd}{AComponent\+Storage}}.
+
+\mbox{\Hypertarget{classComponentStorage_a9c56ecade0edc816c51a1b0f1e0e93a7}\label{classComponentStorage_a9c56ecade0edc816c51a1b0f1e0e93a7}} 
+\index{ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}!getData@{getData}}
+\index{getData@{getData}!ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{getData()}{getData()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T\& \mbox{\hyperlink{classComponentStorage}{Component\+Storage}}$<$ T $>$\+::get\+Data (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieves component data for an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the component data. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::out\+\_\+of\+\_\+range} & if the entity does not exist. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classComponentStorage_a565c060ec97d59f89f13fdab24524ed2}\label{classComponentStorage_a565c060ec97d59f89f13fdab24524ed2}} 
+\index{ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}!hasData@{hasData}}
+\index{hasData@{hasData}!ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{hasData()}{hasData()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+bool \mbox{\hyperlink{classComponentStorage}{Component\+Storage}}$<$ T $>$\+::has\+Data (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Checks if an entity has a component. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the entity has a component, otherwise false. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classComponentStorage_a1a9618d0870b2e39b263004c20be2af9}\label{classComponentStorage_a1a9618d0870b2e39b263004c20be2af9}} 
+\index{ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}!insertData@{insertData}}
+\index{insertData@{insertData}!ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{insertData()}{insertData()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classComponentStorage}{Component\+Storage}}$<$ T $>$\+::insert\+Data (\begin{DoxyParamCaption}\item[{Entity}]{entity,  }\item[{T}]{component }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Inserts or updates component data for an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+{\em component} & The component data. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classComponentStorage_a5e6ce185c54533fd56e38d5ab79dc332}\label{classComponentStorage_a5e6ce185c54533fd56e38d5ab79dc332}} 
+\index{ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}!removeData@{removeData}}
+\index{removeData@{removeData}!ComponentStorage$<$ T $>$@{ComponentStorage$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{removeData()}{removeData()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void \mbox{\hyperlink{classComponentStorage}{Component\+Storage}}$<$ T $>$\+::remove\+Data (\begin{DoxyParamCaption}\item[{Entity}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Removes component data for an entity. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & The entity. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+ECS/includes/Component\+Storage.\+hpp\end{DoxyCompactItemize}

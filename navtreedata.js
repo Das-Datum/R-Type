@@ -63,8 +63,11 @@ var NAVTREE =
         [ "Key Disadvantages:", "md_docs_comparative_study.html#autotoc_md30", null ]
       ] ]
     ] ],
-    [ "Documentation Dev", "md_docs_dev_docs.html", [
-      [ "Architecture Diagram", "md_docs_dev_docs.html#autotoc_md32", null ]
+    [ "Developer Documentation", "md_docs_dev_docs.html", [
+      [ "Architecture Diagram", "md_docs_dev_docs.html#autotoc_md32", null ],
+      [ "ECS", "md_docs_dev_docs.html#autotoc_md33", null ],
+      [ "Binary Protocol", "md_docs_dev_docs.html#autotoc_md34", null ],
+      [ "Stage Loader", "md_docs_dev_docs.html#autotoc_md35", null ]
     ] ],
     [ "Protocol", "md_docs_protocol_client_server.html", null ],
     [ "Modules", "modules.html", "modules" ],
@@ -85,7 +88,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"AEntitiesManager_8hpp_source.html"
+"AComponentStorage_8hpp_source.html",
+"structSpriteAnimationComponent.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

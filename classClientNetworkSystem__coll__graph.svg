@@ -36,8 +36,8 @@
 <!-- Node3 -->
 <g id="node3" class="node">
 <title>Node3</title>
-<g id="a_node3"><a xlink:title=" ">
-<polygon fill="white" stroke="#bfbfbf" points="35,-112.5 35,-131.5 88,-131.5 88,-112.5 35,-112.5"/>
+<g id="a_node3"><a xlink:href="classSystem.html" target="_top" xlink:title="Base class for all systems.">
+<polygon fill="white" stroke="black" points="35,-112.5 35,-131.5 88,-131.5 88,-112.5 35,-112.5"/>
 <text text-anchor="middle" x="61.5" y="-119.5" font-family="Helvetica,sans-Serif" font-size="10.00">System</text>
 </a>
 </g>

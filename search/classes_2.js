@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['clientnetworksystem_78',['ClientNetworkSystem',['../classClientNetworkSystem.html',1,'']]],
-  ['coordinator_79',['Coordinator',['../classCoordinator.html',1,'']]]
+  ['clientnetworksystem_90',['ClientNetworkSystem',['../classClientNetworkSystem.html',1,'']]],
+  ['componentmanager_91',['ComponentManager',['../classComponentManager.html',1,'']]],
+  ['componentstorage_92',['ComponentStorage',['../classComponentStorage.html',1,'']]],
+  ['coordinator_93',['Coordinator',['../classCoordinator.html',1,'']]]
 ];

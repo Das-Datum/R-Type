@@ -154,225 +154,228 @@ $(document).ready(function(){initNavTree('StageLoader_8hpp_source.html',''); ini
 <div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="classStageLoader.html#a9891c8b5b6a567d980b23226d8b3fce6">   89</a></span>&#160;        <span class="keywordtype">void</span> <a class="code" href="classStageLoader.html#a9891c8b5b6a567d980b23226d8b3fce6">genMobsEntities</a>(<a class="code" href="classAEntitiesManager.html">AEntitiesManager</a>&amp; manager) {</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                std::size_t waveMobsCount = _wavesMobsCount[i];</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160; </div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                <span class="keywordtype">float</span> wave_beginning = 0.0f;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                <span class="keywordflow">for</span> (std::size_t w = 0; w &lt; i; w++) wave_beginning += static_cast&lt;float&gt;(_wavesDurations[w]) + WAVE_TIME_INTERVAL;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                <span class="keywordtype">float</span> wave_ending = wave_beginning + <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(_wavesDurations[i]);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                <span class="keywordtype">int</span> enemiesTotal = 0;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; i; j++) enemiesTotal += _wavesMobsCount[j];</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                <span class="keywordtype">float</span> wave_beginning = 0.0f;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                <span class="keywordflow">for</span> (std::size_t w = 0; w &lt; i; w++) wave_beginning += static_cast&lt;float&gt;(_wavesDurations[w]) + WAVE_TIME_INTERVAL;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <span class="keywordflow">for</span> (std::size_t m = 0; m &lt; waveMobsCount; m++) {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                    <span class="keywordtype">float</span> enemyPosX = 0.9f;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                    <span class="keywordtype">float</span> enemyPosY = this-&gt;lcg&lt;double&gt;(0.1, 0.9);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                    <span class="keywordtype">float</span> enemySpawnTime = this-&gt;lcg&lt;double&gt;(wave_beginning, wave_ending);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                    <span class="keywordtype">int</span> typeIndex = _wavesMobsTypes[i][(this-&gt;lcg&lt;int&gt;(0, _wavesMobsTypes[i].size()))];</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                    <a class="code" href="structEnemyType.html">EnemyType</a> enemyType = this-&gt;getEnemyTypeByName(_config.mobs_types[typeIndex]);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                    <span class="keywordtype">bool</span> shootAtPlayer = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                    <span class="keywordflow">if</span> (enemyType.isShooting) {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                        shootAtPlayer = this-&gt;lcg&lt;int&gt;(0, 2);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                    }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                    BehaviorType enemyMovementBehavior = BehaviorType::None;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                    <span class="keywordtype">int</span> hasEnemySpecificMove = this-&gt;lcg&lt;int&gt;(0, 2);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    <span class="keywordflow">if</span> (hasEnemySpecificMove == 1) {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                        enemyMovementBehavior = this-&gt;genRandomMovementBehavior();</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                    }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                    <a class="code" href="structEnemy.html">Enemy</a> newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType, shootAtPlayer, hasEnemySpecificMove, enemyMovementBehavior);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                    manager.<a class="code" href="classAEntitiesManager.html#a180c337300c4c368d6a425bc832dd69c">createEnemy</a>(newEnemy);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                std::cout &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;            }</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        };</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keywordtype">void</span> resetConfig() {</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            this-&gt;_config_filepath = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            this-&gt;_config = <a class="code" href="structStageConfig.html">StageConfig</a>();</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            this-&gt;_waveCount = 0;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            this-&gt;_wavesDurations.clear();</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            this-&gt;_wavesMobsCount.clear();</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            this-&gt;_wavesMobsTypes.clear();</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        }</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="comment">// Getters</span></div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <a class="code" href="structStageConfig.html">StageConfig</a> getStageConfig()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _config; };</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        std::size_t getWaveCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _waveCount; };</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        std::vector&lt;float&gt; getWavesDurations()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _wavesDurations; };</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        std::vector&lt;std::size_t&gt; getWavesMobsCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _wavesMobsCount; };</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        std::map&lt;std::size_t, std::vector&lt;std::size_t&gt;&gt; getWavesMobsTypes()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _wavesMobsTypes; };</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="keywordtype">double</span> getRemainingTime()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _remainingTime; };</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        <span class="keywordtype">void</span> setRemainingTime(<span class="keywordtype">double</span> time) { _remainingTime = time; };</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <span class="keywordtype">float</span> wave_ending = wave_beginning + <span class="keyword">static_cast&lt;</span><span class="keywordtype">float</span><span class="keyword">&gt;</span>(_wavesDurations[i]);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                <span class="keywordflow">for</span> (std::size_t m = 0; m &lt; waveMobsCount; m++) {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;                    <span class="keywordtype">float</span> enemyPosX = 0.9;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                    <span class="keywordtype">float</span> enemyPosY = this-&gt;lcg&lt;float&gt;(0.1, 0.9);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                    <span class="keywordtype">float</span> enemySpawnTime = this-&gt;lcg&lt;double&gt;(wave_beginning, wave_ending);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    <span class="keywordtype">int</span> typeIndex = _wavesMobsTypes[i][(this-&gt;lcg&lt;int&gt;(0, _wavesMobsTypes[i].size()))];</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                    <a class="code" href="structEnemyType.html">EnemyType</a> enemyType = this-&gt;getEnemyTypeByName(_config.mobs_types[typeIndex]);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                    <span class="keywordtype">bool</span> shootAtPlayer = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                    <span class="keywordflow">if</span> (enemyType.isShooting) {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                        shootAtPlayer = this-&gt;lcg&lt;int&gt;(0, 2);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                    }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                    BehaviorType enemyMovementBehavior = BehaviorType::None;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                    <span class="keywordtype">int</span> hasEnemySpecificMove = this-&gt;lcg&lt;int&gt;(0, 2);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                    <span class="keywordflow">if</span> (hasEnemySpecificMove == 1) {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                        enemyMovementBehavior = this-&gt;genRandomMovementBehavior();</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                    }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                    <a class="code" href="structEnemy.html">Enemy</a> newEnemy(enemyPosX, enemyPosY, enemySpawnTime, enemyType, shootAtPlayer, hasEnemySpecificMove, enemyMovementBehavior);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                    newEnemy.setUniqueId(enemiesTotal + m);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                    manager.<a class="code" href="classAEntitiesManager.html#a180c337300c4c368d6a425bc832dd69c">createEnemy</a>(newEnemy);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                std::cout &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            }</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        };</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        <span class="keywordtype">void</span> resetConfig() {</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            this-&gt;_config_filepath = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            this-&gt;_config = <a class="code" href="structStageConfig.html">StageConfig</a>();</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            this-&gt;_waveCount = 0;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            this-&gt;_wavesDurations.clear();</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            this-&gt;_wavesMobsCount.clear();</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            this-&gt;_wavesMobsTypes.clear();</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        }</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        <span class="comment">// Getters</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <a class="code" href="structStageConfig.html">StageConfig</a> getStageConfig()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _config; };</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        std::size_t getWaveCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _waveCount; };</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        std::vector&lt;float&gt; getWavesDurations()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _wavesDurations; };</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        std::vector&lt;std::size_t&gt; getWavesMobsCount()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _wavesMobsCount; };</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        std::map&lt;std::size_t, std::vector&lt;std::size_t&gt;&gt; getWavesMobsTypes()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _wavesMobsTypes; };</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="comment">// Displayers</span></div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keywordtype">void</span> printStageConfig()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot; --- Stage Config --- &quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Numero: &quot;</span> &lt;&lt; _config.numero &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Seed: &quot;</span> &lt;&lt; _seed &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Background Path: &quot;</span> &lt;&lt; _config.background_path &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Music Path: &quot;</span> &lt;&lt; _config.music_path &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Time: &quot;</span> &lt;&lt; _config.time &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot; --- END --- &quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        };</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        <span class="keywordtype">void</span> printWavesDurations()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Waves durations: &quot;</span>;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> duration : _wavesDurations) {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;                std::cout &lt;&lt; duration &lt;&lt; <span class="stringliteral">&quot; / &quot;</span>;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            }</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            std::cout &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        };</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordtype">void</span> printWavesMobsCount()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Waves mobs count: &quot;</span>;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> mobsCount : _wavesMobsCount) {</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                std::cout &lt;&lt; mobsCount &lt;&lt; <span class="stringliteral">&quot; / &quot;</span>;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            }</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            std::cout &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        };</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordtype">void</span> printWavesMobsTypes()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Waves mobs types: &quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> mobsTypes : _wavesMobsTypes) {</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;                std::cout &lt;&lt; mobsTypes.first &lt;&lt; <span class="stringliteral">&quot; -&gt; &quot;</span>;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">auto</span> type : mobsTypes.second) {</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;                    std::cout &lt;&lt; type &lt;&lt; <span class="stringliteral">&quot; / &quot;</span>;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                }</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;                std::cout &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;            }</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        };</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        <a class="code" href="classStageLoader.html">StageLoader</a>() {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            initMobsTypes();</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        }</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        ~<a class="code" href="classStageLoader.html">StageLoader</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160; </div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        std::string _config_filepath;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <a class="code" href="structStageConfig.html">StageConfig</a> _config;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        <span class="keywordtype">double</span> getRemainingTime()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _remainingTime; };</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keywordtype">void</span> setRemainingTime(<span class="keywordtype">double</span> time) { _remainingTime = time; };</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <span class="comment">// Displayers</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordtype">void</span> printStageConfig()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot; --- Stage Config --- &quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Numero: &quot;</span> &lt;&lt; _config.numero &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Seed: &quot;</span> &lt;&lt; _seed &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Background Path: &quot;</span> &lt;&lt; _config.background_path &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Music Path: &quot;</span> &lt;&lt; _config.music_path &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Time: &quot;</span> &lt;&lt; _config.time &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot; --- END --- &quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;        };</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordtype">void</span> printWavesDurations()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Waves durations: &quot;</span>;</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> duration : _wavesDurations) {</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                std::cout &lt;&lt; duration &lt;&lt; <span class="stringliteral">&quot; / &quot;</span>;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;            }</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;            std::cout &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        };</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="keywordtype">void</span> printWavesMobsCount()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Waves mobs count: &quot;</span>;</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> mobsCount : _wavesMobsCount) {</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                std::cout &lt;&lt; mobsCount &lt;&lt; <span class="stringliteral">&quot; / &quot;</span>;</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;            }</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            std::cout &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        };</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordtype">void</span> printWavesMobsTypes()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            std::cout &lt;&lt; <span class="stringliteral">&quot;Waves mobs types: &quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> mobsTypes : _wavesMobsTypes) {</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;                std::cout &lt;&lt; mobsTypes.first &lt;&lt; <span class="stringliteral">&quot; -&gt; &quot;</span>;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">auto</span> type : mobsTypes.second) {</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;                    std::cout &lt;&lt; type &lt;&lt; <span class="stringliteral">&quot; / &quot;</span>;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;                }</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                std::cout &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;            }</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        };</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <a class="code" href="classStageLoader.html">StageLoader</a>() {</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;            initMobsTypes();</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        }</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        ~<a class="code" href="classStageLoader.html">StageLoader</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        std::vector&lt;EnemyType&gt; _enemyTypes;</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keywordtype">double</span> _remainingTime;</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        std::size_t _seed;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="comment">// waves attributs</span></div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        std::size_t _waveCount;</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        std::vector&lt;float&gt; _wavesDurations;</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        std::vector&lt;std::size_t&gt; _wavesMobsCount;</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        std::map&lt;std::size_t, std::vector&lt;std::size_t&gt;&gt; _wavesMobsTypes;</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160; </div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;        T lcg(<span class="keywordtype">double</span> min = 0, <span class="keywordtype">double</span> max = 1, <span class="keywordtype">int</span> a = 1664525, <span class="keywordtype">int</span> c = 1013904223, <span class="keywordtype">int</span> m = pow(2, 8)) {</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;            _seed = (a * _seed + c) % m;</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            T scaled_value = min + (_seed * (max - min) / (m - 1.0));</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            <span class="keywordflow">return</span> scaled_value;</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        }</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160; </div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        <a class="code" href="structEnemyType.html">EnemyType</a> getEnemyTypeByName(<span class="keyword">const</span> std::string&amp; name) {</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code" href="structEnemyType.html">EnemyType</a>&amp; type : _enemyTypes) {</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;                <span class="keywordflow">if</span> (type.name == name)</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;                    <span class="keywordflow">return</span> type;</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            }</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            std::cerr &lt;&lt; <span class="stringliteral">&quot;getEnemyTypeByName(): Cannot find enemy type of name &quot;</span> &lt;&lt; name &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            <span class="keywordflow">return</span> _enemyTypes[0];</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        }</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        <span class="keywordtype">float</span> getSumWavesDurations()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;            <span class="keywordtype">float</span> sum = 0;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> duration : _wavesDurations) {</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                sum += duration;</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            }</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;            <span class="keywordflow">return</span> sum;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        };</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160; </div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        <span class="keywordtype">float</span> getSumWavesInterval()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            <span class="keywordflow">return</span> _waveCount * WAVE_TIME_INTERVAL;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;        };</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">bool</span> isMobTypeValid(<span class="keyword">const</span> std::string&amp; type)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code" href="structEnemyType.html">EnemyType</a>&amp; validType : _enemyTypes) {</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;                <span class="keywordflow">if</span> (type == validType.name) {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                }</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            }</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        }</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;        <span class="keywordtype">void</span> defineWavesDurations() {</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;            <span class="comment">// init duration with constant values</span></div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                _wavesDurations.push_back((_config.time - this-&gt;getSumWavesInterval()) / _waveCount);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            }</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            <span class="comment">// regulate duration with random values</span></div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                <span class="keywordtype">float</span> random_duration = (this-&gt;lcg&lt;int&gt;(0, 4)) + 1;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;                _wavesDurations[_waveCount - i - 1] += random_duration;</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;                _wavesDurations[i] -= random_duration;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;            }</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;            <span class="comment">// check if durations fill the whole time of the stage</span></div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;            <span class="keywordflow">if</span> (this-&gt;getSumWavesDurations() + this-&gt;getSumWavesInterval() != _config.time)</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;                std::cerr &lt;&lt; <span class="stringliteral">&quot;Waves durations are incorrect: &quot;</span> &lt;&lt; this-&gt;getSumWavesDurations() + this-&gt;getSumWavesInterval() &lt;&lt; <span class="stringliteral">&quot; &gt; &quot;</span> &lt;&lt; _config.time &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        }</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160; </div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        <span class="keywordtype">void</span> defineWavesMobsCount() {</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;                <span class="keyword">const</span> std::size_t waveDuration = _wavesDurations[i];</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;                <span class="keyword">const</span> std::size_t countMobs = this-&gt;lcg&lt;int&gt;(waveDuration, waveDuration * 2);</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;                _wavesMobsCount.push_back(countMobs);</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;            }</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        }</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160; </div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        <span class="keywordtype">void</span> defineWavesMobsTypes() {</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;                std::vector&lt;std::size_t&gt; mobsTypes;</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;                std::size_t nbMobsTypesForWave = (this-&gt;lcg&lt;int&gt;(0, _config.mobs_types.size())) + 1;</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;                std::vector&lt;std::string&gt; remainingTypeToChoose = _config.mobs_types;</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; nbMobsTypesForWave; j++) {</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                    std::size_t randomIndex = this-&gt;lcg&lt;int&gt;(0, remainingTypeToChoose.size());</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;                    std::string type = remainingTypeToChoose[randomIndex];</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160; </div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                    remainingTypeToChoose.erase(remainingTypeToChoose.begin() + randomIndex);</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                    <span class="keyword">auto</span> it = std::find(_config.mobs_types.begin(), _config.mobs_types.end(), type);</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;                    <span class="keywordflow">if</span> (it != _config.mobs_types.end()) {</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;                        std::size_t index = std::distance(_config.mobs_types.begin(), it);</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                        mobsTypes.push_back(index);</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                    }</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;                }</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                _wavesMobsTypes[i] = mobsTypes;</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;            }</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        }</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        <span class="keywordtype">void</span> initMobsTypes() {</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;            _enemyTypes.push_back(<a class="code" href="structEnemyType.html">EnemyType</a>(<span class="stringliteral">&quot;asteroid&quot;</span>, Vector2{35.0, 37.0}, 1, 300, <span class="keyword">false</span>, <span class="keyword">true</span>, 48.0f, 0.0f));</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;            _enemyTypes.push_back(<a class="code" href="structEnemyType.html">EnemyType</a>(<span class="stringliteral">&quot;classic&quot;</span>, Vector2{266.0, 36.0}, 8, 100, <span class="keyword">true</span>, <span class="keyword">true</span>, 50.0f, 0.0f));</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;            _enemyTypes.push_back(<a class="code" href="structEnemyType.html">EnemyType</a>(<span class="stringliteral">&quot;ship&quot;</span>, Vector2{145.0, 29.0}, 5, 100, <span class="keyword">true</span>, <span class="keyword">true</span>, 55.0f, 0.0f));</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        }</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160; </div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        <span class="comment">// float genRandomFloat(float min, float max) {</span></div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;        <span class="comment">//     float r = static_cast&lt;float&gt;(rand()) / RAND_MAX;</span></div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;        <span class="comment">//     float value = min + r * (max - min);</span></div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;        <span class="comment">//     return value;</span></div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        <span class="comment">// }</span></div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;        BehaviorType genRandomMovementBehavior() {</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;            <span class="keywordtype">int</span> choice = this-&gt;lcg&lt;int&gt;(0, 4);</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;            <span class="keywordflow">switch</span> (choice)</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;            {</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            <span class="keywordflow">case</span> 0:</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;                <span class="keywordflow">return</span> BehaviorType::ChasePlayer;</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;            <span class="keywordflow">case</span> 1:</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;                <span class="keywordflow">return</span> BehaviorType::FleeFromPlayer;</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;            <span class="keywordflow">case</span> 2:</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                <span class="keywordflow">return</span> BehaviorType::Patrol;</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;            <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;                <span class="keywordflow">return</span> BehaviorType::RandomMovement;</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;            }</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        }</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;};</div>
-<div class="ttc" id="aclassAEntitiesManager_html"><div class="ttname"><a href="classAEntitiesManager.html">AEntitiesManager</a></div><div class="ttdoc">Abstract base class for EntitiesManager for server and client.</div><div class="ttdef"><b>Definition:</b> AEntitiesManager.hpp:39</div></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        std::string _config_filepath;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        <a class="code" href="structStageConfig.html">StageConfig</a> _config;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160; </div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        std::vector&lt;EnemyType&gt; _enemyTypes;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <span class="keywordtype">double</span> _remainingTime;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160; </div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        std::size_t _seed;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160; </div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="comment">// waves attributs</span></div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        std::size_t _waveCount;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        std::vector&lt;float&gt; _wavesDurations;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        std::vector&lt;std::size_t&gt; _wavesMobsCount;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        std::map&lt;std::size_t, std::vector&lt;std::size_t&gt;&gt; _wavesMobsTypes;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        T lcg(<span class="keywordtype">double</span> min = 0, <span class="keywordtype">double</span> max = 1, <span class="keywordtype">int</span> a = 1664525, <span class="keywordtype">int</span> c = 1013904223, <span class="keywordtype">int</span> m = pow(2, 8)) {</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;            _seed = (a * _seed + c) % m;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            T scaled_value = min + (_seed * (max - min) / (m - 1.0));</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            <span class="keywordflow">return</span> scaled_value;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        }</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        <a class="code" href="structEnemyType.html">EnemyType</a> getEnemyTypeByName(<span class="keyword">const</span> std::string&amp; name) {</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code" href="structEnemyType.html">EnemyType</a>&amp; type : _enemyTypes) {</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;                <span class="keywordflow">if</span> (type.name == name)</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;                    <span class="keywordflow">return</span> type;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            }</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            std::cerr &lt;&lt; <span class="stringliteral">&quot;getEnemyTypeByName(): Cannot find enemy type of name &quot;</span> &lt;&lt; name &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            <span class="keywordflow">return</span> _enemyTypes[0];</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        }</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160; </div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        <span class="keywordtype">float</span> getSumWavesDurations()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            <span class="keywordtype">float</span> sum = 0;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> duration : _wavesDurations) {</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                sum += duration;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            }</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            <span class="keywordflow">return</span> sum;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;        };</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;        <span class="keywordtype">float</span> getSumWavesInterval()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;            <span class="keywordflow">return</span> _waveCount * WAVE_TIME_INTERVAL;</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        };</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">bool</span> isMobTypeValid(<span class="keyword">const</span> std::string&amp; type)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code" href="structEnemyType.html">EnemyType</a>&amp; validType : _enemyTypes) {</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                <span class="keywordflow">if</span> (type == validType.name) {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                }</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;            }</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;        }</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        <span class="keywordtype">void</span> defineWavesDurations() {</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;            <span class="comment">// init duration with constant values</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;                _wavesDurations.push_back((_config.time - this-&gt;getSumWavesInterval()) / _waveCount);</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;            }</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;            <span class="comment">// regulate duration with random values</span></div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;                <span class="keywordtype">float</span> random_duration = (this-&gt;lcg&lt;int&gt;(0, 4)) + 1;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;                _wavesDurations[_waveCount - i - 1] += random_duration;</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;                _wavesDurations[i] -= random_duration;</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;            }</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;            <span class="comment">// check if durations fill the whole time of the stage</span></div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;            <span class="keywordflow">if</span> (this-&gt;getSumWavesDurations() + this-&gt;getSumWavesInterval() != _config.time)</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;                std::cerr &lt;&lt; <span class="stringliteral">&quot;Waves durations are incorrect: &quot;</span> &lt;&lt; this-&gt;getSumWavesDurations() + this-&gt;getSumWavesInterval() &lt;&lt; <span class="stringliteral">&quot; &gt; &quot;</span> &lt;&lt; _config.time &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        }</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        <span class="keywordtype">void</span> defineWavesMobsCount() {</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;                <span class="keyword">const</span> std::size_t waveDuration = _wavesDurations[i];</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                <span class="keyword">const</span> std::size_t countMobs = this-&gt;lcg&lt;int&gt;(waveDuration, waveDuration * 2);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;                _wavesMobsCount.push_back(countMobs);</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;            }</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        }</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160; </div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <span class="keywordtype">void</span> defineWavesMobsTypes() {</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;            <span class="keywordflow">for</span> (std::size_t i = 0; i &lt; _waveCount; i++) {</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;                std::vector&lt;std::size_t&gt; mobsTypes;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                std::size_t nbMobsTypesForWave = (this-&gt;lcg&lt;int&gt;(0, _config.mobs_types.size())) + 1;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;                std::vector&lt;std::string&gt; remainingTypeToChoose = _config.mobs_types;</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;                <span class="keywordflow">for</span> (std::size_t j = 0; j &lt; nbMobsTypesForWave; j++) {</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;                    std::size_t randomIndex = this-&gt;lcg&lt;int&gt;(0, remainingTypeToChoose.size());</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;                    std::string type = remainingTypeToChoose[randomIndex];</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;                    remainingTypeToChoose.erase(remainingTypeToChoose.begin() + randomIndex);</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                    <span class="keyword">auto</span> it = std::find(_config.mobs_types.begin(), _config.mobs_types.end(), type);</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                    <span class="keywordflow">if</span> (it != _config.mobs_types.end()) {</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;                        std::size_t index = std::distance(_config.mobs_types.begin(), it);</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;                        mobsTypes.push_back(index);</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;                    }</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;                }</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                _wavesMobsTypes[i] = mobsTypes;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;            }</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        }</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        <span class="keywordtype">void</span> initMobsTypes() {</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;            _enemyTypes.push_back(<a class="code" href="structEnemyType.html">EnemyType</a>(<span class="stringliteral">&quot;asteroid&quot;</span>, Vector2{35.0, 37.0}, 1, 300, <span class="keyword">false</span>, <span class="keyword">true</span>, 48.0f, 0.0f));</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;            _enemyTypes.push_back(<a class="code" href="structEnemyType.html">EnemyType</a>(<span class="stringliteral">&quot;classic&quot;</span>, Vector2{266.0, 36.0}, 8, 100, <span class="keyword">true</span>, <span class="keyword">true</span>, 50.0f, 0.0f));</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;            _enemyTypes.push_back(<a class="code" href="structEnemyType.html">EnemyType</a>(<span class="stringliteral">&quot;ship&quot;</span>, Vector2{145.0, 29.0}, 5, 100, <span class="keyword">true</span>, <span class="keyword">true</span>, 55.0f, 0.0f));</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;        }</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160; </div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;        <span class="comment">// float genRandomFloat(float min, float max) {</span></div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        <span class="comment">//     float r = static_cast&lt;float&gt;(rand()) / RAND_MAX;</span></div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;        <span class="comment">//     float value = min + r * (max - min);</span></div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;        <span class="comment">//     return value;</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        <span class="comment">// }</span></div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160; </div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        BehaviorType genRandomMovementBehavior() {</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;            <span class="keywordtype">int</span> choice = this-&gt;lcg&lt;int&gt;(0, 4);</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;            <span class="keywordflow">switch</span> (choice)</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;            {</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;            <span class="keywordflow">case</span> 0:</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;                <span class="keywordflow">return</span> BehaviorType::ChasePlayer;</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;            <span class="keywordflow">case</span> 1:</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;                <span class="keywordflow">return</span> BehaviorType::FleeFromPlayer;</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;            <span class="keywordflow">case</span> 2:</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;                <span class="keywordflow">return</span> BehaviorType::Patrol;</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;            <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;                <span class="keywordflow">return</span> BehaviorType::RandomMovement;</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;            }</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        }</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;};</div>
+<div class="ttc" id="aclassAEntitiesManager_html"><div class="ttname"><a href="classAEntitiesManager.html">AEntitiesManager</a></div><div class="ttdoc">Abstract base class for EntitiesManager for server and client.</div><div class="ttdef"><b>Definition:</b> AEntitiesManager.hpp:45</div></div>
 <div class="ttc" id="aclassAEntitiesManager_html_a180c337300c4c368d6a425bc832dd69c"><div class="ttname"><a href="classAEntitiesManager.html#a180c337300c4c368d6a425bc832dd69c">AEntitiesManager::createEnemy</a></div><div class="ttdeci">virtual Entity createEnemy(Enemy)=0</div><div class="ttdoc">Create a Enemy object.</div></div>
 <div class="ttc" id="aclassStageLoader_html"><div class="ttname"><a href="classStageLoader.html">StageLoader</a></div><div class="ttdef"><b>Definition:</b> StageLoader.hpp:16</div></div>
 <div class="ttc" id="aclassStageLoader_html_a4e52879f596279cea5c21680faaf8436"><div class="ttname"><a href="classStageLoader.html#a4e52879f596279cea5c21680faaf8436">StageLoader::loadConfig</a></div><div class="ttdeci">void loadConfig(const std::string &amp;config_filepath)</div><div class="ttdoc">Load the config file and store it in the _config attribute.</div><div class="ttdef"><b>Definition:</b> StageLoader.hpp:37</div></div>

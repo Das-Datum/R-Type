@@ -14,7 +14,7 @@
 #include "ShadersManager.hpp"
 
 #include "Systems/ClientRelatives.hpp"
-#include "Systems/EnemiesRelatives.hpp"
+#include "Systems/EnemiesSystem.hpp"
 #include "Systems/SpriteRelatives.hpp"
 #include "Systems/Generics.hpp"
 #include "Systems/BackgroundScrollSystem.hpp"

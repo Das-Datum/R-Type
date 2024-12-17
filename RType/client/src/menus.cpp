@@ -178,7 +178,7 @@ void initMenus(int windowWidth, int windowHeight) {
         [windowWidth, windowHeight]() {
             std::cout << "Starting single player game...\n";
             auto &entitiesManager = EntitiesManager::getInstance();
-            entitiesManager.createShip({0.2f, 0.5f}, 1, "Player");
+            entitiesManager.createShip({0.2f, 0.5f}, 1, "Player", true);
 
             auto &settings = Settings::getInstance();
             settings.setMultiplayer(false);
@@ -265,6 +265,8 @@ void initMenus(int windowWidth, int windowHeight) {
         5, 2,
         [windowWidth, windowHeight]() {
             MenuManager::getInstance().closeCurrentPage();
+
+            gCoordinator.getSystem<ClientManageNetworkSystem>()->sendData("RES");
         },
         style));
 

@@ -25,6 +25,10 @@ Collaboration diagram for Server\+Entities\+Manager\+:
 \item 
 Entity \mbox{\hyperlink{classServerEntitiesManager_a8f35dcfbcb11adb3543f4c0c7e676830}{create\+Enemy}} (\mbox{\hyperlink{structEnemy}{Enemy}} enemy\+Infos) override
 \begin{DoxyCompactList}\small\item\em Create a \mbox{\hyperlink{structEnemy}{Enemy}} object. \end{DoxyCompactList}\item 
+Entity \mbox{\hyperlink{classServerEntitiesManager_a5e3039ae9a875cf61d942b33fb1df7ec}{create\+Bullet}} (Vector2 position, Vector2 velocity) override
+\begin{DoxyCompactList}\small\item\em Create a bullet object. \end{DoxyCompactList}\item 
+Entity \mbox{\hyperlink{classServerEntitiesManager_a9f779034df3be2392f9032298292875c}{create\+Enemy\+Bullet}} (Vector2 position, Vector2 velocity) override
+\begin{DoxyCompactList}\small\item\em Create a enemy bullet object. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classServerEntitiesManager_aff552b7a3911724792ac19fcaa7e491e}\label{classServerEntitiesManager_aff552b7a3911724792ac19fcaa7e491e}} 
 Entity {\bfseries create\+Ship} (Vector2 normalized\+Pos, int id, const std\+::string \&name, const std\+::string \&ip, int port)
 \end{DoxyCompactItemize}
@@ -37,6 +41,30 @@ static \mbox{\hyperlink{classServerEntitiesManager}{Server\+Entities\+Manager}} 
 
 
 \doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classServerEntitiesManager_a5e3039ae9a875cf61d942b33fb1df7ec}\label{classServerEntitiesManager_a5e3039ae9a875cf61d942b33fb1df7ec}} 
+\index{ServerEntitiesManager@{ServerEntitiesManager}!createBullet@{createBullet}}
+\index{createBullet@{createBullet}!ServerEntitiesManager@{ServerEntitiesManager}}
+\doxysubsubsection{\texorpdfstring{createBullet()}{createBullet()}}
+{\footnotesize\ttfamily Entity Server\+Entities\+Manager\+::create\+Bullet (\begin{DoxyParamCaption}\item[{Vector2}]{position,  }\item[{Vector2}]{velocity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Create a bullet object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & \\
+\hline
+{\em velocity} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Entity 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classAEntitiesManager_aa74cd6a4fe19bf4e51d82d6a4065fd56}{AEntities\+Manager}}.
+
 \mbox{\Hypertarget{classServerEntitiesManager_a8f35dcfbcb11adb3543f4c0c7e676830}\label{classServerEntitiesManager_a8f35dcfbcb11adb3543f4c0c7e676830}} 
 \index{ServerEntitiesManager@{ServerEntitiesManager}!createEnemy@{createEnemy}}
 \index{createEnemy@{createEnemy}!ServerEntitiesManager@{ServerEntitiesManager}}
@@ -53,6 +81,30 @@ Entity
 
 
 Implements \mbox{\hyperlink{classAEntitiesManager_a180c337300c4c368d6a425bc832dd69c}{AEntities\+Manager}}.
+
+\mbox{\Hypertarget{classServerEntitiesManager_a9f779034df3be2392f9032298292875c}\label{classServerEntitiesManager_a9f779034df3be2392f9032298292875c}} 
+\index{ServerEntitiesManager@{ServerEntitiesManager}!createEnemyBullet@{createEnemyBullet}}
+\index{createEnemyBullet@{createEnemyBullet}!ServerEntitiesManager@{ServerEntitiesManager}}
+\doxysubsubsection{\texorpdfstring{createEnemyBullet()}{createEnemyBullet()}}
+{\footnotesize\ttfamily Entity Server\+Entities\+Manager\+::create\+Enemy\+Bullet (\begin{DoxyParamCaption}\item[{Vector2}]{position,  }\item[{Vector2}]{velocity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Create a enemy bullet object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & \\
+\hline
+{\em velocity} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Entity 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{classAEntitiesManager_a34710944357dcf165571529e1060c6bd}{AEntities\+Manager}}.
 
 
 

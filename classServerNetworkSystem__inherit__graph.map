@@ -1,5 +1,5 @@
 <map id="ServerNetworkSystem" name="ServerNetworkSystem">
 <area shape="rect" id="node1" title="Manages the server system." alt="" coords="5,155,173,181"/>
 <area shape="rect" id="node2" href="$classNetworkSystem.html" title=" " alt="" coords="26,80,153,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="54,5,125,32"/>
+<area shape="rect" id="node3" href="$classSystem.html" title="Base class for all systems." alt="" coords="54,5,125,32"/>
 </map>
