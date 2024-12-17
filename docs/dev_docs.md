@@ -64,3 +64,11 @@ These three methods are called successively to load the stage.
 The method ```resetConfig``` is used to reset the loader's configuration to load a new stage.
 
 #### The Loader System
+
+The loader system is used to load the system successivelly during the game. It is defined in the ```StageLoaderSystem``` class.
+
+The system contains two methods:
+- ```update```: check if the current stage is finished and load the next stage if neccessary.
+- ```loadConfig```: call the Stage Loader's ```loadConfig``` method, passing the filepath.
+
+Stages's filepath are stored in a list in the ```StageLoaderSystem``` class.
