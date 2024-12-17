@@ -103,7 +103,7 @@ void ServerManageNetworkSystem::update() {
 }
 
 std::string ServerManageNetworkSystem::getCommand(std::string command) {
-    std::cout << command << std::endl;
+    // std::cout << command << std::endl;
     if (command.size() < 3)
         return "";
     if (command.size() == 3)

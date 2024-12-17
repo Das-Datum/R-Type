@@ -15,7 +15,7 @@ void game_tick(double elapsedTimeSeconds, int tick) {
 
     if (tick == 1) {
         //! RESYNC ENEMIES
-        std::cout << "-- Resyncing enemies..." << std::endl;
+        // std::cout << "-- Resyncing enemies..." << std::endl;
         gCoordinator.getSystem<EnemiesSystem>()->syncAllEnemies([](Entity entity) {
             auto &enemy = gCoordinator.getComponent<EnemyComponent>(entity);
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
@@ -29,7 +29,7 @@ void game_tick(double elapsedTimeSeconds, int tick) {
             // auto &enemyShoot = gCoordinator.getComponent<EnemyShootComponent>(entity);
             gCoordinator.getSystem<ServerManageNetworkSystem>()->sendAllPlayer(0, "ENM0" + std::to_string(transform.position.x) + "," + std::to_string(transform.position.y) + ";" + std::to_string(enemy.uniqueId) + ";0.0");
         });
-        std::cout << "-- Resyncing enemies done!" << std::endl;
+        // std::cout << "-- Resyncing enemies done!" << std::endl;
     }
 
     gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {

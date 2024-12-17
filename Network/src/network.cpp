@@ -66,12 +66,12 @@ void ServerNetworkSystem::init(const std::string& ip, int port) {
 
 void ServerNetworkSystem::getHelp() {
     _help.push_back("Available commands:");
-    _help.push_back("send <message>                - Send a message to all client");
-    _help.push_back("sendto <message> <clientId>   - Send a message to the clientId");
-    _help.push_back("restart                       - Restart the server");
+    // _help.push_back("send <message>                - Send a message to all client");
+    // _help.push_back("sendto <message> <clientId>   - Send a message to the clientId");
+    // _help.push_back("restart                       - Restart the server");
     _help.push_back("stop                          - Stop the server");
     _help.push_back("help                          - Display this help");
-    _help.push_back("Added commands:");
+    // _help.push_back("Added commands:");
 }
 
 
