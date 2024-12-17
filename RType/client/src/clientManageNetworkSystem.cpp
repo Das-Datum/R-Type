@@ -47,6 +47,7 @@ void ClientManageNetworkSystem::left(Entity player) {
 }
 
 void ClientManageNetworkSystem::disconnectPlayer(Entity entity) {
+    std::cout << "Disconnecting player:" << _id << std::endl;
     gCoordinator.destroyEntity(entity);
 }
 
@@ -98,6 +99,7 @@ void ClientManageNetworkSystem::setPos(Entity entity) {
 void ClientManageNetworkSystem::update() {
     std::vector<std::string> messages = getLastMessages();
     for (const auto &msg : messages) {
+        std::cout << "Received: " << msg << std::endl;
         std::string command = getCommand(msg);
         if (_protocolMap.find(command) != _protocolMap.end()) {
             _protocolMap[command](getEntityById(_id));
@@ -111,6 +113,7 @@ Entity ClientManageNetworkSystem::getEntityById(int id) {
         if (player.id == id)
             return entity;
     }
+    std::cerr << "Entity not found" << std::endl;
     return 0;
 }
 
