@@ -1,4 +1,5 @@
 #include "client.hpp"
+#include "Systems/InterpolationSystem.hpp"
 
 Coordinator gCoordinator;
 
@@ -12,8 +13,6 @@ int main() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "RType");
     SetTargetFPS(60);
 
-    // std::shared_ptr<MenuManager> menuManager = std::make_shared<MenuManager>();
-    // std::shared_ptr<Settings> settings = std::make_shared<Settings>();
     auto &menuManager = MenuManager::getInstance();
 
     initMenus(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -25,7 +24,6 @@ int main() {
     auto &settings = Settings::getInstance();
 
     initCoordinator();
-
 
     //? User 1 (main player)
     // Vector2 shipPosition = {WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT * 0.8f};
@@ -74,8 +72,11 @@ int main() {
             menuManager.setActivePage("PauseMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
         }
 
-        gCoordinator.getSystem<PhysicsSystem>()->setViewport(viewportWidth, viewportHeight);
         gCoordinator.getSystem<RenderSystem>()->setViewport(viewportX, viewportY, viewportWidth, viewportHeight);
+
+        //? NETWORK
+        gCoordinator.getSystem<ClientManageNetworkSystem>()->update();
+        gCoordinator.getSystem<NetworkInstructionsSystem>()->update();
 
         if (menuManager.isPageActive()) {
             menuManager.handleEvent();
@@ -102,14 +103,17 @@ int main() {
             continue;
         }
 
+        //? VelocitySystem
+        gCoordinator.getSystem<VelocitySystem>()->update(deltaTime);
+
         //? LOGIC
         gCoordinator.getSystem<InputSystem>()->update();
         gCoordinator.getSystem<SpriteFrameSystem>()->update();
         gCoordinator.getSystem<TimerSystem>()->update();
         gCoordinator.getSystem<CollisionSystem>()->update([](Entity entityA, Entity entityB) {
-            if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
-                std::cout << "Ship collided with enemy\n";
-            }
+            // if (gCoordinator.hasComponent<ShipComponent>(entityA) && gCoordinator.hasComponent<EnemyComponent>(entityB)) {
+            //     std::cout << "Ship collided with enemy\n";
+            // }
 
             if (gCoordinator.hasComponent<EnemyComponent>(entityA) && gCoordinator.hasComponent<BulletComponent>(entityB)) {
                 gCoordinator.destroyEntity(entityA);
@@ -119,18 +123,27 @@ int main() {
         gCoordinator.getSystem<BackgroundScrollSystem>()->update(deltaTime);
         gCoordinator.getSystem<PhysicsSystem>()->update(deltaTime);
         gCoordinator.getSystem<EnemiesSystem>()->update(deltaTime);
+        gCoordinator.getSystem<InterpolationSystem>()->update(deltaTime);
 
         //! DESTROY
         gCoordinator.processEntityDestruction();
 
-        //? NETWORK
-        gCoordinator.getSystem<ClientManageNetworkSystem>()->update();
-        gCoordinator.getSystem<NetworkInstructionsSystem>()->update();
-
         //? RENDER
         BeginDrawing();
         ClearBackground(BLACK);
+        Shader shader = shadersManager.getShaderForMode(settings.getColorBlindMode());
+        if (settings.getColorBlindMode() != NORMAL) {
+            BeginShaderMode(shader);
+        }
+
         gCoordinator.getSystem<RenderSystem>()->update();
+
+        if (IsKeyDown(KEY_G))
+            gCoordinator.getSystem<CollisionSystem>()->drawGrid(viewportX, viewportY, viewportWidth, viewportHeight);
+
+        if (settings.getColorBlindMode() != NORMAL) {
+            EndShaderMode();
+        }
         EndDrawing();
 
         //? SPAWN

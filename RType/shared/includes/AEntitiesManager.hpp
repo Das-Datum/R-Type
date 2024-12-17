@@ -12,9 +12,11 @@ struct EnemyType {
     bool isDestructible;
     Vector2 size;
     int nbFrame;
+    float xSpeed;
+    float ySpeed;
 
-    EnemyType(const std::string& enemyName, Vector2 assetSize, int nbAssetFrame, const std::size_t& enemyHP = 100, bool isEnemyShooting = true, bool isEnemyDestructible = true)
-    : name(enemyName), size(assetSize), nbFrame(nbAssetFrame), maxHealth(enemyHP), isShooting(isEnemyShooting), isDestructible(isEnemyDestructible) {}
+    EnemyType(const std::string& enemyName, Vector2 assetSize, int nbAssetFrame, const std::size_t& enemyHP = 100, bool isEnemyShooting = true, bool isEnemyDestructible = true, float enemyXSpeed = 50.0f, float enemyYSpeed = 0.0f)
+    : name(enemyName), size(assetSize), nbFrame(nbAssetFrame), maxHealth(enemyHP), isShooting(isEnemyShooting), isDestructible(isEnemyDestructible), xSpeed(enemyXSpeed), ySpeed(enemyYSpeed) {}
 };
 
 struct Enemy {
@@ -22,9 +24,12 @@ struct Enemy {
     float y;
     float spawnTime;
     EnemyType type;
+    bool shootAtPlayer = false;
+    bool hasSpecificMove = false;
+    BehaviorType specificMove;
 
-    Enemy(float xPos, float yPos, float enemySpawnTime, EnemyType enemyType)
-    : x(xPos), y(yPos), spawnTime(enemySpawnTime), type(enemyType) {}
+    Enemy(float xPos, float yPos, float enemySpawnTime, EnemyType enemyType, bool isEnemyShootAtPlayer = false, bool hasEnemySpecificMove = false, BehaviorType enemySpecificMove = BehaviorType::None)
+    : x(xPos), y(yPos), spawnTime(enemySpawnTime), type(enemyType), shootAtPlayer(isEnemyShootAtPlayer), hasSpecificMove(hasEnemySpecificMove), specificMove(enemySpecificMove) {}
 };
 
 /**

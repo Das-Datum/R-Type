@@ -23,6 +23,7 @@ void initCoordinator() {
 
     //? Shared components
     gCoordinator.registerComponent<TransformComponent>();
+    gCoordinator.registerComponent<VelocityComponent>();
     gCoordinator.registerComponent<ShipComponent>();
     gCoordinator.registerComponent<BulletComponent>();
     gCoordinator.registerComponent<FixedVelocityComponent>();
@@ -30,6 +31,7 @@ void initCoordinator() {
     gCoordinator.registerComponent<BlockOutOfBoundsComponent>();
     gCoordinator.registerComponent<CollisionComponent>();
     gCoordinator.registerComponent<BackgroundScrollComponent>();
+    gCoordinator.registerComponent<NetworkPositionComponent>();
 
     //* Systems
     auto renderSystem = gCoordinator.registerSystem<RenderSystem>();
@@ -40,11 +42,13 @@ void initCoordinator() {
     auto collisionSystem = gCoordinator.registerSystem<CollisionSystem>();
     auto backgroundScrollSystem = gCoordinator.registerSystem<BackgroundScrollSystem>();
     auto enemiesSystem = gCoordinator.registerSystem<EnemiesSystem>();
+    auto interpolationSystem = gCoordinator.registerSystem<InterpolationSystem>();
 
     auto clientManageNetworkSystem = gCoordinator.registerSystem<ClientManageNetworkSystem>();
     auto networkInstructionsSystem = gCoordinator.registerSystem<NetworkInstructionsSystem>();
 
     auto spawnSystem = gCoordinator.registerSystem<SpawnSystem>();
+    auto velocitySystem = gCoordinator.registerSystem<VelocitySystem>();
 
     Signature signature;
 
@@ -99,4 +103,21 @@ void initCoordinator() {
     signature.set(gCoordinator.getComponentTypeID<SpawnComponent>(), true);
     gCoordinator.setSystemSignature<SpawnSystem>(signature);
 
+    //? VelocitySystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
+    signature.set(gCoordinator.getComponentTypeID<VelocityComponent>(), true);
+    gCoordinator.setSystemSignature<VelocitySystem>(signature);
+
+    //? EnemiesSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
+    signature.set(gCoordinator.getComponentTypeID<EnemyComponent>(), true);
+    gCoordinator.setSystemSignature<EnemiesSystem>(signature);
+
+    //? InterpolationSystem
+    signature.reset();
+    signature.set(gCoordinator.getComponentTypeID<TransformComponent>(), true);
+    signature.set(gCoordinator.getComponentTypeID<NetworkPositionComponent>(), true);
+    gCoordinator.setSystemSignature<InterpolationSystem>(signature);
 }

@@ -248,7 +248,7 @@ void ServerNetworkSystem::sendDataAllPlayer() {
 }
 
 void ServerNetworkSystem::sendDataToPlayer(const std::string& message, std::string ip, int port) {
-    info("Sent data to " + ip + ":" + std::to_string(port) + " - " + message);
+    // info("Sent data to " + ip + ":" + std::to_string(port) + " - " + message);
     if (sendTo(_server_fd, message, ip, port) < 0) {
         error("Send failed");
     }

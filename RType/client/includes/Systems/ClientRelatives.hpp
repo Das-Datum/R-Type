@@ -187,27 +187,32 @@ class InputSystem : public System {
 
     void update() {
         auto &settings = Settings::getInstance();
+        float deltaTime = GetFrameTime();
 
         for (auto const &entity : entities) {
             auto &transform = gCoordinator.getComponent<TransformComponent>(entity);
+            auto &velocity = gCoordinator.getComponent<VelocityComponent>(entity);
             auto &playerNetwork = gCoordinator.getComponent<NetworkInstructionsComponent>(entity);
-            float speed = (1000.0f / 1920.0f) * GetFrameTime();
 
             if (IsKeyDown(settings.getMoveRightKey())) {
-                transform.position.x += speed;
-                playerNetwork.instructionsBuffer.push_back("MRT" + std::to_string(playerNetwork.id));
+                velocity.velocity.x += 0.7f * velocity.acceleration;
+                if (settings.isMultiplayer())
+                    playerNetwork.instructionsBuffer.push_back("MRT" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveLeftKey())) {
-                transform.position.x -= speed;
-                playerNetwork.instructionsBuffer.push_back("MLF" + std::to_string(playerNetwork.id));
+                velocity.velocity.x -= 0.7f * velocity.acceleration;
+                if (settings.isMultiplayer())
+                    playerNetwork.instructionsBuffer.push_back("MLF" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveUpKey())) {
-                transform.position.y -= speed * (16.0 / 9.0);
-                playerNetwork.instructionsBuffer.push_back("MUP" + std::to_string(playerNetwork.id));
+                velocity.velocity.y -= 1.0f * velocity.acceleration;
+                if (settings.isMultiplayer())
+                    playerNetwork.instructionsBuffer.push_back("MUP" + std::to_string(playerNetwork.id));
             }
             if (IsKeyDown(settings.getMoveDownKey())) {
-                transform.position.y += speed * (16.0 / 9.0);
-                playerNetwork.instructionsBuffer.push_back("MDW" + std::to_string(playerNetwork.id));
+                velocity.velocity.y += 1.0f * velocity.acceleration;
+                if (settings.isMultiplayer())
+                    playerNetwork.instructionsBuffer.push_back("MDW" + std::to_string(playerNetwork.id));
             }
 
             auto &timer = gCoordinator.getComponent<TimerComponent>(entity);
@@ -234,14 +239,21 @@ class InputSystem : public System {
 
                 if (timer.elapsedTime >= timer.duration) {
                     entitiesManager.createBullet(bulletPosition, {0.9f, 0.0f});
-                    playerNetwork.instructionsBuffer.push_back("DEM" + std::to_string(playerNetwork.id));
+                    if (settings.isMultiplayer())
+                        playerNetwork.instructionsBuffer.push_back("DEM" + std::to_string(playerNetwork.id));
                 } else {
-                    playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id));
+                    if (settings.isMultiplayer())
+                        playerNetwork.instructionsBuffer.push_back("SHT" + std::to_string(playerNetwork.id));
                     entitiesManager.createBullet(bulletPosition, {0.5f, 0.0f});
                 }
                 timer.active = false;
                 timer.elapsedTime = 0.0f;
             }
         }
+    }
+
+private:
+    float lerp(float start, float end, float amount) {
+        return start + amount * (end - start);
     }
 };

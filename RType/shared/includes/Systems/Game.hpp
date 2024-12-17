@@ -1,6 +1,8 @@
 #pragma once
 #include "ECS.hpp"
+#include <algorithm>
 #include "Components/GameComponents.hpp"
+#include <algorithm>
 
 class PhysicsSystem : public System {
   public:
@@ -8,6 +10,9 @@ class PhysicsSystem : public System {
         for (auto const &entity : entities) {
             if (!gCoordinator.hasComponent<TransformComponent>(entity))
                 continue;
+
+            // if (!gCoordinator.hasComponent<InputComponent>(entity))
+            //     continue;
 
             if (gCoordinator.hasComponent<SpawnComponent>(entity)) {
                 continue;
@@ -40,16 +45,6 @@ class PhysicsSystem : public System {
         }
     }
 
-    void setViewport(float width, float height) {
-        viewportWidth = width;
-        viewportHeight = height;
-    }
-
-  private:
-    const float baseWidth = 1920.0f;
-    const float baseHeight = 1080.0f;
-    float viewportWidth = 1920.0f;
-    float viewportHeight = 1080.0f;
 };
 
 class SpawnSystem : public System {
@@ -57,12 +52,12 @@ class SpawnSystem : public System {
         void update(float frameTime = 0.0f) {
             for (const auto& entity : entities) {
                 if (!gCoordinator.hasComponent<SpawnComponent>(entity)) {
-                    std::cout << "No SpawnComponent for entity " << entity << std::endl;
+                    // std::cout << "No SpawnComponent for entity " << entity << std::endl;
                     continue;
                 }
                 auto &spawn = gCoordinator.getComponent<SpawnComponent>(entity);
                 if (spawn.time_left <= 0.0f) {
-                    std::cout << "Removing SpawnComponent for entity " << entity << std::endl;
+                    // std::cout << "Removing SpawnComponent for entity " << entity << std::endl;
                     gCoordinator.removeComponent<SpawnComponent>(entity);
                     break;
                 } else {
